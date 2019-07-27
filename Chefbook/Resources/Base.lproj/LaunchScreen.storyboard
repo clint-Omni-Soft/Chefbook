@@ -1,7 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,13 +17,83 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appIcon 1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="T07-cZ-vrO">
+                                <rect key="frame" x="16" y="20" width="343" height="279.5"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© Omni-Soft, Inc. 2019" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pEm-U7-vxN">
+                                <rect key="frame" x="16" y="544" width="343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="EOf-eO-P2I"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="wBh-OS-IPl"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All rights reserved.  Contact us at" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="POt-XV-ig5">
+                                <rect key="frame" x="16" y="570" width="343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="9hN-Sb-WYM"/>
+                                    <constraint firstAttribute="height" constant="21" id="fUd-Os-j7Z"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MdF-NB-hFC">
+                                <rect key="frame" x="16" y="596" width="343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="2ng-4h-2xo"/>
+                                    <constraint firstAttribute="height" constant="21" id="xZc-0o-9q8"/>
+                                </constraints>
+                                <string key="text">www.Omni-Soft.com/mobile_products.aspx
+</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chefbook" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bqh-nS-msf">
+                                <rect key="frame" x="16" y="307.5" width="343" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="oeE-zs-1eu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="48"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="POt-XV-ig5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="0cC-bz-VyX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="POt-XV-ig5" secondAttribute="trailing" constant="16" id="3b8-vI-Pp4"/>
+                            <constraint firstItem="MdF-NB-hFC" firstAttribute="top" secondItem="POt-XV-ig5" secondAttribute="bottom" constant="5" id="3k8-0A-4q2"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="pEm-U7-vxN" secondAttribute="trailing" constant="16" id="9vt-W8-c6r"/>
+                            <constraint firstItem="bqh-nS-msf" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="BF9-20-9Y0"/>
+                            <constraint firstItem="bqh-nS-msf" firstAttribute="top" secondItem="T07-cZ-vrO" secondAttribute="bottom" constant="8" id="LdJ-4w-qmh"/>
+                            <constraint firstItem="MdF-NB-hFC" firstAttribute="top" secondItem="POt-XV-ig5" secondAttribute="bottom" constant="5" id="LxG-yA-0Ta"/>
+                            <constraint firstItem="pEm-U7-vxN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="MCf-WP-ugI"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="T07-cZ-vrO" secondAttribute="trailing" constant="16" id="Nfo-EA-zTw"/>
+                            <constraint firstItem="POt-XV-ig5" firstAttribute="top" secondItem="pEm-U7-vxN" secondAttribute="bottom" constant="5" id="Nkf-jf-teA"/>
+                            <constraint firstItem="T07-cZ-vrO" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="ZJt-k0-ElK"/>
+                            <constraint firstItem="bqh-nS-msf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="amF-na-s6R"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="MdF-NB-hFC" secondAttribute="trailing" constant="16" id="cF5-dG-Ens"/>
+                            <constraint firstItem="T07-cZ-vrO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="iyq-y2-nrk"/>
+                            <constraint firstItem="POt-XV-ig5" firstAttribute="top" secondItem="pEm-U7-vxN" secondAttribute="bottom" constant="5" id="nN7-w3-5eU"/>
+                            <constraint firstItem="T07-cZ-vrO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="oKT-5g-9KJ"/>
+                            <constraint firstItem="MdF-NB-hFC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="rWS-bm-O50"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="MdF-NB-hFC" secondAttribute="bottom" constant="50" id="vgk-5k-4hD"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bqh-nS-msf" secondAttribute="trailing" constant="16" id="x5K-uB-C7Z"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="50.724637681159422" y="374.18478260869568"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="appIcon 1024.png" width="1024" height="1024"/>
+    </resources>
 </document>

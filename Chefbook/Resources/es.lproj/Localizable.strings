@@ -1,0 +1,41 @@
+/* 
+  Localizable.strings (Spanish)
+  Chefbook
+
+  Created by Clint Shank on 7/26/19.
+  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
+*/
+
+
+"AlertMessage.CannotOpenDatabase"   = "Error fatal!  No se puede abrir la base de datos.";
+"AlertMessage.ImageSaveFailed"      = "No pudimos guardar la imagen que seleccionó.";
+"AlertMessage.InvalidMediaType"     = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
+"AlertMessage.NameCannotBeBlank"    = "El campo de nombre no se puede dejar en blanco";
+"AlertMessage.UnableToDeleteImage"  = "No hemos podido eliminar la imagen que ha creado.";
+"AlertTitle.AreYouSure"             = "¿Estás seguro de que quieres descartar tus cambios?";
+"AlertTitle.Error"                  = "Error";
+"AlertTitle.ImageDisposition"       = "¿Qué te gustaría hacer con esta imagen?";
+"AlertTitle.SelectMediaSource"      = "Seleccionar fuente de medios para foto";
+
+"ButtonTitle.Back"                  = "Espalda";
+"ButtonTitle.Camera"                = "Cámara";
+"ButtonTitle.Cancel"                = "Cancelar";
+"ButtonTitle.Delete"                = "Borrar";
+"ButtonTitle.Done"                  = "Hecho";
+"ButtonTitle.No"                    = "¡No!";
+"ButtonTitle.OK"                    = "DE ACUERDO";
+"ButtonTitle.PhotoAlbum"            = "Album de fotos";
+"ButtonTitle.Replace"               = "Reemplazar";
+"ButtonTitle.Save"                  = "Salvar";
+"ButtonTitle.ZoomIn"                = "Acercarse";
+"ButtonTitle.Yes"                   = "Sí";
+
+"LabelText.About"                   = "Acerca de";
+"LabelText.ContactUs"               = "Todos los derechos reservados. Contactanos en";
+"LabelText.Name"                    = "Nombre";
+
+"Title.App"                         = "Chefbook";
+"Title.HowToUse"                    = "Cómo utilizar";
+"Title.RecipeEditor"                = "Editor de recetas";
+"Title.RecipeList"                  = "Lista de recetas";
+"Title.Settings"                    = "Configuraciones";

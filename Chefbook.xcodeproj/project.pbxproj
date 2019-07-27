@@ -8,14 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09C22EB536500B3CBA4 /* AppDelegate.swift */; };
-		F4C5C09F22EB536500B3CBA4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09E22EB536500B3CBA4 /* ViewController.swift */; };
-		F4C5C0A222EB536500B3CBA4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A022EB536500B3CBA4 /* Main.storyboard */; };
-		F4C5C0A522EB536500B3CBA4 /* Chefbook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0A322EB536500B3CBA4 /* Chefbook.xcdatamodeld */; };
+		F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */; };
+		F4C5C0A222EB536500B3CBA4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A022EB536500B3CBA4 /* Main_iPhone.storyboard */; };
 		F4C5C0A722EB536600B3CBA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */; };
 		F4C5C0AA22EB536600B3CBA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A822EB536600B3CBA4 /* LaunchScreen.storyboard */; };
 		F4C5C0B222EB577000B3CBA4 /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; };
 		F4C5C0B322EB577000B3CBA4 /* ZLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */; };
+		F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */; };
+		F4C5C0CF22EB80E300B3CBA4 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0CD22EB80E300B3CBA4 /* Recipe.swift */; };
+		F4C5C0D722EB874C00B3CBA4 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0D522EB874C00B3CBA4 /* Recipe+CoreDataProperties.swift */; };
+		F4C5C0DC22EB978100B3CBA4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0DE22EB978100B3CBA4 /* Main_iPad.storyboard */; };
+		F4C5C0E822EB992600B3CBA4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0E622EB992600B3CBA4 /* Localizable.strings */; };
+		F4C5C0EC22EBA5B100B3CBA4 /* appIcon 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0EB22EBA5B100B3CBA4 /* appIcon 1024.png */; };
+		F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */; };
+		F4C5C0EF22EBBF0700B3CBA4 /* ChefbookDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */; };
+		F4C5C0F122EBC5ED00B3CBA4 /* RecipeEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,16 +43,34 @@
 /* Begin PBXFileReference section */
 		F4C5C09922EB536500B3CBA4 /* Chefbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chefbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4C5C09C22EB536500B3CBA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F4C5C09E22EB536500B3CBA4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		F4C5C0A122EB536500B3CBA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		F4C5C0A422EB536500B3CBA4 /* Chefbook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chefbook.xcdatamodel; sourceTree = "<group>"; };
+		F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewController.swift; sourceTree = "<group>"; };
+		F4C5C0A122EB536500B3CBA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4C5C0A922EB536600B3CBA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4C5C0AB22EB536600B3CBA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZLogKit.framework; path = "../ZKits/ZKits-Debug/ZLogKit.framework"; sourceTree = "<group>"; };
-		F4C5C0B522EB593D00B3CBA4 /* Chefbook-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Prefix.pch"; sourceTree = "<group>"; };
 		F4C5C0B622EB59C800B3CBA4 /* Chefbook-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F4C5C0BD22EB5F4300B3CBA4 /* Chefbook-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Prefix.pch"; sourceTree = "<group>"; };
+		F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChefbookCentral.swift; sourceTree = "<group>"; };
+		F4C5C0C722EB7DB800B3CBA4 /* Chefbook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chefbook.xcdatamodel; sourceTree = "<group>"; };
+		F4C5C0CD22EB80E300B3CBA4 /* Recipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		F4C5C0D522EB874C00B3CBA4 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4C5C0DB22EB975800B3CBA4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F4C5C0DD22EB978100B3CBA4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		F4C5C0DF22EB978900B3CBA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		F4C5C0E022EB97BA00B3CBA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F4C5C0E122EB97BA00B3CBA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F4C5C0E222EB97BA00B3CBA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPad.strings; sourceTree = "<group>"; };
+		F4C5C0E322EB97CE00B3CBA4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F4C5C0E422EB97CE00B3CBA4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F4C5C0E522EB97CE00B3CBA4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPad.strings; sourceTree = "<group>"; };
+		F4C5C0E722EB992600B3CBA4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4C5C0E922EB994A00B3CBA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4C5C0EA22EB997600B3CBA4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4C5C0EB22EBA5B100B3CBA4 /* appIcon 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 1024.png"; path = "AppIcon/appIcon 1024.png"; sourceTree = "<group>"; };
+		F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditorViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,9 +88,9 @@
 		F4C5C09022EB536500B3CBA4 = {
 			isa = PBXGroup;
 			children = (
-				F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */,
 				F4C5C09B22EB536500B3CBA4 /* Chefbook */,
 				F4C5C09A22EB536500B3CBA4 /* Products */,
+				F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				F4C5C0B622EB59C800B3CBA4 /* Chefbook-Bridging-Header.h */,
-				F4C5C0B522EB593D00B3CBA4 /* Chefbook-Prefix.pch */,
+				F4C5C0BD22EB5F4300B3CBA4 /* Chefbook-Prefix.pch */,
 				F4C5C0AB22EB536600B3CBA4 /* Info.plist */,
 				F4C5C0B722EB59FC00B3CBA4 /* Application */,
 				F4C5C0BA22EB5ADE00B3CBA4 /* ChefbookCentral */,
@@ -101,9 +127,12 @@
 		F4C5C0B822EB5A4100B3CBA4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F4C5C0EB22EBA5B100B3CBA4 /* appIcon 1024.png */,
 				F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */,
 				F4C5C0A822EB536600B3CBA4 /* LaunchScreen.storyboard */,
-				F4C5C0A022EB536500B3CBA4 /* Main.storyboard */,
+				F4C5C0E622EB992600B3CBA4 /* Localizable.strings */,
+				F4C5C0DE22EB978100B3CBA4 /* Main_iPad.storyboard */,
+				F4C5C0A022EB536500B3CBA4 /* Main_iPhone.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -111,7 +140,9 @@
 		F4C5C0B922EB5ABE00B3CBA4 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				F4C5C09E22EB536500B3CBA4 /* ViewController.swift */,
+				F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */,
+				F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */,
+				F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -119,10 +150,21 @@
 		F4C5C0BA22EB5ADE00B3CBA4 /* ChefbookCentral */ = {
 			isa = PBXGroup;
 			children = (
+				F4C5C0CB22EB80B200B3CBA4 /* CoreData Entities */,
+				F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */,
+				F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */,
 				F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */,
-				F4C5C0A322EB536500B3CBA4 /* Chefbook.xcdatamodeld */,
 			);
 			path = ChefbookCentral;
+			sourceTree = "<group>";
+		};
+		F4C5C0CB22EB80B200B3CBA4 /* CoreData Entities */ = {
+			isa = PBXGroup;
+			children = (
+				F4C5C0CD22EB80E300B3CBA4 /* Recipe.swift */,
+				F4C5C0D522EB874C00B3CBA4 /* Recipe+CoreDataProperties.swift */,
+			);
+			path = "CoreData Entities";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,6 +210,8 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
+				fr,
 			);
 			mainGroup = F4C5C09022EB536500B3CBA4;
 			productRefGroup = F4C5C09A22EB536500B3CBA4 /* Products */;
@@ -184,9 +228,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4C5C0E822EB992600B3CBA4 /* Localizable.strings in Resources */,
 				F4C5C0AA22EB536600B3CBA4 /* LaunchScreen.storyboard in Resources */,
+				F4C5C0EC22EBA5B100B3CBA4 /* appIcon 1024.png in Resources */,
+				F4C5C0DC22EB978100B3CBA4 /* Main_iPad.storyboard in Resources */,
 				F4C5C0A722EB536600B3CBA4 /* Assets.xcassets in Resources */,
-				F4C5C0A222EB536500B3CBA4 /* Main.storyboard in Resources */,
+				F4C5C0A222EB536500B3CBA4 /* Main_iPhone.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,30 +244,61 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4C5C09F22EB536500B3CBA4 /* ViewController.swift in Sources */,
+				F4C5C0D722EB874C00B3CBA4 /* Recipe+CoreDataProperties.swift in Sources */,
+				F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */,
+				F4C5C0EF22EBBF0700B3CBA4 /* ChefbookDataModel.xcdatamodeld in Sources */,
 				F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */,
-				F4C5C0A522EB536500B3CBA4 /* Chefbook.xcdatamodeld in Sources */,
+				F4C5C0CF22EB80E300B3CBA4 /* Recipe.swift in Sources */,
+				F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */,
 				F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */,
+				F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */,
+				F4C5C0F122EBC5ED00B3CBA4 /* RecipeEditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		F4C5C0A022EB536500B3CBA4 /* Main.storyboard */ = {
+		F4C5C0A022EB536500B3CBA4 /* Main_iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				F4C5C0A122EB536500B3CBA4 /* Base */,
+				F4C5C0DB22EB975800B3CBA4 /* en */,
+				F4C5C0E122EB97BA00B3CBA4 /* es */,
+				F4C5C0E422EB97CE00B3CBA4 /* fr */,
 			);
-			name = Main.storyboard;
+			name = Main_iPhone.storyboard;
 			sourceTree = "<group>";
 		};
 		F4C5C0A822EB536600B3CBA4 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				F4C5C0A922EB536600B3CBA4 /* Base */,
+				F4C5C0E022EB97BA00B3CBA4 /* es */,
+				F4C5C0E322EB97CE00B3CBA4 /* fr */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		F4C5C0DE22EB978100B3CBA4 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4C5C0DD22EB978100B3CBA4 /* en */,
+				F4C5C0DF22EB978900B3CBA4 /* Base */,
+				F4C5C0E222EB97BA00B3CBA4 /* es */,
+				F4C5C0E522EB97CE00B3CBA4 /* fr */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		F4C5C0E622EB992600B3CBA4 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4C5C0E722EB992600B3CBA4 /* en */,
+				F4C5C0E922EB994A00B3CBA4 /* es */,
+				F4C5C0EA22EB997600B3CBA4 /* fr */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -230,6 +308,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -277,7 +356,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -291,6 +370,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -332,7 +412,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -350,6 +430,7 @@
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chefbook/Chefbook-Prefix.pch";
 				INFOPLIST_FILE = Chefbook/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -357,11 +438,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.Chefbook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Chefbook/Chefbook-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s i386 x86_64";
 			};
 			name = Debug;
@@ -374,6 +456,7 @@
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Release";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chefbook/Chefbook-Prefix.pch";
 				INFOPLIST_FILE = Chefbook/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -383,8 +466,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.Chefbook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Chefbook/Chefbook-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s i386 x86_64";
 			};
 			name = Release;
@@ -413,13 +497,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		F4C5C0A322EB536500B3CBA4 /* Chefbook.xcdatamodeld */ = {
+		F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				F4C5C0A422EB536500B3CBA4 /* Chefbook.xcdatamodel */,
+				F4C5C0C722EB7DB800B3CBA4 /* Chefbook.xcdatamodel */,
 			);
-			currentVersion = F4C5C0A422EB536500B3CBA4 /* Chefbook.xcdatamodel */;
-			path = Chefbook.xcdatamodeld;
+			currentVersion = F4C5C0C722EB7DB800B3CBA4 /* Chefbook.xcdatamodel */;
+			path = ChefbookDataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings (French)
+  Chefbook
+
+  Created by Clint Shank on 7/26/19.
+  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
+*/
+
+
+"AlertMessage.CannotOpenDatabase"   = "Erreur fatale!  Impossible d'ouvrir la base de données.";
+"AlertMessage.ImageSaveFailed"      = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
+"AlertMessage.InvalidMediaType"     = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
+"AlertMessage.NameCannotBeBlank"    = "Le champ Nom ne peut pas être laissé vide";
+"AlertMessage.UnableToDeleteImage"  = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
+"AlertTitle.AreYouSure"             = "Êtes-vous sûr de vouloir annuler vos modifications?";
+"AlertTitle.Error"                  = "Erreur!";
+"AlertTitle.ImageDisposition"       = "Que voudriez-vous faire avec cette image?";
+"AlertTitle.SelectMediaSource"      = "Sélectionnez la source multimédia pour la photo";
+
+"ButtonTitle.Back"                  = "Retour";
+"ButtonTitle.Cancel"                = "Annuler";
+"ButtonTitle.Camera"                = "Caméra";
+"ButtonTitle.Delete"                = "Effacer";
+"ButtonTitle.Done"                  = "Terminé";
+"ButtonTitle.No"                    = "Non!";
+"ButtonTitle.OK"                    = "OK";
+"ButtonTitle.PhotoAlbum"            = "Album photo";
+"ButtonTitle.Replace"               = "Remplacer";
+"ButtonTitle.Save"                  = "Sauvegarder";
+"ButtonTitle.ZoomIn"                = "Agrandir";
+"ButtonTitle.Yes"                   = "Oui";
+
+"LabelText.About"                   = "Sur";
+"LabelText.ContactUs"               = "Tous les droits sont réservés. Contactez-nous à";
+"LabelText.Name"                    = "Nom";
+
+"Title.App"                         = "Chefbook";
+"Title.HowToUse"                    = "Comment utiliser";
+"Title.RecipeEditor"                = "Éditeur de recettes";
+"Title.RecipeList"                  = "Liste des recettes";
+"Title.Settings"                    = "Paramètres";
+
