@@ -8,11 +8,13 @@
 
 
 "AlertMessage.CannotOpenDatabase"   = "Error fatal!  No se puede abrir la base de datos.";
+"AlertMessage.DuplicateRecipeName"  = "El nombre de la receta que elegiste ya existe. Inténtalo de nuevo.";
 "AlertMessage.ImageSaveFailed"      = "No pudimos guardar la imagen que seleccionó.";
 "AlertMessage.InvalidMediaType"     = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
 "AlertMessage.NameCannotBeBlank"    = "El campo de nombre no se puede dejar en blanco";
 "AlertMessage.UnableToDeleteImage"  = "No hemos podido eliminar la imagen que ha creado.";
 "AlertTitle.AreYouSure"             = "¿Estás seguro de que quieres descartar tus cambios?";
+"AlertTitle.EditRecipeName"         = "Editar nombre de receta";
 "AlertTitle.Error"                  = "Error";
 "AlertTitle.ImageDisposition"       = "¿Qué te gustaría hacer con esta imagen?";
 "AlertTitle.SelectMediaSource"      = "Seleccionar fuente de medios para foto";
@@ -30,12 +32,20 @@
 "ButtonTitle.ZoomIn"                = "Acercarse";
 "ButtonTitle.Yes"                   = "Sí";
 
+"CellTitle.Ingredients"             = "Ingredientes";
+"CellTitle.Name"                    = "Nombre";
+"CellTitle.Steps"                   = "Pasos";
+"CellTitle.Yield"                   = "Rendimiento";
+"CellTitle.YieldOptions"            = "Opciones de Rendimiento";
+
 "LabelText.About"                   = "Acerca de";
 "LabelText.ContactUs"               = "Todos los derechos reservados. Contactanos en";
 "LabelText.Name"                    = "Nombre";
 
 "Title.App"                         = "Chefbook";
-"Title.HowToUse"                    = "Cómo utilizar";
-"Title.RecipeEditor"                = "Editor de recetas";
-"Title.RecipeList"                  = "Lista de recetas";
+"Title.HowToUse"                    = "Cómo Utilizar";
+"Title.Ingredients"                 = "Ingredientes";
+"Title.RecipeEditor"                = "Editor de Recetas";
+"Title.RecipeList"                  = "Chefbook Recetas";
 "Title.Settings"                    = "Configuraciones";
+"Title.Steps"                       = "Pasos";

@@ -30,7 +30,7 @@ class RecipeListViewController: UIViewController,
         super.viewDidLoad()
         logTrace()
         
-        title = NSLocalizedString( "Title.RecipeList", comment: "Recipe List" )
+        title = NSLocalizedString( "Title.RecipeList", comment: "Chefbook Recipe List" )
     }
     
 
@@ -223,13 +223,13 @@ extension RecipeListViewController: UITableViewDataSource
 
 extension RecipeListViewController: UITableViewDelegate
 {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    func tableView(_ tableView: UITableView,
+                     didSelectRowAt indexPath: IndexPath)
     {
         logVerbose( "[ %d ]", indexPath.row )
-        tableView.deselectRow(at: indexPath, animated: false )
+        tableView.deselectRow( at: indexPath, animated: false )
         
         launchEditorForRecipeAt( index: indexPath.row )
-
     }
     
     
@@ -242,8 +242,8 @@ extension RecipeListViewController: UITableViewDelegate
         logVerbose( "[ %d ]", index )
         if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController
         {
-            recipeEditorVC.delegate                = self
-            recipeEditorVC.indexOfItemBeingEdited  = index
+            recipeEditorVC.delegate               = self
+            recipeEditorVC.indexOfItemBeingEdited = index
             recipeEditorVC.launchedFromDetailView = false
 
             navigationController?.pushViewController( recipeEditorVC, animated: true )

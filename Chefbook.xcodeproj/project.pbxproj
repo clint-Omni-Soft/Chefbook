@@ -7,12 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F458573122ECDCAE00506C8E /* RecipeImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */; };
+		F458573322ECE2BB00506C8E /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458573222ECE2BB00506C8E /* ImageViewController.swift */; };
+		F4AD56C322F200DA00EFC842 /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; };
+		F4AD56C522F20B4000EFC842 /* RecipeNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56C422F20B4000EFC842 /* RecipeNameTableViewCell.swift */; };
+		F4AD56C822F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56C722F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift */; };
+		F4AD56CC22F24C0400EFC842 /* IngredientsEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56CB22F24C0400EFC842 /* IngredientsEditorViewController.swift */; };
+		F4AD56CE22F25AE400EFC842 /* StepsEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56CD22F25AE400EFC842 /* StepsEditorViewController.swift */; };
+		F4AD56D022F25C3100EFC842 /* RecipeStepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56CF22F25C3100EFC842 /* RecipeStepsTableViewCell.swift */; };
 		F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09C22EB536500B3CBA4 /* AppDelegate.swift */; };
 		F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */; };
 		F4C5C0A222EB536500B3CBA4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A022EB536500B3CBA4 /* Main_iPhone.storyboard */; };
 		F4C5C0A722EB536600B3CBA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */; };
 		F4C5C0AA22EB536600B3CBA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A822EB536600B3CBA4 /* LaunchScreen.storyboard */; };
-		F4C5C0B222EB577000B3CBA4 /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; };
 		F4C5C0B322EB577000B3CBA4 /* ZLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */; };
 		F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */; };
@@ -41,6 +48,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeImageTableViewCell.swift; sourceTree = "<group>"; };
+		F458573222ECE2BB00506C8E /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		F4AD56C422F20B4000EFC842 /* RecipeNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeNameTableViewCell.swift; sourceTree = "<group>"; };
+		F4AD56C722F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientsTableViewCell.swift; sourceTree = "<group>"; };
+		F4AD56CB22F24C0400EFC842 /* IngredientsEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsEditorViewController.swift; sourceTree = "<group>"; };
+		F4AD56CD22F25AE400EFC842 /* StepsEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsEditorViewController.swift; sourceTree = "<group>"; };
+		F4AD56CF22F25C3100EFC842 /* RecipeStepsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeStepsTableViewCell.swift; sourceTree = "<group>"; };
 		F4C5C09922EB536500B3CBA4 /* Chefbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chefbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4C5C09C22EB536500B3CBA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewController.swift; sourceTree = "<group>"; };
@@ -78,19 +92,58 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4C5C0B222EB577000B3CBA4 /* ZLogKit.framework in Frameworks */,
+				F4AD56C322F200DA00EFC842 /* ZLogKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F4AD56C222F200DA00EFC842 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4AD56C622F21B8900EFC842 /* Recipe Editor */ = {
+			isa = PBXGroup;
+			children = (
+				F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */,
+				F4AD56C922F23EB700EFC842 /* Cells */,
+				F4AD56CA22F24B4700EFC842 /* ChildViewControllers */,
+			);
+			path = "Recipe Editor";
+			sourceTree = "<group>";
+		};
+		F4AD56C922F23EB700EFC842 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */,
+				F4AD56C722F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift */,
+				F4AD56C422F20B4000EFC842 /* RecipeNameTableViewCell.swift */,
+				F4AD56CF22F25C3100EFC842 /* RecipeStepsTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		F4AD56CA22F24B4700EFC842 /* ChildViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				F458573222ECE2BB00506C8E /* ImageViewController.swift */,
+				F4AD56CB22F24C0400EFC842 /* IngredientsEditorViewController.swift */,
+				F4AD56CD22F25AE400EFC842 /* StepsEditorViewController.swift */,
+			);
+			path = ChildViewControllers;
+			sourceTree = "<group>";
+		};
 		F4C5C09022EB536500B3CBA4 = {
 			isa = PBXGroup;
 			children = (
 				F4C5C09B22EB536500B3CBA4 /* Chefbook */,
 				F4C5C09A22EB536500B3CBA4 /* Products */,
 				F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */,
+				F4AD56C222F200DA00EFC842 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -140,7 +193,7 @@
 		F4C5C0B922EB5ABE00B3CBA4 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */,
+				F4AD56C622F21B8900EFC842 /* Recipe Editor */,
 				F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */,
 				F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */,
 			);
@@ -245,14 +298,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4C5C0D722EB874C00B3CBA4 /* Recipe+CoreDataProperties.swift in Sources */,
+				F458573122ECDCAE00506C8E /* RecipeImageTableViewCell.swift in Sources */,
 				F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */,
+				F4AD56D022F25C3100EFC842 /* RecipeStepsTableViewCell.swift in Sources */,
 				F4C5C0EF22EBBF0700B3CBA4 /* ChefbookDataModel.xcdatamodeld in Sources */,
 				F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */,
 				F4C5C0CF22EB80E300B3CBA4 /* Recipe.swift in Sources */,
 				F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */,
 				F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */,
+				F4AD56C522F20B4000EFC842 /* RecipeNameTableViewCell.swift in Sources */,
 				F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */,
+				F4AD56CC22F24C0400EFC842 /* IngredientsEditorViewController.swift in Sources */,
+				F458573322ECE2BB00506C8E /* ImageViewController.swift in Sources */,
+				F4AD56CE22F25AE400EFC842 /* StepsEditorViewController.swift in Sources */,
 				F4C5C0F122EBC5ED00B3CBA4 /* RecipeEditorViewController.swift in Sources */,
+				F4AD56C822F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

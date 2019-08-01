@@ -8,11 +8,13 @@
 
 
 "AlertMessage.CannotOpenDatabase"   = "Erreur fatale!  Impossible d'ouvrir la base de données.";
+"AlertMessage.DuplicateRecipeName"  = "Le nom de recette que vous avez choisi existe déjà. Veuillez réessayer.";
 "AlertMessage.ImageSaveFailed"      = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
 "AlertMessage.InvalidMediaType"     = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
 "AlertMessage.NameCannotBeBlank"    = "Le champ Nom ne peut pas être laissé vide";
 "AlertMessage.UnableToDeleteImage"  = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
 "AlertTitle.AreYouSure"             = "Êtes-vous sûr de vouloir annuler vos modifications?";
+"AlertTitle.EditRecipeName"         = "Editer le nom de la recette";
 "AlertTitle.Error"                  = "Erreur!";
 "AlertTitle.ImageDisposition"       = "Que voudriez-vous faire avec cette image?";
 "AlertTitle.SelectMediaSource"      = "Sélectionnez la source multimédia pour la photo";
@@ -30,13 +32,21 @@
 "ButtonTitle.ZoomIn"                = "Agrandir";
 "ButtonTitle.Yes"                   = "Oui";
 
+"CellTitle.Ingredients"             = "Ingrédients";
+"CellTitle.Name"                    = "prénom";
+"CellTitle.Steps"                   = "Pas";
+"CellTitle.Yield"                   = "Rendement";
+"CellTitle.YieldOptions"            = "Options de Rendement";
+
 "LabelText.About"                   = "Sur";
 "LabelText.ContactUs"               = "Tous les droits sont réservés. Contactez-nous à";
 "LabelText.Name"                    = "Nom";
 
 "Title.App"                         = "Chefbook";
-"Title.HowToUse"                    = "Comment utiliser";
-"Title.RecipeEditor"                = "Éditeur de recettes";
-"Title.RecipeList"                  = "Liste des recettes";
+"Title.HowToUse"                    = "Comment Utiliser";
+"Title.Ingredients"                 = "Ingrédients";
+"Title.RecipeEditor"                = "Éditeur de Recettes";
+"Title.RecipeList"                  = "Chefbook Recettes";
 "Title.Settings"                    = "Paramètres";
+"Title.Steps"                       = "Pas";
 
