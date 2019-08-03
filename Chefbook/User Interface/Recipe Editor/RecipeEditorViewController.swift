@@ -50,9 +50,11 @@ class RecipeEditorViewController: UIViewController,
     private struct CellHeights
     {
         static let image        : CGFloat = 240.0
-        static let ingredients  : CGFloat =  44.0
+        static let ingredients  : CGFloat =   0.0       // Calculated
         static let name         : CGFloat =  44.0
-        static let steps        : CGFloat =  44.0
+        static let steps        : CGFloat =   0.0       // Calculated
+        static let yield        : CGFloat =  70.0
+        static let yieldOptions : CGFloat =  70.0
     }
     
     private struct CellIdentifiers
@@ -61,16 +63,20 @@ class RecipeEditorViewController: UIViewController,
         static let ingredients  = "RecipeIngredientsTableViewCell"
         static let name         = "RecipeNameTableViewCell"
         static let steps        = "RecipeStepsTableViewCell"
+        static let yield        = "RecipeYieldTableViewCell"
+        static let yieldOptions = "RecipeYieldOptionsTableViewCell"
     }
     
     private struct CellIndexes
     {
         static let name         = 0
         static let image        = 1
-        static let ingredients  = 2
-        static let steps        = 3
+        static let yield        = 2
+        static let yieldOptions = 3
+        static let ingredients  = 4
+        static let steps        = 5
 
-        static let numberOfCells = 4
+        static let numberOfCells = 6
     }
     
     private var     firstTimeIn                 = true
@@ -85,10 +91,10 @@ class RecipeEditorViewController: UIViewController,
     private var     originalRecipeName          = String()
     private var     originalSteps               = String()
     private var     originalYield               = String()
-    private var     originalYieldOptions: Int16 = 0
+    private var     originalYieldOptions        = String()
     private var     stepsText                   = String()
     private var     yield                       = String()
-    private var     yieldOptions: Int16         = 0
+    private var     yieldOptions                = String()
 
     
     // MARK: UIViewController Lifecycle Methods
@@ -101,6 +107,7 @@ class RecipeEditorViewController: UIViewController,
         title = NSLocalizedString( "Title.RecipeEditor", comment: "Recipe Editor" )
         
         preferredContentSize = CGSize( width: 320, height: 460 )
+        myTableView.separatorStyle = .none
 
         initializeVariables()
     }
@@ -414,6 +421,10 @@ class RecipeEditorViewController: UIViewController,
             cell = loadIngredientsCell()
         case CellIndexes.steps:
             cell = loadStepsCell()
+        case CellIndexes.yield:
+            cell = loadYieldCell()
+        case CellIndexes.yieldOptions:
+            cell = loadYieldOptionsCell()
         default:
             cell = UITableViewCell.init()
         }
@@ -435,17 +446,16 @@ class RecipeEditorViewController: UIViewController,
             launchIngredientsEditorViewController()
             
         case CellIndexes.name:
-            if let recipeNameCell = tableView.cellForRow( at: indexPath ) as? RecipeNameTableViewCell
-            {
-                editRecipeName( recipeNameTableViewCell: recipeNameCell )
-            }
-            else
-            {
-                logTrace( "ERROR!  Could not load recipeNameCell!" )
-            }
+            editRecipeName()
             
         case CellIndexes.steps:
             launchStepsEditorViewController()
+        
+        case CellIndexes.yield:
+            editRecipeYield()
+
+        case CellIndexes.yieldOptions:
+            editRecipeYieldOptions()
 
         default:
             break
@@ -470,6 +480,10 @@ class RecipeEditorViewController: UIViewController,
             height = CellHeights.name
         case CellIndexes.steps:
             height = cellHeightForSteps()
+        case CellIndexes.yield:
+            height = CellHeights.yield
+        case CellIndexes.yieldOptions:
+            height = CellHeights.yieldOptions
         default:
             break
         }
@@ -583,7 +597,7 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    @objc private func editRecipeName( recipeNameTableViewCell: RecipeNameTableViewCell )
+    @objc private func editRecipeName()
     {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditRecipeName", comment: "Edit recipe name" ),
@@ -606,7 +620,7 @@ class RecipeEditorViewController: UIViewController,
                     
                     if textStringName == self.recipeName
                     {
-                        logTrace( "No changes ... Do nothing!" )
+                        logTrace( "No changes ... do nothing!" )
                         return
                     }
                     
@@ -660,6 +674,181 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
+    @objc private func editRecipeYield()
+    {
+        logTrace()
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditRecipeYield", comment: "Edit recipe yield" ),
+                                                message: nil,
+                                                preferredStyle: .alert)
+        
+        let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let     yieldTextField = alert.textFields![0] as UITextField
+            
+            
+            if var textStringName = yieldTextField.text
+            {
+                textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
+                
+                if !textStringName.isEmpty
+                {
+                    logTrace( "We have a non-zero length string" )
+                    
+                    if textStringName == self.yield
+                    {
+                        logTrace( "No changes ... do nothing!" )
+                        return
+                    }
+                    
+                    self.yield = textStringName
+                    
+                    self.updateChefbookCentral()
+                }
+                else
+                {
+                    logTrace( "ERROR:  Yield field cannot be left blank!" )
+                    self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error",               comment: "Error!" ),
+                                       message: NSLocalizedString( "AlertMessage.YieldCannotBeBlank", comment: "Yield cannot be left blank" ) )
+                }
+                
+            }
+            
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        
+        alert.addTextField
+            { ( textField ) in
+                
+                if self.recipeName.isEmpty
+                {
+                    textField.placeholder = NSLocalizedString( "LabelText.Yield", comment: "Yield" )
+                }
+                else
+                {
+                    textField.text = self.yield
+                }
+                
+                textField.autocapitalizationType = .words
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    @objc private func editRecipeYieldOptions()
+    {
+        logTrace()
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditRecipeYieldOptions", comment: "Edit recipe yield options" ),
+                                                message: nil,
+                                                preferredStyle: .alert)
+        
+        let     saveAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Save", comment: "Save" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Save Action" )
+            let     yieldOptionsTextField = alert.textFields![0] as UITextField
+            
+            
+            if var textStringName = yieldOptionsTextField.text
+            {
+                textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
+                
+                if !textStringName.isEmpty
+                {
+                    logTrace( "We have a non-zero length string" )
+                    
+                    if textStringName == self.yieldOptions
+                    {
+                        logTrace( "No changes ... do nothing!" )
+                        return
+                    }
+                    
+                    self.yieldOptions = textStringName
+                    
+                    self.updateChefbookCentral()
+                }
+
+            }
+            
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        
+        alert.addTextField
+            { ( textField ) in
+                
+                if self.recipeName.isEmpty
+                {
+                    textField.placeholder = NSLocalizedString( "LabelText.YieldOptions", comment: "Yield Options" )
+                }
+                else
+                {
+                    textField.text = self.yieldOptions
+                }
+                
+                textField.autocapitalizationType = .words
+        }
+        
+        alert.addAction( saveAction   )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    private func initializeVariables()
+    {
+        logTrace()
+        let         chefbookCentral = ChefbookCentral.sharedInstance
+        var         frame           = CGRect.zero
+        
+        
+        frame.size.height = .leastNormalMagnitude
+        
+        myTableView.tableHeaderView = UIView( frame: frame )
+        myTableView.tableFooterView = UIView( frame: frame )
+        myTableView.contentInsetAdjustmentBehavior = .never
+        
+        if NEW_RECIPE == indexOfItemBeingEdited
+        {
+            imageName       = String()
+            ingredientsText = String()
+            recipeName      = String()
+            stepsText       = String()
+            yield           = String()
+            yieldOptions    = String()
+        }
+        else
+        {
+            let         recipe = chefbookCentral.recipeArray[indexOfItemBeingEdited]
+            
+            
+            imageName       = recipe.imageName     ?? ""
+            ingredientsText = recipe.ingredients   ?? ""
+            recipeName      = recipe.name          ?? ""
+            stepsText       = recipe.steps         ?? ""
+            yield           = recipe.yield         ?? ""
+            yieldOptions    = recipe.yieldOptions  ?? ""
+            
+        }
+        
+        originalImageName    = imageName
+        originalIngredients  = ingredientsText
+        originalRecipeName   = recipeName
+        originalSteps        = stepsText
+        originalYield        = yield
+        originalYieldOptions = yieldOptions
+        
+        imageAssigned = true
+    }
+    
+    
     private func launchImageViewController()
     {
         logVerbose( "imageName[ %@ ]", imageName )
@@ -710,53 +899,6 @@ class RecipeEditorViewController: UIViewController,
             logTrace( "ERROR: Could NOT load StepsEditorViewController!" )
         }
         
-    }
-    
-    
-    private func initializeVariables()
-    {
-        logTrace()
-        let         chefbookCentral = ChefbookCentral.sharedInstance
-        var         frame           = CGRect.zero
-        
-        
-        frame.size.height = .leastNormalMagnitude
-        
-        myTableView.tableHeaderView = UIView( frame: frame )
-        myTableView.tableFooterView = UIView( frame: frame )
-        myTableView.contentInsetAdjustmentBehavior = .never
-        
-        if NEW_RECIPE == indexOfItemBeingEdited
-        {
-            imageName       = String.init()
-            ingredientsText = String.init()
-            recipeName      = String.init()
-            stepsText       = String.init()
-            yield           = String.init()
-            yieldOptions    = 0
-        }
-        else
-        {
-            let         recipe = chefbookCentral.recipeArray[indexOfItemBeingEdited]
-            
-            
-            imageName       = recipe.imageName     ?? ""
-            ingredientsText = recipe.ingredients   ?? ""
-            recipeName      = recipe.name          ?? ""
-            stepsText       = recipe.steps         ?? ""
-            yield           = recipe.yield         ?? ""
-            yieldOptions    = recipe.yieldOptions
-
-        }
-        
-        originalImageName    = imageName
-        originalIngredients  = ingredientsText
-        originalRecipeName   = recipeName
-        originalSteps        = stepsText
-        originalYield        = yield
-        originalYieldOptions = yieldOptions
-        
-        imageAssigned = true
     }
     
     
@@ -820,7 +962,7 @@ class RecipeEditorViewController: UIViewController,
             
             DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ) )
             {
-                self.editRecipeName( recipeNameTableViewCell: recipeNameCell )
+                self.editRecipeName()
             }
             
         }
@@ -843,6 +985,44 @@ class RecipeEditorViewController: UIViewController,
         
         
         stepsCell.initializeWith( stepsList: stepsText )
+        
+        return cell
+    }
+    
+    
+    private func loadYieldCell() -> UITableViewCell
+    {
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else
+        {
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+        
+        logVerbose( "[ %@ ]", yield )
+        let yieldCell = cell as! RecipeYieldTableViewCell
+        
+        
+        yieldCell.initializeWith( yield: yield )
+        
+        return cell
+    }
+    
+    
+    private func loadYieldOptionsCell() -> UITableViewCell
+    {
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yieldOptions ) else
+        {
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+        
+        logVerbose( "[ %@ ]", yieldOptions )
+        let yieldOptionsCell = cell as! RecipeYieldOptionsTableViewCell
+        
+        
+        yieldOptionsCell.initializeWith( yieldOptions: yieldOptions )
         
         return cell
     }

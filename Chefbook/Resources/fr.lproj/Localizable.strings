@@ -11,10 +11,13 @@
 "AlertMessage.DuplicateRecipeName"  = "Le nom de recette que vous avez choisi existe déjà. Veuillez réessayer.";
 "AlertMessage.ImageSaveFailed"      = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
 "AlertMessage.InvalidMediaType"     = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
-"AlertMessage.NameCannotBeBlank"    = "Le champ Nom ne peut pas être laissé vide";
+"AlertMessage.NameCannotBeBlank"    = "Le nom ne peut pas être laissé en blanc";
 "AlertMessage.UnableToDeleteImage"  = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
+"AlertMessage.YieldCannotBeBlank"   = "Le rendement ne peut pas être laissé en blanc.";
 "AlertTitle.AreYouSure"             = "Êtes-vous sûr de vouloir annuler vos modifications?";
 "AlertTitle.EditRecipeName"         = "Editer le nom de la recette";
+"AlertTitle.EditRecipeYield"        = "Modifier le rendement de la recette";
+"AlertTitle.EditRecipeYieldOptions" = "Modifier les options de rendement de la recette";
 "AlertTitle.Error"                  = "Erreur!";
 "AlertTitle.ImageDisposition"       = "Que voudriez-vous faire avec cette image?";
 "AlertTitle.SelectMediaSource"      = "Sélectionnez la source multimédia pour la photo";
@@ -41,6 +44,8 @@
 "LabelText.About"                   = "Sur";
 "LabelText.ContactUs"               = "Tous les droits sont réservés. Contactez-nous à";
 "LabelText.Name"                    = "Nom";
+"LabelText.Yield"                   = "Rendement";
+"LabelText.YieldOptions"            = "Options de Rendement";
 
 "Title.App"                         = "Chefbook";
 "Title.HowToUse"                    = "Comment Utiliser";

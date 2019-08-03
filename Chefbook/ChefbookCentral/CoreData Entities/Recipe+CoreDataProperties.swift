@@ -2,7 +2,7 @@
 //  Recipe+CoreDataProperties.swift
 //  Chefbook
 //
-//  Created by Clint Shank on 7/26/19.
+//  Created by Clint Shank on 8/2/19.
 //  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
 //
 //
@@ -18,12 +18,12 @@ extension Recipe {
     }
 
     @NSManaged public var guid: String?
+    @NSManaged public var imageName: String?
     @NSManaged public var ingredients: String?
     @NSManaged public var lastModified: NSDate?
     @NSManaged public var name: String?
     @NSManaged public var steps: String?
     @NSManaged public var yield: String?
-    @NSManaged public var yieldOptions: Int16
-    @NSManaged public var imageName: String?
+    @NSManaged public var yieldOptions: String?
 
 }
