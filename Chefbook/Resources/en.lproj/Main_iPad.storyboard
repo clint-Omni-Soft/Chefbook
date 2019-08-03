@@ -1,7 +1,60 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13142" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PAV-nj-rN2">
+    <device id="ipad10_5" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12042"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--RecipeEditorViewController-->
+        <scene sceneID="m5b-tJ-fZH">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="RecipeEditorViewController" storyboardName="Main_iPhone" referencedIdentifier="RecipeEditorViewController" id="Y6E-Qm-Ow1" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="g3G-dq-7IQ"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cyg-B7-wt2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="196" y="371"/>
+        </scene>
+        <!--Split View Controller-->
+        <scene sceneID="hGb-rj-LHn">
+            <objects>
+                <splitViewController id="PAV-nj-rN2" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="TzK-A5-j0e" kind="relationship" relationship="masterViewController" id="bbE-SU-Lgh"/>
+                        <segue destination="Ujl-ck-rGm" kind="relationship" relationship="detailViewController" id="cBv-mr-mOZ"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cvB-Cy-Fbc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-995" y="19"/>
+        </scene>
+        <!--NavigationController-->
+        <scene sceneID="0Ka-4c-aRB">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="NavigationController" storyboardName="Main_iPhone" referencedIdentifier="NavigationController" id="TzK-A5-j0e" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n15-Kl-D2X" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-535" y="-271"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="qhs-rZ-hNb">
+            <objects>
+                <navigationController id="Ujl-ck-rGm" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kIv-4F-bhV">
+                        <rect key="frame" x="0.0" y="20" width="791.5" height="50"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Y6E-Qm-Ow1" kind="relationship" relationship="rootViewController" id="KuX-HS-4rc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5gA-QN-iuC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-277" y="371"/>
+        </scene>
+    </scenes>
 </document>

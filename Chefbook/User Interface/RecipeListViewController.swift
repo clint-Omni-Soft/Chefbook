@@ -21,6 +21,16 @@ class RecipeListViewController: UIViewController,
 
     @IBOutlet weak var myTableView: UITableView!
     
+    lazy var recipeEditorViewController : RecipeEditorViewController =
+    {
+        let splitViewController            = parent?.parent as? UISplitViewController
+        let detailViewNavigationController = splitViewController?.viewControllers[1] as? UINavigationController
+        let detailViewController           = detailViewNavigationController?.viewControllers[0]
+        
+        
+        return (detailViewController as? RecipeEditorViewController)!
+    }()
+    
     
     
     // MARK: UIViewController Lifecycle Methods
@@ -240,17 +250,30 @@ extension RecipeListViewController: UITableViewDelegate
     private func launchEditorForRecipeAt( index: Int )
     {
         logVerbose( "[ %d ]", index )
-        if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController
+        
+        if UIDevice.current.userInterfaceIdiom == .pad
         {
-            recipeEditorVC.delegate               = self
-            recipeEditorVC.indexOfItemBeingEdited = index
-            recipeEditorVC.launchedFromDetailView = false
-
-            navigationController?.pushViewController( recipeEditorVC, animated: true )
+            recipeEditorViewController.delegate               = self        // recipeEditorViewController is a lazy var that we compute exactly once
+            recipeEditorViewController.indexOfItemBeingEdited = index
+            recipeEditorViewController.launchedFromMasterView = true
+            
+            NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
         }
         else
         {
-            logTrace( "ERROR: Could NOT load RecipeEditorViewController!" )
+            if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController
+            {
+                recipeEditorVC.delegate               = self
+                recipeEditorVC.indexOfItemBeingEdited = index
+                recipeEditorVC.launchedFromMasterView = false
+                
+                navigationController?.pushViewController( recipeEditorVC, animated: true )
+            }
+            else
+            {
+                logTrace( "ERROR: Could NOT load RecipeEditorViewController!" )
+            }
+
         }
         
     }

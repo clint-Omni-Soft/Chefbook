@@ -33,7 +33,7 @@ class RecipeEditorViewController: UIViewController,
     weak var delegate: RecipeEditorViewControllerDelegate?
     
     var     indexOfItemBeingEdited:     Int!                        // Set by delegate
-    var     launchedFromDetailView    = false                       // Set by delegate
+    var     launchedFromMasterView    = false                       // Set by delegate
 
     
     @IBOutlet weak var myTableView: UITableView!
@@ -93,6 +93,7 @@ class RecipeEditorViewController: UIViewController,
     private var     originalYield               = String()
     private var     originalYieldOptions        = String()
     private var     stepsText                   = String()
+    private var     waitingForNotification      = false
     private var     yield                       = String()
     private var     yieldOptions                = String()
 
@@ -109,7 +110,16 @@ class RecipeEditorViewController: UIViewController,
         preferredContentSize = CGSize( width: 320, height: 460 )
         myTableView.separatorStyle = .none
 
-        initializeVariables()
+        if UIDevice.current.userInterfaceIdiom == .pad
+        {
+            waitingForNotification = true
+            launchedFromMasterView = true
+        }
+        else
+        {
+            initializeVariables()
+        }
+        
     }
     
     
@@ -118,7 +128,7 @@ class RecipeEditorViewController: UIViewController,
         logTrace()
         super.viewWillAppear( animated )
         
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromDetailView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
+        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
                                                                   style: .plain,
                                                                   target: self,
                                                                   action: #selector( cancelBarButtonTouched ) )
@@ -127,6 +137,10 @@ class RecipeEditorViewController: UIViewController,
         NotificationCenter.default.addObserver( self,
                                                 selector: #selector( RecipeEditorViewController.recipesUpdated( notification: ) ),
                                                 name:     NSNotification.Name( rawValue: NOTIFICATION_RECIPES_UPDATED ),
+                                                object:   nil )
+        NotificationCenter.default.addObserver( self,
+                                                selector: #selector( RecipeEditorViewController.recipeSelected( notification: ) ),
+                                                name:     NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ),
                                                 object:   nil )
     }
     
@@ -199,9 +213,27 @@ class RecipeEditorViewController: UIViewController,
 
     // MARK: NSNotification Methods
     
+    @objc func recipeSelected( notification: NSNotification )
+    {
+        logTrace()
+        waitingForNotification = false
+        
+        initializeVariables()
+        
+        myTableView.reloadData()
+    }
+    
+    
     @objc func recipesUpdated( notification: NSNotification )
     {
         let     chefbookCentral = ChefbookCentral.sharedInstance
+        
+        
+        if waitingForNotification
+        {
+            logTrace( "ignorning ... waitingForNotification" )
+            return
+        }
         
         logVerbose( "recovering selectedRecipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
         indexOfItemBeingEdited = chefbookCentral.selectedRecipeIndex
@@ -400,7 +432,9 @@ class RecipeEditorViewController: UIViewController,
                      numberOfRowsInSection section: Int) -> Int
     {
 //        logTrace()
-        return CellIndexes.numberOfCells
+        let numberOfRows = waitingForNotification ? 0 : CellIndexes.numberOfCells
+        
+        return numberOfRows
     }
     
     
@@ -585,9 +619,11 @@ class RecipeEditorViewController: UIViewController,
     private func dismissView()
     {
         logTrace()
-        if launchedFromDetailView
+        if launchedFromMasterView
         {
-            dismiss( animated: true, completion: nil )
+            waitingForNotification = true
+            
+            myTableView.reloadData()
         }
         else
         {
