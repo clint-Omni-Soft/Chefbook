@@ -40,7 +40,7 @@ class RecipeListViewController: UIViewController,
         super.viewDidLoad()
         logTrace()
         
-        title = NSLocalizedString( "Title.RecipeList", comment: "Chefbook Recipe List" )
+        title = NSLocalizedString( "Title.RecipeList", comment: "Recipe List" )
     }
     
 

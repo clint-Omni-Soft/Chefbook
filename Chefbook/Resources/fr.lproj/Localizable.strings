@@ -47,11 +47,11 @@
 "LabelText.Yield"                   = "Rendement";
 "LabelText.YieldOptions"            = "Options de Rendement";
 
-"Title.App"                         = "Chefbook";
+"Title.App"                         = "My Chefbook";
 "Title.HowToUse"                    = "Comment Utiliser";
 "Title.Ingredients"                 = "Ingrédients";
 "Title.RecipeEditor"                = "Éditeur de Recettes";
-"Title.RecipeList"                  = "Chefbook Recettes";
+"Title.RecipeList"                  = "Recettes";
 "Title.Settings"                    = "Paramètres";
 "Title.Steps"                       = "Pas";
 
