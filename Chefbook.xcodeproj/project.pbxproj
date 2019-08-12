@@ -523,7 +523,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Release";
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chefbook/Chefbook-Prefix.pch";
 				INFOPLIST_FILE = Chefbook/Info.plist;
