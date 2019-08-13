@@ -28,7 +28,6 @@ class ChefbookCentral: NSObject
     weak var delegate:      ChefbookCentralDelegate?
 
     var didOpenDatabase       = false
-    var locationEstablished   = false
     var recipeArray           = [Recipe].init()
     var selectedRecipeIndex   = NO_SELECTION
 
