@@ -19,17 +19,17 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This allow us to capture images of your dishes.</string>
+	<string>This allows us to capture images of your dishes.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This allows us to add images to your photo library</string>
+	<string>This allows us to add images of your dishes to your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This allows us to access images in your photo library</string>
+	<string>This allows us to access images of dishes in your photo library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile~ipad</key>
