@@ -128,10 +128,7 @@ class RecipeEditorViewController: UIViewController,
         logTrace()
         super.viewWillAppear( animated )
         
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( title: ( launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
-                                                                  style: .plain,
-                                                                  target: self,
-                                                                  action: #selector( cancelBarButtonTouched ) )
+        configureBarButtonItem()
         myTableView.reloadData()
         
         NotificationCenter.default.addObserver( self,
@@ -218,6 +215,7 @@ class RecipeEditorViewController: UIViewController,
         logTrace()
         waitingForNotification = false
         
+        configureBarButtonItem()
         initializeVariables()
         
         myTableView.reloadData()
@@ -555,6 +553,15 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
+    private func configureBarButtonItem()
+    {
+        navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: ( launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
+                                                                                                   style: .plain,
+                                                                                                   target: self,
+                                                                                                   action: #selector( cancelBarButtonTouched ) ) )
+    }
+    
+
     private func confirmIntentToDiscardChanges()
     {
         logTrace()
@@ -623,6 +630,7 @@ class RecipeEditorViewController: UIViewController,
         {
             waitingForNotification = true
             
+            configureBarButtonItem()
             myTableView.reloadData()
         }
         else

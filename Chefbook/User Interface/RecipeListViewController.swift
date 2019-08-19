@@ -21,16 +21,23 @@ class RecipeListViewController: UIViewController,
 
     @IBOutlet weak var myTableView: UITableView!
     
-    lazy var recipeEditorViewController : RecipeEditorViewController =
-    {
-        let splitViewController            = parent?.parent as? UISplitViewController
-        let detailViewNavigationController = splitViewController?.viewControllers[1] as? UINavigationController
-        let detailViewController           = detailViewNavigationController?.viewControllers[0]
-        
-        
-        return (detailViewController as? RecipeEditorViewController)!
-    }()
     
+    private var recipeEditor       : RecipeEditorViewController!
+    private var recipeEditorLoaded = false
+    
+    private lazy var recipeEditorViewController : RecipeEditorViewController =
+    {
+        if !recipeEditorLoaded
+        {
+            let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+            
+            recipeEditor = detailNavigationViewController?.viewControllers[0] as? RecipeEditorViewController
+            recipeEditorLoaded = true
+        }
+        
+        return recipeEditor
+    }()
+
     
     
     // MARK: UIViewController Lifecycle Methods
@@ -40,7 +47,7 @@ class RecipeListViewController: UIViewController,
         super.viewDidLoad()
         logTrace()
         
-        title = NSLocalizedString( "Title.RecipeList", comment: "Recipe List" )
+        title = NSLocalizedString( "Title.RecipeList", comment: "Recipes" )
     }
     
 
@@ -99,6 +106,12 @@ class RecipeListViewController: UIViewController,
         // This approach allows a change in one to immediately be reflected in the other.
         
         myTableView.reloadData()
+        
+        if UIDevice.current.userInterfaceIdiom == .pad
+        {
+            loadExampleRecipeOnFirstTimeIn()
+        }
+
     }
     
     
@@ -126,6 +139,12 @@ class RecipeListViewController: UIViewController,
     {
         logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
         myTableView.reloadData()
+        
+        if UIDevice.current.userInterfaceIdiom == .phone
+        {
+            loadExampleRecipeOnFirstTimeIn()
+        }
+
     }
 
     
@@ -167,6 +186,33 @@ class RecipeListViewController: UIViewController,
                                                           action: #selector( addBarButtonItemTouched ) )
         
         navigationItem.rightBarButtonItem = addBarButtonItem
+    }
+    
+    
+    private func loadExampleRecipeOnFirstTimeIn()
+    {
+        let userDefaults = UserDefaults.standard
+        let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
+        
+        logVerbose( "dirtyFlag[ %@ ]", stringFor( dirtyFlag ) )
+        
+        if !dirtyFlag
+        {
+            userDefaults.set( true, forKey: "Dirty" )
+            let chefbookCentral = ChefbookCentral.sharedInstance
+            
+            if chefbookCentral.recipeArray.count == 0
+            {
+                chefbookCentral.addRecipe( name: "Example Recipe",
+                                           imageName: "",
+                                           ingredients: "1 lb. Bacon\n4 oz grated Parmesan",
+                                           steps: "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan",
+                                           yield: "12 strips",
+                                           yieldOptions: "1x" )
+            }
+
+        }
+
     }
     
 }
@@ -253,11 +299,19 @@ extension RecipeListViewController: UITableViewDelegate
         
         if UIDevice.current.userInterfaceIdiom == .pad
         {
-            recipeEditorViewController.delegate               = self        // recipeEditorViewController is a lazy var that we compute exactly once
-            recipeEditorViewController.indexOfItemBeingEdited = index
-            recipeEditorViewController.launchedFromMasterView = true
+            if recipeEditorViewController == recipeEditorViewController.navigationController?.visibleViewController
+            {
+                recipeEditorViewController.delegate               = self        // recipeEditorViewController is a lazy var that we compute exactly once
+                recipeEditorViewController.indexOfItemBeingEdited = index
+                recipeEditorViewController.launchedFromMasterView = true
+                
+                NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
+            }
+            else
+            {
+                logTrace( "recipeEditorViewController is NOT visible ... ignoring!" )
+            }
             
-            NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
         }
         else
         {

@@ -43,14 +43,20 @@
 
 "LabelText.About"                   = "Sur";
 "LabelText.ContactUs"               = "Tous les droits sont réservés. Contactez-nous à";
+"LableText.HowToUse01"              = "LISTE DES RECETTES\n\nAjouter une recette - Toucher le signe plus (+) bouton vous amène à l'éditeur de recettes où vous pouvez ajouter / modifier des informations sur cette recette.  Appuyez sur n’importe laquelle des recettes de la liste pour la charger dans l’éditeur de recettes.\n\n\n";
+"LableText.HowToUse02"              = "RÉDACTEUR DE RECETTE\n\nPermet de: (a) lui attribuer un nom, (b) associer une image à la recette et zoomer dessus, (c) spécifier le rendement, (d) fournir une liste d'ingrédients, ";
+"LableText.HowToUse03"              = "et (e) décrire les étapes pour produire le produit final. Il suffit de toucher l'un des liens bleus pour ajouter / modifier n'importe quel texte.\n\nREMARQUE: Si l’éditeur de recettes est masqué (c’est-à-dire que vous êtes en mode ZOOM dans l’image), vous ne pouvez pas sélectionner une autre recette tant que vous n'avez pas supprimé la vue superposée.\n\n\n";
+"LableText.HowToUse04"              = "RÉGLAGES\n\nTouchez n'importe quelle ligne de la table pour obtenir des informations / données de configuration sur cette application.\n\Sur - Nos coordonnées.\n\nComment Utiliser - Cette vue.\n\n\n";
 "LabelText.Name"                    = "Nom";
 "LabelText.Yield"                   = "Rendement";
 "LabelText.YieldOptions"            = "Options de Rendement";
 
+"Title.About"                       = "Sur";
 "Title.App"                         = "My Chefbook";
 "Title.HowToUse"                    = "Comment Utiliser";
 "Title.Ingredients"                 = "Ingrédients";
 "Title.RecipeEditor"                = "Éditeur de Recettes";
+"Title.RecipeImage"                 = "Image de recette";
 "Title.RecipeList"                  = "Recettes";
 "Title.Settings"                    = "Paramètres";
 "Title.Steps"                       = "Pas";

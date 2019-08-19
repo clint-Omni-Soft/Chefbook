@@ -43,14 +43,20 @@
 
 "LabelText.About"                   = "About";
 "LabelText.ContactUs"               = "All rights reserved.  Contact us at";
+"LableText.HowToUse01"              = "RECIPE LIST\n\nAdd a Recipe - Touching the plus sign (+) button will take you to the Recipe Editor where you can add/modify information about that recipe.  Tapping any of the recipes in the list will load it into the Recipe Editor\n\n\n";
+"LableText.HowToUse02"              = "RECIPE EDITOR\n\nProvides the ability to (a) assign it a name, (b) associate an image with the recipe and zoom in on it, (c) specify the yield, (d) provide an ingredients list, ";
+"LableText.HowToUse03"              = "and (e) describe the steps to produce the end product.  Just touch any of the blue links to add/modify any of the text.\n\nNOTE: If the Recipe Editor is hidden (i.e. - you are ZOOMed into the image), you cannot select a different recipe until you dismiss the overlaying view.\n\n\n";
+"LableText.HowToUse04"              = "SETTINGS\n\nTouch any populated row in the table to get information/configuration data about this app.\n\nAbout - Our contact information.\n\nHow to Use - This view.\n\n\n";
 "LabelText.Name"                    = "Name";
 "LabelText.Yield"                   = "Yield";
 "LabelText.YieldOptions"            = "Yield Options";
 
+"Title.About"                       = "About";
 "Title.App"                         = "My Chefbook";
 "Title.HowToUse"                    = "How to Use";
 "Title.Ingredients"                 = "Ingredients";
 "Title.RecipeEditor"                = "Recipe Editor";
+"Title.RecipeImage"                 = "Recipe Image";
 "Title.RecipeList"                  = "Recipes";
 "Title.Settings"                    = "Settings";
 "Title.Steps"                       = "Steps";

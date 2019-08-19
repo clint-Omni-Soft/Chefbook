@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F4010632230B0AEF00DA636A /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4010630230B0AEF00DA636A /* HowToUseViewController.swift */; };
+		F4010633230B0AEF00DA636A /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */; };
 		F458573122ECDCAE00506C8E /* RecipeImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */; };
 		F458573322ECE2BB00506C8E /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458573222ECE2BB00506C8E /* ImageViewController.swift */; };
 		F45D728222F4E35500B8BC58 /* RecipeYieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45D728122F4E35500B8BC58 /* RecipeYieldTableViewCell.swift */; };
 		F45D728622F4E73A00B8BC58 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45D728422F4E73A00B8BC58 /* Recipe+CoreDataProperties.swift */; };
 		F45D728822F4E81500B8BC58 /* RecipeYieldOptionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45D728722F4E81500B8BC58 /* RecipeYieldOptionsTableViewCell.swift */; };
+		F479C29B23075FF700998B4B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F479C29A23075FF700998B4B /* SettingsTableViewController.swift */; };
+		F482010723075769005C90E4 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F482010623075769005C90E4 /* TabBarViewController.swift */; };
 		F4AD56C322F200DA00EFC842 /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; };
 		F4AD56C522F20B4000EFC842 /* RecipeNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56C422F20B4000EFC842 /* RecipeNameTableViewCell.swift */; };
 		F4AD56C822F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56C722F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift */; };
@@ -50,11 +54,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F4010630230B0AEF00DA636A /* HowToUseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
+		F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeImageTableViewCell.swift; sourceTree = "<group>"; };
 		F458573222ECE2BB00506C8E /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F45D728122F4E35500B8BC58 /* RecipeYieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeYieldTableViewCell.swift; sourceTree = "<group>"; };
 		F45D728422F4E73A00B8BC58 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F45D728722F4E81500B8BC58 /* RecipeYieldOptionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeYieldOptionsTableViewCell.swift; sourceTree = "<group>"; };
+		F479C29A23075FF700998B4B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		F482010623075769005C90E4 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		F4AD56C422F20B4000EFC842 /* RecipeNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeNameTableViewCell.swift; sourceTree = "<group>"; };
 		F4AD56C722F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientsTableViewCell.swift; sourceTree = "<group>"; };
 		F4AD56CB22F24C0400EFC842 /* IngredientsEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsEditorViewController.swift; sourceTree = "<group>"; };
@@ -199,8 +207,12 @@
 		F4C5C0B922EB5ABE00B3CBA4 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */,
+				F4010630230B0AEF00DA636A /* HowToUseViewController.swift */,
 				F4AD56C622F21B8900EFC842 /* Recipe Editor */,
+				F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */,
+				F479C29A23075FF700998B4B /* SettingsTableViewController.swift */,
+				F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */,
+				F482010623075769005C90E4 /* TabBarViewController.swift */,
 				F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */,
 			);
 			path = "User Interface";
@@ -306,6 +318,7 @@
 				F458573122ECDCAE00506C8E /* RecipeImageTableViewCell.swift in Sources */,
 				F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */,
 				F45D728822F4E81500B8BC58 /* RecipeYieldOptionsTableViewCell.swift in Sources */,
+				F4010632230B0AEF00DA636A /* HowToUseViewController.swift in Sources */,
 				F4AD56D022F25C3100EFC842 /* RecipeStepsTableViewCell.swift in Sources */,
 				F45D728622F4E73A00B8BC58 /* Recipe+CoreDataProperties.swift in Sources */,
 				F4C5C0EF22EBBF0700B3CBA4 /* ChefbookDataModel.xcdatamodeld in Sources */,
@@ -316,8 +329,11 @@
 				F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */,
 				F4AD56C522F20B4000EFC842 /* RecipeNameTableViewCell.swift in Sources */,
 				F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */,
+				F482010723075769005C90E4 /* TabBarViewController.swift in Sources */,
 				F4AD56CC22F24C0400EFC842 /* IngredientsEditorViewController.swift in Sources */,
+				F4010633230B0AEF00DA636A /* SplashScreenViewController.swift in Sources */,
 				F458573322ECE2BB00506C8E /* ImageViewController.swift in Sources */,
+				F479C29B23075FF700998B4B /* SettingsTableViewController.swift in Sources */,
 				F4AD56CE22F25AE400EFC842 /* StepsEditorViewController.swift in Sources */,
 				F4C5C0F122EBC5ED00B3CBA4 /* RecipeEditorViewController.swift in Sources */,
 				F4AD56C822F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift in Sources */,

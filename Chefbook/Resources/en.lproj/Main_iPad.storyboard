@@ -32,10 +32,10 @@
             </objects>
             <point key="canvasLocation" x="-995" y="19"/>
         </scene>
-        <!--NavigationController-->
+        <!--TabBarViewController-->
         <scene sceneID="0Ka-4c-aRB">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="NavigationController" storyboardName="Main_iPhone" referencedIdentifier="NavigationController" id="TzK-A5-j0e" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="TabBarViewController" storyboardName="Main_iPhone" referencedIdentifier="TabBarViewController" id="TzK-A5-j0e" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n15-Kl-D2X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-535" y="-271"/>
