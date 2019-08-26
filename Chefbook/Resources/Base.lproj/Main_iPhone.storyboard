@@ -518,8 +518,8 @@
                     <tabBarItem key="tabBarItem" title="Settings" image="settings" selectedImage="settings" id="8eP-YG-ZNh"/>
                     <navigationItem key="navigationItem" id="INm-Ee-CIw"/>
                     <connections>
-                        <segue destination="HSB-Kr-ebx" kind="show" id="jWe-Em-XTh"/>
-                        <segue destination="wkC-cc-axo" kind="show" id="h3j-Jt-vTS"/>
+                        <segue destination="HSB-Kr-ebx" kind="show" identifier="SplashScreenViewController" id="jWe-Em-XTh"/>
+                        <segue destination="wkC-cc-axo" kind="show" identifier="HowToUseViewController" id="h3j-Jt-vTS"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fGn-UP-KJj" userLabel="First Responder" sceneMemberID="firstResponder"/>
