@@ -9,16 +9,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--RecipeEditorViewController-->
-        <scene sceneID="m5b-tJ-fZH">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="RecipeEditorViewController" storyboardName="Main_iPhone" referencedIdentifier="RecipeEditorViewController" id="Y6E-Qm-Ow1" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="g3G-dq-7IQ"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Cyg-B7-wt2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="196" y="371"/>
-        </scene>
         <!--Split View Controller-->
         <scene sceneID="hGb-rj-LHn">
             <objects>
@@ -48,9 +38,6 @@
                         <rect key="frame" x="0.0" y="20" width="791.5" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
-                    <connections>
-                        <segue destination="Y6E-Qm-Ow1" kind="relationship" relationship="rootViewController" id="KuX-HS-4rc"/>
-                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5gA-QN-iuC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

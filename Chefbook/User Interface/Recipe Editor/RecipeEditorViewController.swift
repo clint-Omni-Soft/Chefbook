@@ -9,14 +9,6 @@
 import UIKit
 
 
-protocol RecipeEditorViewControllerDelegate: class
-{
-    func recipeEditorViewController( recipeEditorViewController : RecipeEditorViewController,
-                                     didEditRecipe: Bool )
-}
-
-
-
 class RecipeEditorViewController: UIViewController,
                                   ChefbookCentralDelegate,
                                   IngredientsEditorViewControllerDelegate,
@@ -30,10 +22,7 @@ class RecipeEditorViewController: UIViewController,
 
 {
     // MARK: Public Variables
-    weak var delegate: RecipeEditorViewControllerDelegate?
-    
-    var     indexOfItemBeingEdited:     Int!                        // Set by delegate
-    var     launchedFromMasterView    = false                       // Set by delegate
+    var     indexOfItemBeingEdited:     Int!                        // Set by caller
 
     
     @IBOutlet weak var myTableView: UITableView!
@@ -113,7 +102,6 @@ class RecipeEditorViewController: UIViewController,
         if UIDevice.current.userInterfaceIdiom == .pad
         {
             waitingForNotification = true
-            launchedFromMasterView = true
         }
         else
         {
@@ -555,6 +543,8 @@ class RecipeEditorViewController: UIViewController,
     
     private func configureBarButtonItem()
     {
+        let launchedFromMasterView = UIDevice.current.userInterfaceIdiom == .pad
+
         navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: ( launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
                                                                                                    style: .plain,
                                                                                                    target: self,
@@ -562,30 +552,6 @@ class RecipeEditorViewController: UIViewController,
     }
     
 
-    private func confirmIntentToDiscardChanges()
-    {
-        logTrace()
-        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.AreYouSure", comment: "Are you sure you want to discard your changes?" ),
-                                                message: nil,
-                                                preferredStyle: .alert)
-        
-        let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .destructive )
-        { ( alertAction ) in
-            logTrace( "Yes Action" )
-            
-            self.dismissView()
-        }
-        
-        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No!" ), style: .cancel, handler: nil )
-        
-        
-        alert.addAction( yesAction )
-        alert.addAction( noAction  )
-        
-        present( alert, animated: true, completion: nil )
-    }
-    
-    
     private func dataChanged() -> Bool
     {
         var     dataChanged  = false
@@ -626,13 +592,14 @@ class RecipeEditorViewController: UIViewController,
     private func dismissView()
     {
         logTrace()
-        if launchedFromMasterView
+        if UIDevice.current.userInterfaceIdiom == .pad
         {
-            waitingForNotification = true
+            let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
             
-            configureBarButtonItem()
-            myTableView.reloadData()
-        }
+            
+            detailNavigationViewController?.visibleViewController?.view.frame = CGRect( x: 0, y: 0, width: 0, height: 0 )
+            navigationItem.leftBarButtonItem = nil
+       }
         else
         {
             navigationController?.popViewController( animated: true )
@@ -1232,6 +1199,7 @@ class RecipeEditorViewController: UIViewController,
             chefbookCentral.addRecipe( name: recipeName,
                                        imageName: imageName,
                                        ingredients: ingredientsText,
+                                       isFormulaType: false,
                                        steps: stepsText,
                                        yield: yield,
                                        yieldOptions: yieldOptions )
@@ -1241,12 +1209,13 @@ class RecipeEditorViewController: UIViewController,
             let     recipe = chefbookCentral.recipeArray[indexOfItemBeingEdited]
             
             
-            recipe.name         = recipeName
-            recipe.imageName    = imageName
-            recipe.ingredients  = ingredientsText
-            recipe.steps        = stepsText
-            recipe.yield        = yield
-            recipe.yieldOptions = yieldOptions
+            recipe.name             = recipeName
+            recipe.imageName        = imageName
+            recipe.ingredients      = ingredientsText
+            recipe.isFormulaType    = false
+            recipe.steps            = stepsText
+            recipe.yield            = yield
+            recipe.yieldOptions     = yieldOptions
             
             chefbookCentral.saveUpdatedRecipe( recipe: recipe )
         }

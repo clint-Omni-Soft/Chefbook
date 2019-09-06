@@ -102,6 +102,7 @@ class TabBarViewController: UITabBarController,
                 chefbookCentral.addRecipe( name: "Example Recipe",
                                            imageName: "",
                                            ingredients: "1 lb. Bacon\n4 oz grated Parmesan",
+                                           isFormulaType: false,
                                            steps: "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan",
                                            yield: "12 strips",
                                            yieldOptions: "1x" )

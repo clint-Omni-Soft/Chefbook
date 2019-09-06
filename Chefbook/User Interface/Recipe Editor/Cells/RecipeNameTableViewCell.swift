@@ -11,7 +11,10 @@ import UIKit
 
 class RecipeNameTableViewCell: UITableViewCell
 {
+    
     @IBOutlet weak var titleLabel: UILabel!
+    
+    
     
     // MARK: UITableViewCell Lifecycle Methods
     
@@ -21,6 +24,7 @@ class RecipeNameTableViewCell: UITableViewCell
         logTrace()
     }
 
+    
     override func setSelected(_ selected: Bool,
                                 animated: Bool )
     {

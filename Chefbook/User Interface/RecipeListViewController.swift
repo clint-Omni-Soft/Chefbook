@@ -9,15 +9,15 @@
 import UIKit
 
 class RecipeListViewController: UIViewController,
-                                ChefbookCentralDelegate,
-                                RecipeEditorViewControllerDelegate
+                                ChefbookCentralDelegate
 {
     
-    let     CELL_ID                     = "RecipeListViewControllerCell"
-    let     CELL_TAG_LABEL_NAME         = 11
-    let     CELL_TAG_IMAGE_VIEW         = 12
-    let     STORYBOARD_ID_RECIPE_EDITOR = "RecipeEditorViewController"
-    
+    let     CELL_ID                         = "RecipeListViewControllerCell"
+    let     CELL_TAG_LABEL_NAME             = 11
+    let     CELL_TAG_IMAGE_VIEW             = 12
+    let     STORYBOARD_ID_FORMULA_EDITOR    = "FormulaEditorViewController"
+    let     STORYBOARD_ID_RECIPE_EDITOR     = "RecipeEditorViewController"
+
 
     @IBOutlet weak var myTableView: UITableView!
     
@@ -25,19 +25,6 @@ class RecipeListViewController: UIViewController,
     private var recipeEditor       : RecipeEditorViewController!
     private var recipeEditorLoaded = false
     
-    private lazy var recipeEditorViewController : RecipeEditorViewController =
-    {
-        if !recipeEditorLoaded
-        {
-            let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
-            
-            recipeEditor = detailNavigationViewController?.viewControllers[0] as? RecipeEditorViewController
-            recipeEditorLoaded = true
-        }
-        
-        return recipeEditor
-    }()
-
     
     
     // MARK: UIViewController Lifecycle Methods
@@ -149,34 +136,85 @@ class RecipeListViewController: UIViewController,
 
     
     
-    // MARK: RecipeEditorViewControllerDelegate Methods
-    
-    func recipeEditorViewController( recipeEditorViewController: RecipeEditorViewController,
-                                     didEditRecipe: Bool)
-    {
-        logVerbose( "didEditRecipe[ %@ ]", stringFor( didEditRecipe ) )
-        recipeEditorViewController.delegate = self
-        
-        if didEditRecipe
-        {
-            myTableView.reloadData()
-        }
-
-    }
-    
-    
-    
     // MARK: Target / Action Methods
     
     @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem )
     {
         logTrace()
-        launchEditorForRecipeAt( index: NEW_RECIPE )
+        promptForRecipeType()
     }
 
     
     
     // MARK: Utility Methods
+    
+    private func launchFormulaEditorFor( index: Int )
+    {
+        logVerbose( "[ %d ]", index )
+        if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_FORMULA_EDITOR ) as? FormulaEditorViewController
+        {
+            formulaEditorVC.indexOfItemBeingEdited = index
+            
+            if UIDevice.current.userInterfaceIdiom == .pad
+            {
+                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+                
+                
+                detailNavigationViewController?.viewControllers = [formulaEditorVC]
+                
+                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute:
+                {
+                    NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
+                })
+
+            }
+            else
+            {
+                navigationController?.pushViewController( formulaEditorVC, animated: true )
+            }
+            
+        }
+        else
+        {
+            logTrace( "ERROR!  Could NOT load the FormulaEditorViewController!" )
+        }
+    }
+    
+    
+    private func launchRecipeEditorFor( index: Int )
+    {
+        logVerbose( "[ %d ]", index )
+        
+        if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController
+        {
+            recipeEditorVC.indexOfItemBeingEdited = index
+            
+            if UIDevice.current.userInterfaceIdiom == .pad
+            {
+                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+                
+                
+                detailNavigationViewController?.viewControllers = [recipeEditorVC]
+                
+                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute:
+                    {
+                        NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
+                })
+                
+            }
+            else
+            {
+                navigationController?.pushViewController( recipeEditorVC, animated: true )
+            }
+            
+        }
+        else
+        {
+            logTrace( "ERROR: Could NOT load RecipeEditorViewController!" )
+        }
+        
+    }
+    
     
     private func loadBarButtonItems()
     {
@@ -203,17 +241,51 @@ class RecipeListViewController: UIViewController,
             
             if chefbookCentral.recipeArray.count == 0
             {
-                chefbookCentral.addRecipe( name: "Example Recipe",
-                                           imageName: "",
-                                           ingredients: "1 lb. Bacon\n4 oz grated Parmesan",
-                                           steps: "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan",
-                                           yield: "12 strips",
-                                           yieldOptions: "1x" )
+                chefbookCentral.addRecipe( name         : "Standard Recipe Example",
+                                           imageName    : "",
+                                           ingredients  : "1 lb. Bacon\n4 oz grated Parmesan",
+                                           isFormulaType: false,
+                                           steps        : "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan",
+                                           yield        : "12 strips",
+                                           yieldOptions : "1x" )
             }
 
         }
 
     }
+    
+    
+    private func promptForRecipeType()
+    {
+        logTrace()
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ),
+                                                message: nil,
+                                                preferredStyle: .alert)
+        
+        let     standardAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Standard", comment: "Standard" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Standard Action" )
+            
+            self.launchRecipeEditorFor( index: NEW_RECIPE )
+        }
+        
+        let     formulaAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.BreadFormula", comment: "Bread Formula" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Formula Action" )
+            
+            self.launchFormulaEditorFor( index: NEW_RECIPE )
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        
+        alert.addAction( standardAction )
+        alert.addAction( formulaAction  )
+        alert.addAction( cancelAction   )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
     
 }
 
@@ -269,7 +341,19 @@ extension RecipeListViewController: UITableViewDataSource
         if editingStyle == .delete
         {
             logVerbose( "delete recipe at row [ %d ]", indexPath.row )
-            ChefbookCentral.sharedInstance.deleteRecipeAtIndex( index: indexPath.row )
+            if UIDevice.current.userInterfaceIdiom == .pad
+            {
+                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+                
+                
+                detailNavigationViewController?.viewControllers = []
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute:
+            {
+                ChefbookCentral.sharedInstance.deleteRecipeAtIndex( index: indexPath.row )
+            })
+
         }
         
     }
@@ -285,51 +369,15 @@ extension RecipeListViewController: UITableViewDelegate
         logVerbose( "[ %d ]", indexPath.row )
         tableView.deselectRow( at: indexPath, animated: false )
         
-        launchEditorForRecipeAt( index: indexPath.row )
-    }
-    
-    
-    
-    
-    // MARK: Utility Methods
-    
-    private func launchEditorForRecipeAt( index: Int )
-    {
-        logVerbose( "[ %d ]", index )
-        
-        if UIDevice.current.userInterfaceIdiom == .pad
+        if ChefbookCentral.sharedInstance.recipeArray[indexPath.row].isFormulaType
         {
-            if recipeEditorViewController == recipeEditorViewController.navigationController?.visibleViewController
-            {
-                recipeEditorViewController.delegate               = self        // recipeEditorViewController is a lazy var that we compute exactly once
-                recipeEditorViewController.indexOfItemBeingEdited = index
-                recipeEditorViewController.launchedFromMasterView = true
-                
-                NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
-            }
-            else
-            {
-                logTrace( "recipeEditorViewController is NOT visible ... ignoring!" )
-            }
-            
+            launchFormulaEditorFor( index: indexPath.row )
         }
         else
         {
-            if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController
-            {
-                recipeEditorVC.delegate               = self
-                recipeEditorVC.indexOfItemBeingEdited = index
-                recipeEditorVC.launchedFromMasterView = false
-                
-                navigationController?.pushViewController( recipeEditorVC, animated: true )
-            }
-            else
-            {
-                logTrace( "ERROR: Could NOT load RecipeEditorViewController!" )
-            }
-
+            launchRecipeEditorFor( index: indexPath.row )
         }
-        
+
     }
     
     

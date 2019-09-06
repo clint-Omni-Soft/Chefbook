@@ -33,8 +33,9 @@ class ChefbookCentral: NSObject
 
     
     // MARK: Private Variables
-    private let DATABASE_NAME        = "RecipeDB.sqlite"
-    private let ENTITY_NAME_RECIPE   = "Recipe"
+    private let DATABASE_NAME                = "RecipeDB.sqlite"
+    private let ENTITY_NAME_RECIPE           = "Recipe"
+    private let ENTITY_NAME_BREAD_INGREDIENT = "BreadIngredient"
     
     private var managedObjectContext : NSManagedObjectContext!
     private var selectedRecipeGuid   = ""
@@ -91,12 +92,13 @@ class ChefbookCentral: NSObject
     
     // MARK: Recipe Access/Modifier Methods (Public)
     
-    func addRecipe( name:         String,
-                    imageName:    String,
-                    ingredients:  String,
-                    steps:        String,
-                    yield:        String,
-                    yieldOptions: String )
+    func addRecipe( name            : String,
+                    imageName       : String,
+                    ingredients     : String,
+                    isFormulaType   : Bool,
+                    steps           : String,
+                    yield           : String,
+                    yieldOptions    : String )
     {
         if !self.didOpenDatabase
         {
@@ -111,14 +113,15 @@ class ChefbookCentral: NSObject
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
             
             
-            recipe.guid         = UUID().uuidString
-            recipe.imageName    = imageName
-            recipe.ingredients  = ingredients
-            recipe.lastModified = NSDate.init()
-            recipe.name         = name
-            recipe.steps        = steps
-            recipe.yield        = yield
-            recipe.yieldOptions = yieldOptions
+            recipe.guid             = UUID().uuidString
+            recipe.imageName        = imageName
+            recipe.ingredients      = ingredients
+            recipe.isFormulaType    = isFormulaType
+            recipe.lastModified     = NSDate.init()
+            recipe.name             = name
+            recipe.steps            = steps
+            recipe.yield            = yield
+            recipe.yieldOptions     = yieldOptions
 
             self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
             
@@ -126,6 +129,118 @@ class ChefbookCentral: NSObject
             self.refetchRecipesAndNotifyDelegate()
         }
         
+    }
+    
+    
+    func addFormulaRecipe( name          : String,
+                           yieldQuantity : Int,
+                           yieldWeight   : Int )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ][ %d ][ %d ]", name, yieldQuantity, yieldWeight )
+
+        persistentContainer.viewContext.perform
+        {
+            let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
+            
+            
+            recipe.guid                 = UUID().uuidString
+            recipe.isFormulaType        = true
+            recipe.lastModified         = NSDate.init()
+            recipe.name                 = name
+            recipe.formulaYieldQuantity = Int16( yieldQuantity )
+            recipe.formulaYieldWeight   = Int16( yieldWeight   )
+            
+            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
+
+            self.saveContext()
+            self.refetchRecipesAndNotifyDelegate()
+        }
+
+    }
+    
+    
+    func addIngredientToFormulaRecipeWith( index      : Int,
+                                           name       : String,
+                                           isFlour    : Bool,
+                                           percentage : Int,
+                                           weight     : Int )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ] @[ %d ] p[ %d ] w[ %d ] isFlour[ %@ ]", name, index, percentage, weight, stringFor( isFlour ) )
+        
+        persistentContainer.viewContext.perform
+        {
+            let     recipe          = self.recipeArray[self.selectedRecipeIndex]
+            let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
+            
+            
+            breadIngredient.index           = Int16( index )
+            breadIngredient.isFlour         = isFlour
+            breadIngredient.name            = name
+            breadIngredient.percentOfFlour  = Int16( percentage )
+            breadIngredient.weight          = Int16( weight     )
+            
+            recipe.addToBreadIngredients( breadIngredient )
+            
+            self.saveUpdatedRecipe( recipe: recipe )
+        }
+        
+    }
+    
+    
+    func deleteFormulaRecipeIngredientAt( index : Int )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %d ]", index )
+        
+        persistentContainer.viewContext.perform
+        {
+            let     recipe           = self.recipeArray[self.selectedRecipeIndex]
+            let     ingredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+            
+            
+                // First we sort the ingredients by their index value
+            var sortedIngredientsArray = ingredientsArray.sorted( by:
+                { (ingredient1, ingredient2) -> Bool in
+                
+                    ingredient1.index < ingredient2.index
+                })
+            
+
+            recipe.removeFromBreadIngredients( sortedIngredientsArray[index] )
+            sortedIngredientsArray.remove( at: index )
+            
+            if recipe.breadIngredients?.count != 0
+            {
+                // Now we need to renumber all the indexes and update the store with our sorted & renumbered array
+                for i in 0..<sortedIngredientsArray.count
+                {
+                    sortedIngredientsArray[i].index = Int16( i )
+                    recipe.removeFromBreadIngredients( sortedIngredientsArray[i] )
+                    recipe.addToBreadIngredients(      sortedIngredientsArray[i] )
+                }
+
+            }
+            
+            self.saveUpdatedRecipe( recipe: recipe )
+        }
+
     }
     
     
@@ -144,6 +259,7 @@ class ChefbookCentral: NSObject
             
             
             self.managedObjectContext.delete( recipe )
+            
             self.saveContext()
             self.refetchRecipesAndNotifyDelegate()
         }
@@ -564,6 +680,7 @@ let pinColorNameArray = [ NSLocalizedString( "PinColor.Black"    , comment:  "Bl
                           NSLocalizedString( "PinColor.Yellow"   , comment:  "Yellow"     )]
 
 
+let NEW_INGREDIENT                  = -3
 let NEW_RECIPE                      = -2
 let NO_SELECTION                    = -1
 let NOTIFICATION_RECIPE_SELECTED    = "RecipeSelected"
