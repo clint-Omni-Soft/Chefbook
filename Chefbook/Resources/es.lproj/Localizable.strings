@@ -44,7 +44,6 @@
 "ButtonTitle.Yes"                           = "Sí";
 
 "CellTitle.Flour"                           = "Harina";
-"CellTitle.FormulaYieldFormat"              = "Rinde %d artículos cada uno con un peso de %d g";
 "CellTitle.Ingredients"                     = "Ingredientes";
 "CellTitle.Name"                            = "Nombre";
 "CellTitle.Steps"                           = "Pasos";

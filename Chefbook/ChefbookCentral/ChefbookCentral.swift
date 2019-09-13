@@ -165,11 +165,9 @@ class ChefbookCentral: NSObject
     }
     
     
-    func addIngredientToFormulaRecipeWith( index      : Int,
-                                           name       : String,
-                                           isFlour    : Bool,
-                                           percentage : Int,
-                                           weight     : Int )
+    func addIngredientToFormulaRecipeAt( ingredientIndex : Int,
+                                         name            : String,
+                                         percentage      : Int )
     {
         if !self.didOpenDatabase
         {
@@ -177,7 +175,7 @@ class ChefbookCentral: NSObject
             return
         }
         
-        logVerbose( "[ %@ ] @[ %d ] p[ %d ] w[ %d ] isFlour[ %@ ]", name, index, percentage, weight, stringFor( isFlour ) )
+        logVerbose( "[ %@ ] index[ %d ] percentage[ %d ]", name, ingredientIndex, percentage )
         
         persistentContainer.viewContext.perform
         {
@@ -185,15 +183,16 @@ class ChefbookCentral: NSObject
             let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
             
             
-            breadIngredient.index           = Int16( index )
-            breadIngredient.isFlour         = isFlour
+            breadIngredient.index           = Int16( ingredientIndex )
+            breadIngredient.isFlour         = ingredientIndex == 0
             breadIngredient.name            = name
             breadIngredient.percentOfFlour  = Int16( percentage )
-            breadIngredient.weight          = Int16( weight     )
+            breadIngredient.weight          = 0
             
             recipe.addToBreadIngredients( breadIngredient )
             
-            self.saveUpdatedRecipe( recipe: recipe )
+            self.updateIngredientsIn( recipe: recipe )
+            self.saveUpdatedRecipe(   recipe: recipe )
         }
         
     }
@@ -238,7 +237,8 @@ class ChefbookCentral: NSObject
 
             }
             
-            self.saveUpdatedRecipe( recipe: recipe )
+            self.updateIngredientsIn( recipe: recipe )
+            self.saveUpdatedRecipe(   recipe: recipe )
         }
 
     }
@@ -303,6 +303,48 @@ class ChefbookCentral: NSObject
             self.refetchRecipesAndNotifyDelegate()
         }
         
+    }
+    
+    
+    func updateIngredientsIn( recipe: Recipe )
+    {
+        logTrace()
+        let     recipe           = recipeArray[selectedRecipeIndex]
+        let     ingredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+        var     totalPercentage  = 0
+
+        
+        // First we sort the ingredients by their index value
+        let sortedIngredientsArray = ingredientsArray.sorted( by:
+        { (ingredient1, ingredient2) -> Bool in
+            
+            ingredient1.index < ingredient2.index
+        })
+        
+        // Now we sum up all of the percentages
+        for ingredient in sortedIngredientsArray
+        {
+            totalPercentage += Int( ingredient.percentOfFlour )
+        }
+        
+        
+        let totalYieldWeight = Float( recipe.formulaYieldQuantity ) * Float( recipe.formulaYieldWeight )
+        let onePercent       = totalYieldWeight / Float( totalPercentage )
+        
+        
+        // Remove the current ingredients
+        for ingredient in sortedIngredientsArray
+        {
+            recipe.removeFromBreadIngredients( ingredient )
+        }
+        
+        // Now we assign the computed weights for the current yield for all of the ingredients
+        for ingredient in sortedIngredientsArray
+        {
+            ingredient.weight = Int16( Float( ingredient.percentOfFlour ) * onePercent )
+            recipe.addToBreadIngredients( ingredient )
+        }
+
     }
     
     

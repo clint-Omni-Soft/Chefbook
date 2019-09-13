@@ -11,20 +11,26 @@ import UIKit
 
 protocol FormulaIngredientTableViewCellDelegate
 {
-    func formulaIngredientTableViewCell( FormulaIngredientTableViewCell: FormulaIngredientTableViewCell,
-                                         requestingAdd: Bool )
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
+                                         requestingAdd                  : Bool )
+    
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
+                                         ingredientIndex                : Int,
+                                         editedIngredientName           : String,
+                                         editedPercentage               : String )
 }
 
 
 class FormulaIngredientTableViewCell: UITableViewCell
 {
 
-    @IBOutlet weak var addButton        : UIButton!
-    @IBOutlet weak var ingredientLabel  : UILabel!
-    @IBOutlet weak var percentageLabel  : UILabel!
-    @IBOutlet weak var quantityLabel    : UILabel!
+    @IBOutlet weak var addOrEditButton      : UIButton!
+    @IBOutlet weak var ingredientTextField  : UITextField!
+    @IBOutlet weak var percentageTextField  : UITextField!
+    @IBOutlet weak var weightLabel          : UILabel!
     
     
+
     // MARK: Public Variables
     
     var delegate : FormulaIngredientTableViewCellDelegate!
@@ -32,8 +38,10 @@ class FormulaIngredientTableViewCell: UITableViewCell
     
     // MARK: Private Variables
     
-    private var isFlour       = false
-    private var weightOfFlour = 0
+    private var inEditMode      = false
+    private var ingredientIndex = 0
+    private var isHeader        = false
+    private var weightOfFlour   = 0
     
     
     
@@ -54,10 +62,53 @@ class FormulaIngredientTableViewCell: UITableViewCell
     
     // MARK: Target/Action Methods
     
-    @IBAction func addButtonTouched(_ sender: Any)
+    @IBAction func addOrEditButtonTouched(_ sender: Any)
     {
         logTrace()
-        delegate.formulaIngredientTableViewCell( FormulaIngredientTableViewCell: self, requestingAdd: true )
+        
+        if isHeader
+        {
+            delegate.formulaIngredientTableViewCell( formulaIngredientTableViewCell : self,
+                                                     requestingAdd                  : true )
+        }
+        else
+        {
+            let     percentage = Int( percentageTextField.text ?? "0" )
+            
+            
+            if inEditMode && ( ( ingredientTextField.text?.isEmpty ?? true ) || ( percentageTextField.text?.isEmpty ?? true ) || ( percentage == 0 ) )
+            {
+                logTrace( "ERROR:  ingredientTextField?.isEmpty or percentage == 0" )
+                return
+            }
+            
+            logTrace()
+            let isFlour = ingredientIndex == 0
+            
+            
+            inEditMode = !inEditMode
+            
+            ingredientTextField.borderStyle = inEditMode ? .roundedRect : .none
+            ingredientTextField.isEnabled   = inEditMode
+            
+            percentageTextField.borderStyle = ( inEditMode && !isFlour ) ? .roundedRect : .none
+            percentageTextField.isEnabled   = ( inEditMode && !isFlour )
+            
+            addOrEditButton.setImage( UIImage(named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
+            
+            if !inEditMode
+            {
+                ingredientTextField.endEditing( true )
+                percentageTextField.endEditing( true )
+                
+                delegate.formulaIngredientTableViewCell( formulaIngredientTableViewCell : self,
+                                                         ingredientIndex                : ingredientIndex,
+                                                         editedIngredientName           : ingredientTextField.text ?? "",
+                                                         editedPercentage               : percentageTextField.text ?? "" )
+            }
+            
+        }
+        
     }
     
     
@@ -66,37 +117,49 @@ class FormulaIngredientTableViewCell: UITableViewCell
     
     func setupAsHeaderWith( delegate: FormulaIngredientTableViewCellDelegate )
     {
+        logTrace()
         self.delegate = delegate
+        self.isHeader = true
         
-        percentageLabel.text = "%"
-        ingredientLabel.text = NSLocalizedString( "LabelText.Ingredient", comment: "Ingredient" )
-        quantityLabel  .text = NSLocalizedString( "LabelText.Weight",     comment: "Weight"     )
+        ingredientTextField.text = NSLocalizedString( "LabelText.Ingredient", comment: "Ingredient" )
+        percentageTextField.text = "%"
+        weightLabel        .text = NSLocalizedString( "LabelText.Weight",     comment: "Weight"     )
 
-        setupCellAt( ingredientIndex: 0, isHeader: true )
+        setupCellAt( ingredientIndex: 0 )
     }
     
     
-    func initializeWithRecipeAt( index: Int, ingredientIndex: Int  )
+    func initializeWithRecipeAt( recipeIndex     : Int,
+                                 ingredientIndex : Int,
+                                 isNew           : Bool,
+                                 delegate        : FormulaIngredientTableViewCellDelegate )
     {
-        let recipe = ChefbookCentral.sharedInstance.recipeArray[index]
+        logTrace()
+        let isFlour = ingredientIndex == 0
         
-        setupCellAt( ingredientIndex: ingredientIndex, isHeader: false )
+        
+        self.delegate        = delegate
+        self.ingredientIndex = ingredientIndex
+        
+        setupCellAt( ingredientIndex: ingredientIndex )
 
-        if flourIngredientPresentIn( recipe: recipe )
+        if isNew
         {
-            let breadIngredient = breadIngredientAt( index: ingredientIndex, recipe: recipe )
-            let itemQuantity    = Float( weightOfFlour ) * ( Float( breadIngredient.percentOfFlour ) / 100 )
+            ingredientTextField.text = isFlour ? NSLocalizedString( "CellTitle.Flour", comment: "Flour" ) : "???"
+            percentageTextField.text = isFlour ? "100" : ""
+            weightLabel        .text = ""
             
-            percentageLabel.text = String( format: "%d", breadIngredient.percentOfFlour )
-            ingredientLabel.text = breadIngredient.name
-            quantityLabel  .text = String( format: "%d g", Int( itemQuantity ) )
+            addOrEditButtonTouched( self )
         }
         else
         {
-            isFlour = true
-            percentageLabel.text = "100"
-            ingredientLabel.text = NSLocalizedString( "CellTitle.Flour", comment: "Flour" )
-            quantityLabel  .text = ""
+            let recipe          = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+            let breadIngredient = breadIngredientAt( index: ingredientIndex, recipe: recipe )
+            
+            
+            ingredientTextField.text = breadIngredient.name
+            percentageTextField.text = String( format: "%d",   breadIngredient.percentOfFlour )
+            weightLabel        .text = String( format: "%d g", breadIngredient.weight )
         }
 
     }
@@ -105,11 +168,12 @@ class FormulaIngredientTableViewCell: UITableViewCell
     
     // MARK: Utility Methods
     
-    private func breadIngredientAt( index: Int, recipe : Recipe ) -> BreadIngredient
+    private func breadIngredientAt( index  : Int,
+                                    recipe : Recipe ) -> BreadIngredient
     {
         var     breadIngredient : BreadIngredient!
         
-        logVerbose( "[ %d ]", index )
+//        logVerbose( "[ %d ]", index )
         
         if recipe.breadIngredients?.count != 0
         {
@@ -117,7 +181,7 @@ class FormulaIngredientTableViewCell: UITableViewCell
             {
                 if ingredient.index == index
                 {
-                    logVerbose( "Found it ... [ %@ ]", ingredient.name ?? "Unknown" )
+//                    logVerbose( "Found it ... [ %@ ]", ingredient.name ?? "Unknown" )
                     breadIngredient = ingredient
                     break
                 }
@@ -130,50 +194,26 @@ class FormulaIngredientTableViewCell: UITableViewCell
     }
     
     
-    private func flourIngredientPresentIn( recipe : Recipe ) -> Bool
+    private func setupCellAt( ingredientIndex : Int )
     {
-        var     flourIsPresent = false
-        
-        if recipe.breadIngredients?.count != 0
-        {
-            for case let ingredient as BreadIngredient in recipe.breadIngredients!
-            {
-                if ingredient.isFlour
-                {
-                    flourIsPresent = true
-                    weightOfFlour = Int( ingredient.weight )
-                    break
-                }
-                
-            }
-            
-        }
-        
-        return flourIsPresent
-    }
-    
-    
-    private func setupCellAt( ingredientIndex : Int,
-                              isHeader        : Bool )
-    {
-        addButton.isHidden = !isHeader
-        
+//        logVerbose( "[ %d ]", ingredientIndex )
         if isHeader
         {
             backgroundColor = .lightGray
-        }
-        else if ingredientIndex == 0
-        {
-            backgroundColor = .yellow
+            
+            addOrEditButton.setImage( nil, for: .normal )
+            addOrEditButton.setTitle( "+", for: .normal )
         }
         else
         {
-            backgroundColor = .white
+            backgroundColor = ingredientIndex == 0 ? .yellow : .white
+            
+            addOrEditButton.setImage( UIImage( named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
+            addOrEditButton.setTitle( "", for: .normal )
         }
-        
-        percentageLabel.textColor = ( isHeader ? .black : .blue )
-        ingredientLabel.textColor = ( isHeader ? .black : .blue )
-        quantityLabel  .textColor = ( isHeader ? .black : .blue )
+
+        ingredientTextField.borderStyle = .none
+        percentageTextField.borderStyle = .none
     }
     
     

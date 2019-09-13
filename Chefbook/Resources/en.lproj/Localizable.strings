@@ -44,7 +44,6 @@
 "ButtonTitle.Yes"                           = "Yes";
 
 "CellTitle.Flour"                           = "Flour";
-"CellTitle.FormulaYieldFormat"              = "Yields %d items each weighing %dg";
 "CellTitle.Ingredients"                     = "Ingredients";
 "CellTitle.Name"                            = "Name";
 "CellTitle.Steps"                           = "Steps";

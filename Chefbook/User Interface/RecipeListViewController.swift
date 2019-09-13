@@ -153,7 +153,7 @@ class RecipeListViewController: UIViewController,
         logVerbose( "[ %d ]", index )
         if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_FORMULA_EDITOR ) as? FormulaEditorViewController
         {
-            formulaEditorVC.indexOfItemBeingEdited = index
+            formulaEditorVC.recipeIndex = index
             
             if UIDevice.current.userInterfaceIdiom == .pad
             {
