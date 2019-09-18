@@ -27,7 +27,7 @@ class FormulaYieldTableViewCell: UITableViewCell
     @IBOutlet weak var yieldLabel        : UILabel!
     
     
-    var delegate : FormulaYieldTableViewCellDelegate!
+    weak var delegate : FormulaYieldTableViewCellDelegate!
     
     private var inEditMode    = false
     private var yieldQuantity = ""
@@ -57,7 +57,7 @@ class FormulaYieldTableViewCell: UITableViewCell
                          weight   : Int,
                          delegate : FormulaYieldTableViewCellDelegate )
     {
-        logTrace()
+//        logTrace()
         let     isNew = ( quantity == 0 && weight == 0 )
         
         
@@ -94,7 +94,7 @@ class FormulaYieldTableViewCell: UITableViewCell
             return
         }
         
-        logTrace()
+//        logTrace()
         inEditMode = !inEditMode
         
         quantityTextField.borderStyle = inEditMode ? .roundedRect : .none

@@ -2,7 +2,7 @@
 //  Recipe+CoreDataProperties.swift
 //  Chefbook
 //
-//  Created by Clint Shank on 9/4/19.
+//  Created by Clint Shank on 9/16/19.
 //  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
 //
 //
@@ -17,6 +17,8 @@ extension Recipe {
         return NSFetchRequest<Recipe>(entityName: "Recipe")
     }
 
+    @NSManaged public var formulaYieldQuantity: Int16
+    @NSManaged public var formulaYieldWeight: Int64
     @NSManaged public var guid: String?
     @NSManaged public var imageName: String?
     @NSManaged public var ingredients: String?
@@ -26,9 +28,8 @@ extension Recipe {
     @NSManaged public var steps: String?
     @NSManaged public var yield: String?
     @NSManaged public var yieldOptions: String?
-    @NSManaged public var formulaYieldQuantity: Int16
-    @NSManaged public var formulaYieldWeight: Int16
     @NSManaged public var breadIngredients: NSSet?
+    @NSManaged public var flourIngredients: NSSet?
 
 }
 
@@ -46,5 +47,22 @@ extension Recipe {
 
     @objc(removeBreadIngredients:)
     @NSManaged public func removeFromBreadIngredients(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for flourIngredients
+extension Recipe {
+
+    @objc(addFlourIngredientsObject:)
+    @NSManaged public func addToFlourIngredients(_ value: BreadIngredient)
+
+    @objc(removeFlourIngredientsObject:)
+    @NSManaged public func removeFromFlourIngredients(_ value: BreadIngredient)
+
+    @objc(addFlourIngredients:)
+    @NSManaged public func addToFlourIngredients(_ values: NSSet)
+
+    @objc(removeFlourIngredients:)
+    @NSManaged public func removeFromFlourIngredients(_ values: NSSet)
 
 }

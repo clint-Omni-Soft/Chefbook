@@ -92,82 +92,9 @@ class ChefbookCentral: NSObject
     
     // MARK: Recipe Access/Modifier Methods (Public)
     
-    func addRecipe( name            : String,
-                    imageName       : String,
-                    ingredients     : String,
-                    isFormulaType   : Bool,
-                    steps           : String,
-                    yield           : String,
-                    yieldOptions    : String )
-    {
-        if !self.didOpenDatabase
-        {
-            logTrace( "ERROR!  Database NOT open yet!" )
-            return
-        }
-        
-        logVerbose( "[ %@ ][ %@ ][ %@ ]", name, ingredients, steps )
-
-        persistentContainer.viewContext.perform
-        {
-            let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
-            
-            
-            recipe.guid             = UUID().uuidString
-            recipe.imageName        = imageName
-            recipe.ingredients      = ingredients
-            recipe.isFormulaType    = isFormulaType
-            recipe.lastModified     = NSDate.init()
-            recipe.name             = name
-            recipe.steps            = steps
-            recipe.yield            = yield
-            recipe.yieldOptions     = yieldOptions
-
-            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
-            
-            self.saveContext()
-            self.refetchRecipesAndNotifyDelegate()
-        }
-        
-    }
-    
-    
-    func addFormulaRecipe( name          : String,
-                           yieldQuantity : Int,
-                           yieldWeight   : Int )
-    {
-        if !self.didOpenDatabase
-        {
-            logTrace( "ERROR!  Database NOT open yet!" )
-            return
-        }
-        
-        logVerbose( "[ %@ ][ %d ][ %d ]", name, yieldQuantity, yieldWeight )
-
-        persistentContainer.viewContext.perform
-        {
-            let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
-            
-            
-            recipe.guid                 = UUID().uuidString
-            recipe.isFormulaType        = true
-            recipe.lastModified         = NSDate.init()
-            recipe.name                 = name
-            recipe.formulaYieldQuantity = Int16( yieldQuantity )
-            recipe.formulaYieldWeight   = Int16( yieldWeight   )
-            
-            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
-
-            self.saveContext()
-            self.refetchRecipesAndNotifyDelegate()
-        }
-
-    }
-    
-    
-    func addIngredientToFormulaRecipeAt( ingredientIndex : Int,
-                                         name            : String,
-                                         percentage      : Int )
+    func addBreadIngredientToFormulaRecipeAt( ingredientIndex : Int,
+                                              name            : String,
+                                              percentage      : Int )
     {
         if !self.didOpenDatabase
         {
@@ -198,7 +125,172 @@ class ChefbookCentral: NSObject
     }
     
     
-    func deleteFormulaRecipeIngredientAt( index : Int )
+    func addFlourIngredientToFormulaRecipeAt( ingredientIndex : Int,
+                                              name            : String,
+                                              percentage      : Int )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ] index[ %d ] percentage[ %d ]", name, ingredientIndex, percentage )
+        
+        persistentContainer.viewContext.perform
+        {
+            let     recipe          = self.recipeArray[self.selectedRecipeIndex]
+            let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
+            
+            
+            breadIngredient.index           = Int16( ingredientIndex )
+            breadIngredient.isFlour         = true
+            breadIngredient.name            = name
+            breadIngredient.percentOfFlour  = Int16( percentage )
+            breadIngredient.weight          = 0
+            
+            recipe.addToFlourIngredients( breadIngredient )
+            
+            self.adjustFlourIngredientsPercentagesIn( recipe             : recipe,
+                                                      forNewIngredientAt : ingredientIndex )
+            self.updateIngredientsIn( recipe: recipe )
+            self.saveUpdatedRecipe(   recipe: recipe )
+        }
+        
+    }
+    
+    
+    func addFormulaRecipe( name          : String,
+                           yieldQuantity : Int,
+                           yieldWeight   : Int )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ][ %d ][ %d ]", name, yieldQuantity, yieldWeight )
+        
+        persistentContainer.viewContext.perform
+        {
+            let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
+            
+            
+            recipe.guid                 = UUID().uuidString
+            recipe.isFormulaType        = true
+            recipe.lastModified         = NSDate.init()
+            recipe.name                 = name
+            recipe.formulaYieldQuantity = Int16( yieldQuantity )
+            recipe.formulaYieldWeight   = Int64( yieldWeight   )
+            
+            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
+            
+            self.saveContext()
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func addRecipe( name            : String,
+                    imageName       : String,
+                    ingredients     : String,
+                    isFormulaType   : Bool,
+                    steps           : String,
+                    yield           : String,
+                    yieldOptions    : String )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ][ %@ ][ %@ ]", name, ingredients, steps )
+        
+        persistentContainer.viewContext.perform
+        {
+            let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
+            
+            
+            recipe.guid             = UUID().uuidString
+            recipe.imageName        = imageName
+            recipe.ingredients      = ingredients
+            recipe.isFormulaType    = isFormulaType
+            recipe.lastModified     = NSDate.init()
+            recipe.name             = name
+            recipe.steps            = steps
+            recipe.yield            = yield
+            recipe.yieldOptions     = yieldOptions
+            
+            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
+            
+            self.saveContext()
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func adjustFlourIngredientsPercentagesIn( recipe                        : Recipe,
+                                              forChangeInIngredientAt index : Int )
+    {
+        logTrace()
+        var     existingPercentageTotal = 0
+        let     flourIngredientsArray   = recipe.flourIngredients?.allObjects as! [BreadIngredient]
+        var     updatedPercentOfFlour   = 0
+        
+        
+        // Populate our variables
+        for ingredient in flourIngredientsArray
+        {
+            if ingredient.index == index
+            {
+                updatedPercentOfFlour = Int( ingredient.percentOfFlour )
+            }
+            else
+            {
+                existingPercentageTotal += Int( ingredient.percentOfFlour )
+            }
+            
+        }
+        
+        
+        var     totalAdjustedPercentage = 100 - updatedPercentOfFlour
+        let     scalingFactor           = ( Float( totalAdjustedPercentage ) / Float( existingPercentageTotal ) )
+        
+        
+        // Now we remove each ingredient, adjust its percentage and then add it back to the recipe
+        for ingredient in flourIngredientsArray
+        {
+            if ingredient.index != index        // We want to change the percentage of the everything except the one we just updated
+            {
+                recipe.removeFromFlourIngredients( ingredient )
+                
+                ingredient.percentOfFlour = Int16( round( Float( ingredient.percentOfFlour ) * scalingFactor ) )
+                totalAdjustedPercentage -= Int( ingredient.percentOfFlour )
+                
+                recipe.addToFlourIngredients( ingredient )
+            }
+            
+        }
+        
+        // Now we guarantee that the total will always be 100
+        if totalAdjustedPercentage != 0 && flourIngredientsArray.count != 0
+        {
+            let ingredient = flourIngredientsArray[0]
+            
+            recipe.removeFromFlourIngredients( ingredient )
+            
+            ingredient.percentOfFlour += Int16( totalAdjustedPercentage )
+            recipe.addToFlourIngredients( ingredient )
+        }
+        
+    }
+    
+    
+    func deleteFormulaRecipeBreadIngredientAt( index : Int )
     {
         if !self.didOpenDatabase
         {
@@ -210,37 +302,77 @@ class ChefbookCentral: NSObject
         
         persistentContainer.viewContext.perform
         {
-            let     recipe           = self.recipeArray[self.selectedRecipeIndex]
-            let     ingredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+            let     recipe                = self.recipeArray[self.selectedRecipeIndex]
+            let     breadIngredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
             
             
                 // First we sort the ingredients by their index value
-            var sortedIngredientsArray = ingredientsArray.sorted( by:
+            var sortedBreadIngredientsArray = breadIngredientsArray.sorted( by:
                 { (ingredient1, ingredient2) -> Bool in
                 
                     ingredient1.index < ingredient2.index
                 })
             
 
-            recipe.removeFromBreadIngredients( sortedIngredientsArray[index] )
-            sortedIngredientsArray.remove( at: index )
+            recipe.removeFromBreadIngredients( sortedBreadIngredientsArray[index] )
+            sortedBreadIngredientsArray.remove( at: index )
             
-            if recipe.breadIngredients?.count != 0
+            // Now we need to renumber all the indexes and update the store with our sorted & renumbered array
+            for i in 0..<sortedBreadIngredientsArray.count
             {
-                // Now we need to renumber all the indexes and update the store with our sorted & renumbered array
-                for i in 0..<sortedIngredientsArray.count
-                {
-                    sortedIngredientsArray[i].index = Int16( i )
-                    recipe.removeFromBreadIngredients( sortedIngredientsArray[i] )
-                    recipe.addToBreadIngredients(      sortedIngredientsArray[i] )
-                }
+                recipe.removeFromBreadIngredients( sortedBreadIngredientsArray[i] )
 
+                sortedBreadIngredientsArray[i].index = Int16( i )
+                recipe.addToBreadIngredients(sortedBreadIngredientsArray[i] )
             }
             
             self.updateIngredientsIn( recipe: recipe )
             self.saveUpdatedRecipe(   recipe: recipe )
         }
 
+    }
+    
+    
+    func deleteFormulaRecipeFlourIngredientAt( index : Int )
+    {
+        if !self.didOpenDatabase
+        {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %d ]", index )
+        
+        persistentContainer.viewContext.perform
+        {
+            let     recipe                = self.recipeArray[self.selectedRecipeIndex]
+            let     flourIngredientsArray = recipe.flourIngredients?.allObjects as! [BreadIngredient]
+            
+            
+            // First we sort the ingredients by their index value
+            var sortedFlourIngredientsArray = flourIngredientsArray.sorted( by:
+            { (ingredient1, ingredient2) -> Bool in
+                
+                ingredient1.index < ingredient2.index
+            })
+            
+            
+            recipe.removeFromFlourIngredients( sortedFlourIngredientsArray[index] )
+            sortedFlourIngredientsArray.remove( at: index )
+            
+            // Now we need to renumber all the indexes and update the store with our sorted & renumbered array
+            for i in 0..<sortedFlourIngredientsArray.count
+            {
+                recipe.removeFromFlourIngredients( sortedFlourIngredientsArray[i] )
+                
+                sortedFlourIngredientsArray[i].index = Int16( i )
+                recipe.addToFlourIngredients( sortedFlourIngredientsArray[i] )
+            }
+            
+            self.updateIngredientsIn( recipe: recipe )
+            self.saveUpdatedRecipe(   recipe: recipe )
+        }
+        
     }
     
     
@@ -309,46 +441,43 @@ class ChefbookCentral: NSObject
     func updateIngredientsIn( recipe: Recipe )
     {
         logTrace()
-        let     recipe           = recipeArray[selectedRecipeIndex]
-        let     ingredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
-        var     totalPercentage  = 0
+        let     breadIngredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+        let     flourIngredientsArray = recipe.flourIngredients?.allObjects as! [BreadIngredient]
+        var     totalPercentage       = 100 // We start with the fixed percentage of flour
+        
 
-        
-        // First we sort the ingredients by their index value
-        let sortedIngredientsArray = ingredientsArray.sorted( by:
-        { (ingredient1, ingredient2) -> Bool in
-            
-            ingredient1.index < ingredient2.index
-        })
-        
-        // Now we sum up all of the percentages
-        for ingredient in sortedIngredientsArray
+        // Add all of the bread percentages to the flour percentage
+        for ingredient in breadIngredientsArray
         {
             totalPercentage += Int( ingredient.percentOfFlour )
         }
         
         
-        let totalYieldWeight = Float( recipe.formulaYieldQuantity ) * Float( recipe.formulaYieldWeight )
-        let onePercent       = totalYieldWeight / Float( totalPercentage )
+        let     totalYieldWeight = Float( recipe.formulaYieldQuantity ) * Float( recipe.formulaYieldWeight )
+        let     onePercent       = totalYieldWeight / Float( totalPercentage )
         
         
-        // Remove the current ingredients
-        for ingredient in sortedIngredientsArray
+        // Now we assign new computed weights for the current yield for all of the ingredients
+        for flourIngredient in flourIngredientsArray
         {
-            recipe.removeFromBreadIngredients( ingredient )
+            recipe.removeFromFlourIngredients( flourIngredient )
+            
+            flourIngredient.weight = Int64( round( Float( flourIngredient.percentOfFlour ) * onePercent ) )
+            recipe.addToFlourIngredients( flourIngredient )
         }
         
-        // Now we assign the computed weights for the current yield for all of the ingredients
-        for ingredient in sortedIngredientsArray
+        for breadIngredient in breadIngredientsArray
         {
-            ingredient.weight = Int16( Float( ingredient.percentOfFlour ) * onePercent )
-            recipe.addToBreadIngredients( ingredient )
+            recipe.removeFromBreadIngredients( breadIngredient )
+            
+            breadIngredient.weight = Int64( round( Float( breadIngredient.percentOfFlour ) * onePercent ) )
+            recipe.addToBreadIngredients( breadIngredient )
         }
-
+        
     }
     
     
-    
+
     // MARK: Image Convenience Methods (Public)
     
     func deleteImageWith( name: String ) -> Bool
@@ -461,6 +590,49 @@ class ChefbookCentral: NSObject
     
 
     // MARK: Utility Methods
+    
+    private func adjustFlourIngredientsPercentagesIn( recipe                   : Recipe,
+                                                      forNewIngredientAt index : Int )
+    {
+        logTrace()
+        var     addedPercentOfFlour     = 0
+        var     existingPercentageTotal = 0
+        let     flourIngredientsArray   = recipe.flourIngredients?.allObjects as! [BreadIngredient]
+        
+        
+        // Populate our variables
+        for ingredient in flourIngredientsArray
+        {
+            if ingredient.index == index
+            {
+                addedPercentOfFlour = Int( ingredient.percentOfFlour )
+            }
+            else
+            {
+                existingPercentageTotal += Int( ingredient.percentOfFlour )
+            }
+            
+        }
+        
+        
+        let     scalingFactor = ( Float( 100 - addedPercentOfFlour ) / Float( existingPercentageTotal ) )
+        
+        
+        // Now we remove each ingredient, adjust its percentage and then add it back to the recipe
+        for ingredient in flourIngredientsArray
+        {
+            if ingredient.index != index        // We want to change the percentage of the everything except the one we just added
+            {
+                recipe.removeFromFlourIngredients( ingredient )
+                
+                ingredient.percentOfFlour = Int16( Float( ingredient.percentOfFlour ) * scalingFactor )
+                recipe.addToFlourIngredients( ingredient )
+            }
+            
+        }
+        
+    }
+    
     
     private func deleteDatabase()
     {

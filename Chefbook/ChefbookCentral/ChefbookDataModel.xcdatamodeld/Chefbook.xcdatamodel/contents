@@ -5,12 +5,13 @@
         <attribute name="isFlour" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="percentOfFlour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="weight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Recipe" inverseName="breadIngredients" inverseEntity="Recipe" syncable="YES"/>
+        <relationship name="recipeParent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Recipe" inverseName="flourIngredients" inverseEntity="Recipe" syncable="YES"/>
     </entity>
     <entity name="Recipe" representedClassName="Recipe" syncable="YES">
         <attribute name="formulaYieldQuantity" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="formulaYieldWeight" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="formulaYieldWeight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ingredients" optional="YES" attributeType="String" syncable="YES"/>
@@ -21,9 +22,10 @@
         <attribute name="yield" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="yieldOptions" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="breadIngredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BreadIngredient" inverseName="recipe" inverseEntity="BreadIngredient" syncable="YES"/>
+        <relationship name="flourIngredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BreadIngredient" inverseName="recipeParent" inverseEntity="BreadIngredient" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BreadIngredient" positionX="-12.75" positionY="3155.03125" width="128" height="135"/>
-        <element name="Recipe" positionX="-220.42578125" positionY="3079.69921875" width="128" height="225"/>
+        <element name="BreadIngredient" positionX="-39.53515625" positionY="3169.98828125" width="128" height="150"/>
+        <element name="Recipe" positionX="-220.42578125" positionY="3079.69921875" width="128" height="240"/>
     </elements>
 </model>

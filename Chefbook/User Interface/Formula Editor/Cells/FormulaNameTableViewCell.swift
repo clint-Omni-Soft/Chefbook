@@ -23,7 +23,7 @@ class FormulaNameTableViewCell: UITableViewCell
     @IBOutlet weak var nameTextField : UITextField!
     
     
-    var delegate : FormulaNameTableViewCellDelegate!
+    weak var delegate : FormulaNameTableViewCellDelegate!
     
     private var inEditMode = false
     private var recipeName = ""
@@ -51,7 +51,7 @@ class FormulaNameTableViewCell: UITableViewCell
     func initializeWith( formulaName : String,
                          delegate    : FormulaNameTableViewCellDelegate )
     {
-        logTrace()
+//        logTrace()
         let isNew = formulaName.isEmpty
         
         
@@ -80,7 +80,7 @@ class FormulaNameTableViewCell: UITableViewCell
             return
         }
         
-        logTrace()
+//        logTrace()
         inEditMode = !inEditMode
 
         nameTextField.borderStyle = inEditMode ? .roundedRect : .none
