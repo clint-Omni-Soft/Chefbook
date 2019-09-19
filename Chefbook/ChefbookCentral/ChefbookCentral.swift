@@ -152,7 +152,7 @@ class ChefbookCentral: NSObject
             recipe.addToFlourIngredients( breadIngredient )
             
             self.adjustFlourIngredientsPercentagesIn( recipe             : recipe,
-                                                      forNewIngredientAt : ingredientIndex )
+                                                      aroundIngredientAt : ingredientIndex )
             self.updateIngredientsIn( recipe: recipe )
             self.saveUpdatedRecipe(   recipe: recipe )
         }
@@ -233,8 +233,8 @@ class ChefbookCentral: NSObject
     }
     
     
-    func adjustFlourIngredientsPercentagesIn( recipe                        : Recipe,
-                                              forChangeInIngredientAt index : Int )
+    func adjustFlourIngredientsPercentagesIn( recipe                   : Recipe,
+                                              aroundIngredientAt index : Int )
     {
         logTrace()
         var     existingPercentageTotal = 0
@@ -591,49 +591,6 @@ class ChefbookCentral: NSObject
 
     // MARK: Utility Methods
     
-    private func adjustFlourIngredientsPercentagesIn( recipe                   : Recipe,
-                                                      forNewIngredientAt index : Int )
-    {
-        logTrace()
-        var     addedPercentOfFlour     = 0
-        var     existingPercentageTotal = 0
-        let     flourIngredientsArray   = recipe.flourIngredients?.allObjects as! [BreadIngredient]
-        
-        
-        // Populate our variables
-        for ingredient in flourIngredientsArray
-        {
-            if ingredient.index == index
-            {
-                addedPercentOfFlour = Int( ingredient.percentOfFlour )
-            }
-            else
-            {
-                existingPercentageTotal += Int( ingredient.percentOfFlour )
-            }
-            
-        }
-        
-        
-        let     scalingFactor = ( Float( 100 - addedPercentOfFlour ) / Float( existingPercentageTotal ) )
-        
-        
-        // Now we remove each ingredient, adjust its percentage and then add it back to the recipe
-        for ingredient in flourIngredientsArray
-        {
-            if ingredient.index != index        // We want to change the percentage of the everything except the one we just added
-            {
-                recipe.removeFromFlourIngredients( ingredient )
-                
-                ingredient.percentOfFlour = Int16( Float( ingredient.percentOfFlour ) * scalingFactor )
-                recipe.addToFlourIngredients( ingredient )
-            }
-            
-        }
-        
-    }
-    
-    
     private func deleteDatabase()
     {
         guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else
@@ -843,62 +800,20 @@ class ChefbookCentral: NSObject
 
 // MARK: Public Definitions & Utility Methods
 
-struct PinColors
+struct ForumlaTableSections
 {
-    static let pinBlack     = Int16( 0 )
-    static let pinBlue      = Int16( 1 )
-    static let pinBrown     = Int16( 2 )
-    static let pinCyan      = Int16( 3 )
-    static let pinDarkGray  = Int16( 4 )
-    static let pinGray      = Int16( 5 )
-    static let pinGreen     = Int16( 6 )
-    static let pinLightGray = Int16( 7 )
-    static let pinMagenta   = Int16( 8 )
-    static let pinOrange    = Int16( 9 )
-    static let pinPurple    = Int16( 10 )
-    static let pinRed       = Int16( 11 )
-    static let pinWhite     = Int16( 12 )
-    static let pinYellow    = Int16( 13 )
-};
+    static let nameAndYield = 0
+    static let flour        = 1
+    static let ingredients  = 2
+    static let none         = 3
+}
 
 
-let pinColorArray: [UIColor] = [ .black,
-                                 .blue,
-                                 .brown,
-                                 .cyan,
-                                 .darkGray,
-                                 .gray,
-                                 .green,
-                                 .lightGray,
-                                 .magenta,
-                                 .orange,
-                                 .purple,
-                                 .red,
-                                 .white,
-                                 .yellow ]
-
-
-let pinColorNameArray = [ NSLocalizedString( "PinColor.Black"    , comment:  "Black"      ),
-                          NSLocalizedString( "PinColor.Blue"     , comment:  "Blue"       ),
-                          NSLocalizedString( "PinColor.Brown"    , comment:  "Brown"      ),
-                          NSLocalizedString( "PinColor.Cyan"     , comment:  "Cyan"       ),
-                          NSLocalizedString( "PinColor.DarkGray" , comment:  "Dark Gray"  ),
-                          NSLocalizedString( "PinColor.Gray"     , comment:  "Gray"       ),
-                          NSLocalizedString( "PinColor.Green"    , comment:  "Green"      ),
-                          NSLocalizedString( "PinColor.LightGray", comment:  "Light Gray" ),
-                          NSLocalizedString( "PinColor.Magenta"  , comment:  "Magenta"    ),
-                          NSLocalizedString( "PinColor.Orange"   , comment:  "Orange"     ),
-                          NSLocalizedString( "PinColor.Purple"   , comment:  "Purple"     ),
-                          NSLocalizedString( "PinColor.Red"      , comment:  "Red"        ),
-                          NSLocalizedString( "PinColor.White"    , comment:  "White"      ),
-                          NSLocalizedString( "PinColor.Yellow"   , comment:  "Yellow"     )]
-
-
-let NEW_INGREDIENT                  = -3
-let NEW_RECIPE                      = -2
-let NO_SELECTION                    = -1
-let NOTIFICATION_RECIPE_SELECTED    = "RecipeSelected"
-let NOTIFICATION_RECIPES_UPDATED    = "RecipesUpdated"
+let     NEW_INGREDIENT                  = -3
+let     NEW_RECIPE                      = -2
+let     NO_SELECTION                    = -1
+let     NOTIFICATION_RECIPE_SELECTED    = "RecipeSelected"
+let     NOTIFICATION_RECIPES_UPDATED    = "RecipesUpdated"
 
 
 

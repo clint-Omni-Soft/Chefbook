@@ -80,13 +80,13 @@ class FormulaIngredientTableViewCell: UITableViewCell
         
         ingredientTextField.backgroundColor = .white
         
-        if myIndexPath.section == 1     // flour
+        if myIndexPath.section == ForumlaTableSections.flour
         {
             ingredientTextField.backgroundColor = inEditMode ? .white : .yellow
             percentageTextField.backgroundColor = inEditMode ? .white : .yellow
         }
         
-        if isNew && myIndexPath == IndexPath( item: 0, section: 1 )
+        if isNew && ( myIndexPath == IndexPath( item: 0, section: 1 ) )
         {
             percentageTextField.borderStyle = .none
             percentageTextField.isEnabled   = false
@@ -141,7 +141,7 @@ class FormulaIngredientTableViewCell: UITableViewCell
 //        logTrace()
         self.delegate = delegate
         self.isNew    = isNew
-        isFlour       = ingredientIndexPath.section == 1
+        isFlour       = ( ingredientIndexPath.section == ForumlaTableSections.flour )
         myIndexPath   = ingredientIndexPath
         
         setupCell()
@@ -161,8 +161,8 @@ class FormulaIngredientTableViewCell: UITableViewCell
             
             
             ingredientTextField.text = ingredient.name
-            percentageTextField.text = String( format: "%d",   ingredient.percentOfFlour )
-            weightLabel        .text = String( format: "%d g", ingredient.weight         )
+            percentageTextField.text = String( format : "%d",   ingredient.percentOfFlour )
+            weightLabel        .text = String( format : "%d g", ingredient.weight         )
         }
 
     }

@@ -94,7 +94,8 @@ class FormulaNameTableViewCell: UITableViewCell
 
             nameTextField.endEditing( true )
             
-            delegate.formulaNameTableViewCell( formulaNameTableViewCell: self, editedName: recipeName )
+            delegate.formulaNameTableViewCell( formulaNameTableViewCell : self,
+                                               editedName               : recipeName )
         }
 
     }

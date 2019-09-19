@@ -49,7 +49,6 @@ class FormulaEditorViewController: UIViewController,
     private struct StoryboardIds
     {
         static let imageViewer   = "ImageViewController"
-        static let sectionHeader = "SectionHeaderViewController"
     }
     
     private enum StateMachine
@@ -59,15 +58,7 @@ class FormulaEditorViewController: UIViewController,
         case ingredients
     }
     
-    private struct TableSections
-    {
-        static let nameAndYield = 0
-        static let flour        = 1
-        static let ingredients  = 2
-        static let none         = 3
-    }
-    
-    private var     newIngredientForSection = TableSections.none
+    private var     newIngredientForSection = ForumlaTableSections.none
     private var     currentState            = StateMachine.name
     private var     waitingForNotification  = false
     private var     weightOfFlour           = 0
@@ -95,7 +86,7 @@ class FormulaEditorViewController: UIViewController,
     }
     
 
-    override func viewWillAppear(_ animated: Bool)
+    override func viewWillAppear(_ animated: Bool )
     {
         logTrace()
         super.viewWillAppear( animated )
@@ -106,17 +97,17 @@ class FormulaEditorViewController: UIViewController,
         myTableView.reloadData()
         
         NotificationCenter.default.addObserver( self,
-                                                selector: #selector( FormulaEditorViewController.recipesUpdated( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: NOTIFICATION_RECIPES_UPDATED ),
-                                                object:   nil )
+                                                selector : #selector( FormulaEditorViewController.recipesUpdated( notification: ) ),
+                                                name     : NSNotification.Name( rawValue: NOTIFICATION_RECIPES_UPDATED ),
+                                                object   : nil )
         NotificationCenter.default.addObserver( self,
-                                                selector: #selector( FormulaEditorViewController.recipeSelected( notification: ) ),
-                                                name:     NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ),
-                                                object:   nil )
+                                                selector : #selector( FormulaEditorViewController.recipeSelected( notification: ) ),
+                                                name     : NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ),
+                                                object   : nil )
    }
     
     
-    override func viewWillDisappear(_ animated: Bool)
+    override func viewWillDisappear(_ animated: Bool )
     {
         logTrace()
         super.viewWillDisappear( animated )
@@ -174,8 +165,8 @@ class FormulaEditorViewController: UIViewController,
     
     // MARK: FormulaNameTableViewCellDelegate Methods
     
-    func formulaNameTableViewCell( formulaNameTableViewCell: FormulaNameTableViewCell,
-                                   editedName              : String )
+    func formulaNameTableViewCell( formulaNameTableViewCell : FormulaNameTableViewCell,
+                                   editedName               : String )
     {
         logTrace()
         processNameInput( name: editedName )
@@ -185,9 +176,9 @@ class FormulaEditorViewController: UIViewController,
     
     // MARK: FormulaYieldTableViewCellDelegate Methods
 
-    func formulaYieldTableViewCell( formulaYieldTableViewCell: FormulaYieldTableViewCell,
-                                    editedQuantity           : String,
-                                    editedWeight             : String )
+    func formulaYieldTableViewCell( formulaYieldTableViewCell : FormulaYieldTableViewCell,
+                                    editedQuantity            : String,
+                                    editedWeight              : String )
     {
         logTrace()
         processYieldInputs( yieldQuantity : editedQuantity,
@@ -246,7 +237,7 @@ class FormulaEditorViewController: UIViewController,
     
     // MARK: Target/Action Methods
     
-    @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem )
+    @IBAction func cancelBarButtonTouched( sender : UIBarButtonItem )
     {
         logTrace()
         dismissView()
@@ -256,7 +247,7 @@ class FormulaEditorViewController: UIViewController,
     
     // MARK: UIPopoverPresentationControllerDelegate Methods
     
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle
+    func adaptivePresentationStyle(for controller : UIPresentationController) -> UIModalPresentationStyle
     {
         return UIModalPresentationStyle.none
     }
@@ -265,24 +256,14 @@ class FormulaEditorViewController: UIViewController,
     
     // MARK: UITableViewDataSource Methods
     
-    func numberOfSections( in tableView: UITableView ) -> Int
+    func numberOfSections( in tableView : UITableView ) -> Int
     {
         var numberOfSections = 0
         
+        
         if !waitingForNotification
         {
-            switch currentState
-            {
-            case .name:
-                numberOfSections = 1
-                
-            case .yield:
-                numberOfSections = 1
-                
-            default:
-                numberOfSections = 3
-            }
-            
+            numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : 3
         }
         
 //        logVerbose( "[ %d ]", numberOfSections )
@@ -298,7 +279,7 @@ class FormulaEditorViewController: UIViewController,
         
         if !waitingForNotification
         {
-            if section == TableSections.nameAndYield
+            if section == ForumlaTableSections.nameAndYield
             {
                 switch currentState
                 {
@@ -313,17 +294,19 @@ class FormulaEditorViewController: UIViewController,
                 }
 
             }
-            else if section == TableSections.flour
+            else if section == ForumlaTableSections.flour
             {
                 let     indexOfNextFlourIngredient = ChefbookCentral.sharedInstance.recipeArray[recipeIndex].flourIngredients?.count ?? 0
                 
-                numberOfRows = indexOfNextFlourIngredient + ( newIngredientForSection == TableSections.flour ? 1 : 0 )
+                
+                numberOfRows = indexOfNextFlourIngredient + ( newIngredientForSection == ForumlaTableSections.flour ? 1 : 0 )
             }
-            else // section 2 ... TableSections.ingredients
+            else // section 2 ... ForumlaTableSections.ingredients
             {
                 let     indexOfNextBreadIngredient = ChefbookCentral.sharedInstance.recipeArray[recipeIndex].breadIngredients?.count ?? 0
                 
-                numberOfRows = indexOfNextBreadIngredient + ( newIngredientForSection == TableSections.ingredients ? 1 : 0 )
+                
+                numberOfRows = indexOfNextBreadIngredient + ( newIngredientForSection == ForumlaTableSections.ingredients ? 1 : 0 )
             }
 
         }
@@ -341,7 +324,7 @@ class FormulaEditorViewController: UIViewController,
         var     cell : UITableViewCell!
         
         
-        if indexPath.section == TableSections.nameAndYield
+        if indexPath.section == ForumlaTableSections.nameAndYield
         {
             switch indexPath.row
             {
@@ -350,11 +333,11 @@ class FormulaEditorViewController: UIViewController,
             case 1:
                 cell = loadFormulaYieldCell()
             default:
-                cell = loadFormulaIngredientCellFor( indexPath: indexPath )
+                cell = loadFormulaIngredientCellFor( indexPath: indexPath )     // Creates the % Name Weight header for the following sections
             }
             
         }
-        else
+        else    // flour & ingredients
         {
             cell = loadFormulaIngredientCellFor( indexPath: indexPath )
         }
@@ -366,7 +349,7 @@ class FormulaEditorViewController: UIViewController,
     func tableView(_ tableView              : UITableView,
                      canEditRowAt indexPath : IndexPath) -> Bool
     {
-        let canEdit = indexPath.section != TableSections.nameAndYield
+        let canEdit = indexPath.section != ForumlaTableSections.nameAndYield
         
         return canEdit
     }
@@ -386,11 +369,11 @@ class FormulaEditorViewController: UIViewController,
                 
                 chefbookCentral.selectedRecipeIndex = self.recipeIndex
                 
-                if indexPath.section == TableSections.flour
+                if indexPath.section == ForumlaTableSections.flour
                 {
                     chefbookCentral.deleteFormulaRecipeFlourIngredientAt( index: indexPath.row )
                 }
-                else    // TableSections.ingredients
+                else    // ForumlaTableSections.ingredients
                 {
                     chefbookCentral.deleteFormulaRecipeBreadIngredientAt( index: indexPath.row )
                 }
@@ -426,8 +409,9 @@ class FormulaEditorViewController: UIViewController,
     {
         let     sectionHeaderView = tableView.dequeueReusableHeaderFooterView( withIdentifier: SectionHeaderView.reuseIdentifier ) as? SectionHeaderView
         let     flourHeaderText   = String( format: "100     %@", NSLocalizedString( "CellTitle.Flour", comment: "Flour" ) )
-        let     title             = section == TableSections.flour ? flourHeaderText : NSLocalizedString( "CellTitle.Ingredients", comment: "Ingredients" )
+        let     title             = ( section == ForumlaTableSections.flour ) ? flourHeaderText : NSLocalizedString( "CellTitle.Ingredients", comment: "Ingredients" )
 
+        
         sectionHeaderView?.initWith( title : title,
                                      for   : section,
                                      with  : self )
@@ -440,9 +424,11 @@ class FormulaEditorViewController: UIViewController,
     
     private func configureBarButtonItem()
     {
-        let launchedFromMasterView = UIDevice.current.userInterfaceIdiom == .pad
+        let     launchedFromMasterView = UIDevice.current.userInterfaceIdiom == .pad
+        let     title                  = launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   )
         
-        navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: ( launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
+        
+        navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: title,
                                                                                                    style: .plain,
                                                                                                    target: self,
                                                                                                    action: #selector( cancelBarButtonTouched ) ) )
@@ -456,7 +442,7 @@ class FormulaEditorViewController: UIViewController,
         {
             let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
             
-            
+            // Move the visible viewController off the screen
             detailNavigationViewController?.visibleViewController?.view.frame = CGRect( x: 0, y: 0, width: 0, height: 0 )
             navigationItem.leftBarButtonItem = nil
         }
@@ -468,33 +454,11 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
-    private func flourIngredientPresentIn( recipe : Recipe ) -> Bool
-    {
-        var     flourIsPresent = false
-        
-        if recipe.breadIngredients?.count != 0
-        {
-            for case let ingredient as BreadIngredient in recipe.breadIngredients!
-            {
-                if ingredient.isFlour
-                {
-                    flourIsPresent = true
-                    weightOfFlour = Int( ingredient.weight )
-                    break
-                }
-                
-            }
-            
-        }
-        
-        return flourIsPresent
-    }
-    
-    
     private func ingredientAt( indexPath: IndexPath ) -> BreadIngredient
     {
         let     recipe           = ChefbookCentral.sharedInstance.recipeArray[self.recipeIndex]
-        let     ingredientsArray = indexPath.section == 1 ? recipe.flourIngredients?.allObjects as! [BreadIngredient] : recipe.breadIngredients?.allObjects as! [BreadIngredient]
+        let     dataSource       = ( indexPath.section == ForumlaTableSections.flour ) ? recipe.flourIngredients : recipe.breadIngredients
+        let     ingredientsArray = dataSource?.allObjects as! [BreadIngredient]
         var     breadIngredient  : BreadIngredient!
         
         
@@ -523,15 +487,8 @@ class FormulaEditorViewController: UIViewController,
         {
             let recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
             
-            if recipe.formulaYieldQuantity == 0 || recipe.formulaYieldWeight == 0
-            {
-                currentState = StateMachine.yield
-            }
-            else
-            {
-                currentState = StateMachine.ingredients
-            }
             
+            currentState = ( recipe.formulaYieldQuantity == 0 || recipe.formulaYieldWeight == 0 ) ? .yield : .ingredients
         }
         
     }
@@ -546,11 +503,11 @@ class FormulaEditorViewController: UIViewController,
         frame.size.height = .leastNormalMagnitude
 
         myTableView.contentInsetAdjustmentBehavior = .never
-        myTableView.separatorStyle  = .none
-        myTableView.tableHeaderView = UIView( frame: frame )
-        myTableView.tableFooterView = UIView( frame: frame )
+        myTableView.separatorStyle                 = .none
+        myTableView.tableHeaderView                = UIView( frame: frame )
+        myTableView.tableFooterView                = UIView( frame: frame )
         
-        myTableView.register( SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier )   // programmatic
+        myTableView.register( SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier )   // this form is required for programmatic header construction
     }
     
     
@@ -651,16 +608,17 @@ class FormulaEditorViewController: UIViewController,
 //        logVerbose( "section[ %d ] row[ %d ]", indexPath.section, indexPath.row )
         let     formulaIngredientCell = cell as! FormulaIngredientTableViewCell
         
-        if indexPath.section == TableSections.nameAndYield
+        if indexPath.section == ForumlaTableSections.nameAndYield
         {
             formulaIngredientCell.setupAsHeader()
         }
         else
         {
             let     recipe             = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
-            let     dataSource         = indexPath.section == TableSections.flour ? recipe.flourIngredients : recipe.breadIngredients
+            let     dataSource         = indexPath.section == ForumlaTableSections.flour ? recipe.flourIngredients : recipe.breadIngredients
             let     lastIngredientRow  = dataSource?.count ?? 0
             let     isNewIngredientRow = newIngredientForSection == indexPath.section && lastIngredientRow == indexPath.row
+            
             
             formulaIngredientCell.initializeWithRecipeAt( recipeIndex         : recipeIndex,
                                                           ingredientIndexPath : indexPath,
@@ -688,7 +646,6 @@ class FormulaEditorViewController: UIViewController,
         
         formulaNameCell.initializeWith( formulaName : recipeName,
                                         delegate    : self )
-        
         return cell
     }
     
@@ -715,7 +672,6 @@ class FormulaEditorViewController: UIViewController,
             numberOfLoaves = Int( recipe.formulaYieldQuantity )
             loafWeight     = Int( recipe.formulaYieldWeight   )
         }
-        
         
         formulaYieldCell.initializeWith( quantity : numberOfLoaves,
                                          weight   : loafWeight,
@@ -748,7 +704,7 @@ class FormulaEditorViewController: UIViewController,
                 
                 if isNew
                 {
-                    if ingredientIndexPath.section == TableSections.flour
+                    if ingredientIndexPath.section == ForumlaTableSections.flour
                     {
                         chefbookCentral.addFlourIngredientToFormulaRecipeAt( ingredientIndex : ( chefbookCentral.recipeArray[self.recipeIndex].flourIngredients?.count ?? 0 ),
                                                                              name            : newName,
@@ -761,14 +717,13 @@ class FormulaEditorViewController: UIViewController,
                                                                              percentage      : Int( myPercentOfFlour ) )
                     }
 
-                    newIngredientForSection = TableSections.none
+                    newIngredientForSection = ForumlaTableSections.none
                 }
                 else
                 {
-                    let     ingredient = ingredientAt( indexPath: ingredientIndexPath )
-                    let     recipe     = chefbookCentral.recipeArray[recipeIndex]
-                    let     updatePercentages =  ingredient.percentOfFlour != Int16( myPercentOfFlour )
-                    
+                    let     ingredient        = ingredientAt( indexPath: ingredientIndexPath )
+                    let     recipe            = chefbookCentral.recipeArray[recipeIndex]
+                    let     updatePercentages = ingredient.percentOfFlour != Int16( myPercentOfFlour )
                     
                     
                     ingredient.name           = newName
@@ -776,8 +731,8 @@ class FormulaEditorViewController: UIViewController,
                     
                     if updatePercentages
                     {
-                        chefbookCentral.adjustFlourIngredientsPercentagesIn( recipe                  : recipe,
-                                                                             forChangeInIngredientAt : ingredientIndexPath.row )
+                        chefbookCentral.adjustFlourIngredientsPercentagesIn( recipe             : recipe,
+                                                                             aroundIngredientAt : ingredientIndexPath.row )
                     }
                     
                     chefbookCentral.updateIngredientsIn( recipe: recipe )
@@ -827,7 +782,7 @@ class FormulaEditorViewController: UIViewController,
                 {
                     let     recipe = chefbookCentral.recipeArray[recipeIndex]
 
-                    recipe.name  = myName
+                    recipe.name = myName
                     
                     chefbookCentral.saveUpdatedRecipe( recipe: recipe )
                 }
@@ -867,6 +822,7 @@ class FormulaEditorViewController: UIViewController,
         currentState = StateMachine.ingredients
         
         chefbookCentral.selectedRecipeIndex = recipeIndex
+        
         chefbookCentral.updateIngredientsIn( recipe: recipe )
         chefbookCentral.saveUpdatedRecipe(   recipe: recipe )
     }

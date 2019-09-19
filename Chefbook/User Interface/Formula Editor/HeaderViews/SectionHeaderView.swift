@@ -20,33 +20,31 @@ protocol SectionHeaderViewDelegate : class
 
 class SectionHeaderView: UITableViewHeaderFooterView
 {
+    // MARK: Public Variables
+    
     static let reuseIdentifier : String = String( describing: self )
-    static var nib             : UINib
-    {
-        logVerbose( "[ %@ ]", String( describing: self ) )
-        return UINib( nibName: String( describing: self ), bundle: nil )
-    }
+    static var nib             : UINib { return UINib( nibName: reuseIdentifier, bundle: nil ) }
 
 
     // MARK: Private Variables
-    private weak var delegate : SectionHeaderViewDelegate!
-    private      var section  = 1
     
-    
-    
-    // MARK: Research Area
-    var addButton  : UIButton!
-    var titleLabel : UILabel!
+    private      var addButton  : UIButton!
+    private weak var delegate   : SectionHeaderViewDelegate!
+    private      var section    = 1
+    private      var titleLabel : UILabel!
 
+    
+    // MARK: UITableViewHeaderFooterView Lifecycle Methods
+    
     override init( reuseIdentifier: String? )
     {
         logTrace()
-        super.init(reuseIdentifier: reuseIdentifier)
+        super.init( reuseIdentifier: reuseIdentifier )
         
         addButton = UIButton.init( type: .system )
         
         addButton.addTarget( self, action: #selector( addButtonTouched ), for: .touchUpInside )
-        addButton.setTitle( "+", for: .normal )
+        addButton.setTitle(  "+", for: .normal )
         addButton.titleLabel?.font = .systemFont( ofSize: 24 )
 
         contentView.addSubview( addButton )
@@ -59,6 +57,7 @@ class SectionHeaderView: UITableViewHeaderFooterView
         addButton.trailingAnchor.constraint( equalTo: contentView.layoutMarginsGuide.trailingAnchor ).isActive = true
     }
 
+    
     required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
