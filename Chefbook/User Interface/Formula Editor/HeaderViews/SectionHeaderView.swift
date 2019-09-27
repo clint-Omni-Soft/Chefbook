@@ -10,16 +10,15 @@ import UIKit
 
 
 
-protocol SectionHeaderViewDelegate : class
-{
+protocol SectionHeaderViewDelegate : class {
+    
     func sectionHeaderView( sectionHeaderView        : SectionHeaderView,
                             didRequestAddFor section : Int )
 }
 
 
 
-class SectionHeaderView: UITableViewHeaderFooterView
-{
+class SectionHeaderView: UITableViewHeaderFooterView {
     // MARK: Public Variables
     
     static let reuseIdentifier : String = String( describing: self )
@@ -36,8 +35,7 @@ class SectionHeaderView: UITableViewHeaderFooterView
     
     // MARK: UITableViewHeaderFooterView Lifecycle Methods
     
-    override init( reuseIdentifier: String? )
-    {
+    override init( reuseIdentifier: String? ) {
         logTrace()
         super.init( reuseIdentifier: reuseIdentifier )
         
@@ -58,8 +56,7 @@ class SectionHeaderView: UITableViewHeaderFooterView
     }
 
     
-    required init?(coder aDecoder: NSCoder)
-    {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -67,8 +64,7 @@ class SectionHeaderView: UITableViewHeaderFooterView
     
     // MARK: Target/Action Methods
     
-    @IBAction func addButtonTouched(_ sender: Any )
-    {
+    @IBAction func addButtonTouched(_ sender: Any ) {
         logVerbose( "section[ %d ]", section )
         delegate.sectionHeaderView( sectionHeaderView : self,
                                     didRequestAddFor  : section )
@@ -80,8 +76,7 @@ class SectionHeaderView: UITableViewHeaderFooterView
     
     func initWith( title         : String,
                    for section   : Int,
-                   with delegate : SectionHeaderViewDelegate )
-    {
+                   with delegate : SectionHeaderViewDelegate ) {
 //        logTrace()
         self.delegate   = delegate
         self.section    = section

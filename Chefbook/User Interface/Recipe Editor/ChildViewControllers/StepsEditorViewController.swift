@@ -9,19 +9,17 @@
 import UIKit
 
 
-protocol StepsEditorViewControllerDelegate: class
-{
+protocol StepsEditorViewControllerDelegate: class {
+    
     func stepsEditorViewController( stepsEditorViewController : StepsEditorViewController,
-                                    didEditSteps: Bool )
+                                    didEditSteps              : Bool )
 }
 
 
 
-class StepsEditorViewController: UIViewController
-{
+class StepsEditorViewController: UIViewController {
+    
     @IBOutlet weak var myTextView: UITextView!
-    
-    
     
     weak var delegate : StepsEditorViewControllerDelegate?
     
@@ -31,8 +29,7 @@ class StepsEditorViewController: UIViewController
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
         
@@ -40,8 +37,7 @@ class StepsEditorViewController: UIViewController
     }
     
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
         
@@ -49,13 +45,12 @@ class StepsEditorViewController: UIViewController
     }
     
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
+    override func viewWillDisappear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
         
-        if myTextView.text != steps
-        {
+        if myTextView.text != steps {
+            
             steps = myTextView.text
             delegate?.stepsEditorViewController( stepsEditorViewController: self,
                                                  didEditSteps: true )

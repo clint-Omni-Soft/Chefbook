@@ -11,13 +11,12 @@ import UIKit
 
 
 
-class SettingsTableViewController: UITableViewController
-{
+class SettingsTableViewController: UITableViewController {
+    
     let     CELL_IDENTIFIER             = "SettingsTableViewControllerCell"
     let     STORYBOARD_ID_HOW_TO_USE    = "HowToUseViewController"
     let     STORYBOARD_ID_SPLASH_SCREEN = "SplashScreenViewController"
 
-    
     
     private var rowTitleArray   = [String].init()
     
@@ -25,8 +24,7 @@ class SettingsTableViewController: UITableViewController
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad()      {
         logTrace()
         super.viewDidLoad()
 
@@ -37,8 +35,7 @@ class SettingsTableViewController: UITableViewController
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
@@ -47,9 +44,9 @@ class SettingsTableViewController: UITableViewController
     
     // MARK: UITableViewDataSource Methods
 
-    override func tableView(_ tableView: UITableView,
-                              cellForRowAt indexPath: IndexPath ) -> UITableViewCell
-    {
+    override func tableView(_ tableView              : UITableView,
+                              cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell( withIdentifier: CELL_IDENTIFIER,
                                                   for: indexPath)
         
@@ -59,9 +56,9 @@ class SettingsTableViewController: UITableViewController
     }
     
     
-    override func tableView(_ tableView: UITableView,
-                              numberOfRowsInSection section: Int) -> Int
-    {
+    override func tableView(_ tableView                     : UITableView,
+                              numberOfRowsInSection section : Int ) -> Int {
+        
         return rowTitleArray.count
     }
     
@@ -69,17 +66,16 @@ class SettingsTableViewController: UITableViewController
     
     // MARK: - UITableViewDelegate Methods
     
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath )
-    {
+    override func tableView(_ tableView                : UITableView,
+                              didSelectRowAt indexPath : IndexPath ) {
         logTrace()
-        tableView.deselectRow( at: indexPath,
-                               animated: false )
+        tableView.deselectRow( at       : indexPath,
+                               animated : false )
         
         switch indexPath.row
         {
-        case 0:     showViewController( storyboardId: STORYBOARD_ID_SPLASH_SCREEN );      break
-        case 1:     showViewController( storyboardId: STORYBOARD_ID_HOW_TO_USE    );      break
+        case 0:     showViewController( storyboardId: STORYBOARD_ID_SPLASH_SCREEN )
+        case 1:     showViewController( storyboardId: STORYBOARD_ID_HOW_TO_USE    )
             
         default:    break
         }
@@ -90,16 +86,9 @@ class SettingsTableViewController: UITableViewController
     
     // MARK: Utility Methods
     
-    private func description() -> String
-    {
-        return "SettingsTableViewController"
-    }
-    
-    
-    private func showViewController( storyboardId: String )
-    {
-        let     viewController = iPhoneViewControllerWithStoryboardId( storyboardId: storyboardId )
+    private func showViewController( storyboardId: String ) {
         
+        let     viewController = iPhoneViewControllerWithStoryboardId( storyboardId: storyboardId )
         
         navigationController?.show( viewController, sender: self )
     }

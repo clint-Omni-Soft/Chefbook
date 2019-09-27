@@ -9,19 +9,18 @@
 import UIKit
 
 
-protocol FormulaNameTableViewCellDelegate: class
-{
+protocol FormulaNameTableViewCellDelegate: class {
+    
     func formulaNameTableViewCell( formulaNameTableViewCell : FormulaNameTableViewCell,
                                    editedName               : String )
 }
 
 
-class FormulaNameTableViewCell: UITableViewCell
-{
+class FormulaNameTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var editButton    : UIButton!
-    @IBOutlet weak var nameTextField : UITextField!
-    
+    @IBOutlet weak var editButton          : UIButton!
+    @IBOutlet weak var invisibleNameButton : UIButton!
+    @IBOutlet weak var nameTextField       : UITextField!
     
     weak var delegate : FormulaNameTableViewCellDelegate!
     
@@ -32,16 +31,14 @@ class FormulaNameTableViewCell: UITableViewCell
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
     }
 
     
     override func setSelected(_ selected: Bool,
-                                animated: Bool )
-    {
-        super.setSelected( false, animated: animated )
+                                animated: Bool ) {
+        super.setSelected( false, animated: false )
     }
     
     
@@ -49,33 +46,30 @@ class FormulaNameTableViewCell: UITableViewCell
     // MARK: Public Initializer
     
     func initializeWith( formulaName : String,
-                         delegate    : FormulaNameTableViewCellDelegate )
-    {
+                         delegate    : FormulaNameTableViewCellDelegate ) {
 //        logTrace()
-        let isNew = formulaName.isEmpty
-        
+        let     isNew = formulaName.isEmpty
         
         inEditMode    = isNew
         recipeName    = formulaName
         self.delegate = delegate
         
-        nameTextField.borderStyle = isNew ? .roundedRect : .none
-        nameTextField.isEnabled   = isNew
-        nameTextField.placeholder = isNew ? "Enter Name" : ""
+        editButton.setImage( UIImage( named: "checkmark" ), for: .normal )
+        editButton.setTitle( "", for: .normal )
+        
+        nameTextField.placeholder = inEditMode ? "Enter Name" : ""
         nameTextField.text        = recipeName
 
-        editButton.setImage( UIImage( named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
-        editButton.setTitle( "", for: .normal )
+        configureControls()
    }
     
     
     
     // MARK: Target/Action Methods
     
-    @IBAction func editButtonTouched(_ sender: UIButton )
-    {
-        if inEditMode && ( nameTextField.text?.isEmpty ?? true )
-        {
+    @IBAction func editButtonTouched(_ sender: Any ) {
+        
+        if inEditMode && ( nameTextField.text?.isEmpty ?? true ) {
             logTrace( "ERROR:  nameTextField.text?.isEmpty" )
             return
         }
@@ -83,16 +77,12 @@ class FormulaNameTableViewCell: UITableViewCell
 //        logTrace()
         inEditMode = !inEditMode
 
-        nameTextField.borderStyle = inEditMode ? .roundedRect : .none
-        nameTextField.isEnabled   = inEditMode
-
-        editButton.setImage( UIImage( named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
-
-        if !inEditMode
-        {
+        configureControls()
+        
+        if !inEditMode {
             recipeName = nameTextField.text ?? ""
 
-            nameTextField.endEditing( true )
+            nameTextField.resignFirstResponder()
             
             delegate.formulaNameTableViewCell( formulaNameTableViewCell : self,
                                                editedName               : recipeName )
@@ -100,5 +90,26 @@ class FormulaNameTableViewCell: UITableViewCell
 
     }
 
+    @IBAction func invisibleNameButtonTouched(_ sender: Any ) {
+        editButtonTouched( self )
+    }
     
+    
+    
+    // MARK: Utility Methods
+    
+    private func configureControls() {
+        
+        nameTextField.borderStyle = inEditMode ? .roundedRect : .none
+        nameTextField.isEnabled   = inEditMode
+        nameTextField.textColor   = inEditMode ? .black : .blue
+        
+        editButton         .isHidden = !inEditMode
+        invisibleNameButton.isHidden =  inEditMode
+        
+        if inEditMode {
+            nameTextField.becomeFirstResponder()
+        }
+
+    }
 }

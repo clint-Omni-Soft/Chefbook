@@ -8,16 +8,16 @@
 
 import UIKit
 
-protocol RecipeImageTableViewCellDelegate: class
-{
+protocol RecipeImageTableViewCellDelegate: class {
+    
     func recipeImageTableViewCell( recipeImageTableViewCell: RecipeImageTableViewCell,
                                    cameraButtonTouched: Bool )
 }
 
 
 
-class RecipeImageTableViewCell: UITableViewCell
-{
+class RecipeImageTableViewCell: UITableViewCell {
+    
     // MARK: Public Variables ... these are guaranteed to be set by our creator
     weak var delegate: RecipeImageTableViewCellDelegate?
     
@@ -28,15 +28,14 @@ class RecipeImageTableViewCell: UITableViewCell
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
         logTrace()
    }
     
 
-    override func setSelected(_ selected: Bool, animated: Bool)
-    {
+    override func setSelected(_ selected: Bool,
+                                animated: Bool) {
         super.setSelected( false, animated: animated)
     }
 
@@ -44,8 +43,7 @@ class RecipeImageTableViewCell: UITableViewCell
     
     // MARK: Target/Action Methods
     
-    @IBAction func cameraButtonTouched(_ sender: UIButton)
-    {
+    @IBAction func cameraButtonTouched(_ sender: UIButton) {
         logTrace()
         delegate?.recipeImageTableViewCell( recipeImageTableViewCell: self,
                                             cameraButtonTouched: true )
@@ -54,8 +52,7 @@ class RecipeImageTableViewCell: UITableViewCell
     
     // MARK: Public Initializer
     
-    func initializeWith( imageName: String )
-    {
+    func initializeWith( imageName: String ) {
         logTrace()
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )

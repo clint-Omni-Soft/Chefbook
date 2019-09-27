@@ -9,8 +9,7 @@
 import UIKit
 
 class RecipeListViewController: UIViewController,
-                                ChefbookCentralDelegate
-{
+                                ChefbookCentralDelegate {
     
     let     CELL_ID                         = "RecipeListViewControllerCell"
     let     CELL_TAG_LABEL_NAME             = 11
@@ -18,9 +17,7 @@ class RecipeListViewController: UIViewController,
     let     STORYBOARD_ID_FORMULA_EDITOR    = "FormulaEditorViewController"
     let     STORYBOARD_ID_RECIPE_EDITOR     = "RecipeEditorViewController"
 
-
     @IBOutlet weak var myTableView: UITableView!
-    
     
     private var recipeEditor       : RecipeEditorViewController!
     private var recipeEditorLoaded = false
@@ -29,8 +26,7 @@ class RecipeListViewController: UIViewController,
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         super.viewDidLoad()
         logTrace()
         
@@ -38,23 +34,19 @@ class RecipeListViewController: UIViewController,
     }
     
 
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool ) {
+        
         super.viewWillAppear( animated )
         logTrace()
 
-
         let     chefbookCentral = ChefbookCentral.sharedInstance
-        
         
         chefbookCentral.delegate = self
         
-        if !chefbookCentral.didOpenDatabase
-        {
+        if !chefbookCentral.didOpenDatabase {
             chefbookCentral.openDatabase()
         }
-        else
-        {
+        else {
             myTableView.reloadData()
         }
         
@@ -67,8 +59,7 @@ class RecipeListViewController: UIViewController,
     }
     
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
+    override func viewWillDisappear(_ animated: Bool ) {
         logTrace()
         super.viewWillDisappear( animated )
         
@@ -76,8 +67,7 @@ class RecipeListViewController: UIViewController,
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "WARNING!" )
     }
     
@@ -85,8 +75,7 @@ class RecipeListViewController: UIViewController,
     
     // MARK: NSNotification Methods
     
-    @objc func recipesUpdated( notification: NSNotification )
-    {
+    @objc func recipesUpdated( notification: NSNotification ) {
         logTrace()
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
@@ -94,8 +83,7 @@ class RecipeListViewController: UIViewController,
         
         myTableView.reloadData()
         
-        if UIDevice.current.userInterfaceIdiom == .pad
-        {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             loadExampleRecipeOnFirstTimeIn()
         }
 
@@ -106,15 +94,13 @@ class RecipeListViewController: UIViewController,
     // MARK: ChefbookCentralDelegate Methods
     
     func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool )
-    {
+                          didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
-        if didOpenDatabase
-        {
+        
+        if didOpenDatabase {
             chefbookCentral.fetchRecipes()
         }
-        else
-        {
+        else {
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
         }
@@ -122,13 +108,12 @@ class RecipeListViewController: UIViewController,
     }
     
     
-    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral )
-    {
+    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
+        
         logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
         myTableView.reloadData()
         
-        if UIDevice.current.userInterfaceIdiom == .phone
-        {
+        if UIDevice.current.userInterfaceIdiom == .phone {
             loadExampleRecipeOnFirstTimeIn()
         }
 
@@ -138,8 +123,7 @@ class RecipeListViewController: UIViewController,
     
     // MARK: Target / Action Methods
     
-    @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem )
-    {
+    @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem ) {
         logTrace()
         promptForRecipeType()
     }
@@ -148,76 +132,67 @@ class RecipeListViewController: UIViewController,
     
     // MARK: Utility Methods
     
-    private func launchFormulaEditorFor( index: Int )
-    {
+    private func launchFormulaEditorFor( index: Int ) {
+        
         logVerbose( "[ %d ]", index )
-        if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_FORMULA_EDITOR ) as? FormulaEditorViewController
-        {
+        if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_FORMULA_EDITOR ) as? FormulaEditorViewController {
+            
             formulaEditorVC.recipeIndex = index
             
-            if UIDevice.current.userInterfaceIdiom == .pad
-            {
-                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+            if UIDevice.current.userInterfaceIdiom == .pad {
                 
+                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
                 
                 detailNavigationViewController?.viewControllers = [formulaEditorVC]
                 
-                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute:
-                {
+                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                     NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
                 })
 
             }
-            else
-            {
+            else {
                 navigationController?.pushViewController( formulaEditorVC, animated: true )
             }
             
         }
-        else
-        {
+        else {
             logTrace( "ERROR!  Could NOT load the FormulaEditorViewController!" )
         }
+        
     }
     
     
-    private func launchRecipeEditorFor( index: Int )
-    {
+    private func launchRecipeEditorFor( index: Int ) {
         logVerbose( "[ %d ]", index )
         
-        if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController
-        {
+        if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController {
+            
             recipeEditorVC.indexOfItemBeingEdited = index
             
-            if UIDevice.current.userInterfaceIdiom == .pad
-            {
-                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+            if UIDevice.current.userInterfaceIdiom == .pad {
                 
+                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
                 
                 detailNavigationViewController?.viewControllers = [recipeEditorVC]
                 
-                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute:
-                    {
+                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                         NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
                 })
                 
             }
-            else
-            {
+            else {
                 navigationController?.pushViewController( recipeEditorVC, animated: true )
             }
             
         }
-        else
-        {
+        else {
             logTrace( "ERROR: Could NOT load RecipeEditorViewController!" )
         }
         
     }
     
     
-    private func loadBarButtonItems()
-    {
+    private func loadBarButtonItems() {
         logTrace()
         let     addBarButtonItem  = UIBarButtonItem.init( barButtonSystemItem: .add,
                                                           target: self,
@@ -227,20 +202,19 @@ class RecipeListViewController: UIViewController,
     }
     
     
-    private func loadExampleRecipeOnFirstTimeIn()
-    {
+    private func loadExampleRecipeOnFirstTimeIn() {
+        
         let userDefaults = UserDefaults.standard
         let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
         
         logVerbose( "dirtyFlag[ %@ ]", stringFor( dirtyFlag ) )
         
-        if !dirtyFlag
-        {
+        if !dirtyFlag {
+            
             userDefaults.set( true, forKey: "Dirty" )
             let chefbookCentral = ChefbookCentral.sharedInstance
             
-            if chefbookCentral.recipeArray.count == 0
-            {
+            if chefbookCentral.recipeArray.count == 0 {
                 chefbookCentral.addRecipe( name         : "Standard Recipe Example",
                                            imageName    : "",
                                            ingredients  : "1 lb. Bacon\n4 oz grated Parmesan",
@@ -255,8 +229,7 @@ class RecipeListViewController: UIViewController,
     }
     
     
-    private func promptForRecipeType()
-    {
+    private func promptForRecipeType() {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ),
                                                 message: nil,
@@ -278,7 +251,6 @@ class RecipeListViewController: UIViewController,
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        
         alert.addAction( standardAction )
         alert.addAction( formulaAction  )
         alert.addAction( cancelAction   )
@@ -290,11 +262,11 @@ class RecipeListViewController: UIViewController,
 }
 
 
-extension RecipeListViewController: UITableViewDataSource
-{
-    func tableView(_ tableView: UITableView,
-                     numberOfRowsInSection section: Int) -> Int
-    {
+extension RecipeListViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView                     : UITableView,
+                     numberOfRowsInSection section : Int) -> Int {
+        
         let     numberOfRows = ChefbookCentral.sharedInstance.recipeArray.count
         
         logVerbose( "[ %d ]", numberOfRows )
@@ -302,9 +274,9 @@ extension RecipeListViewController: UITableViewDataSource
     }
     
     
-    func tableView(_ tableView: UITableView,
-                     cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(_ tableView              : UITableView,
+                     cellForRowAt indexPath : IndexPath) -> UITableViewCell {
+        
         let         cell                     = tableView.dequeueReusableCell(withIdentifier: CELL_ID, for: indexPath )
         let         imageView:   UIImageView = cell.viewWithTag( CELL_TAG_IMAGE_VIEW   ) as! UIImageView
         let         nameLabel:   UILabel     = cell.viewWithTag( CELL_TAG_LABEL_NAME   ) as! UILabel
@@ -314,10 +286,9 @@ extension RecipeListViewController: UITableViewDataSource
         nameLabel.text  = recipe.name
         imageView.image = nil
         
-        if let imageName = recipe.imageName
-        {
-            if !imageName.isEmpty
-            {
+        if let imageName = recipe.imageName {
+            
+            if !imageName.isEmpty {
                 imageView.image = ChefbookCentral.sharedInstance.imageWith( name: imageName )
             }
             
@@ -327,30 +298,27 @@ extension RecipeListViewController: UITableViewDataSource
     }
     
     
-    func tableView(_ tableView: UITableView,
-                     canEditRowAt indexPath: IndexPath) -> Bool
-    {
+    func tableView(_ tableView              : UITableView,
+                     canEditRowAt indexPath : IndexPath ) -> Bool {
         return true
     }
     
     
-    func tableView(_ tableView: UITableView,
-                     commit editingStyle: UITableViewCell.EditingStyle,
-                     forRowAt indexPath: IndexPath)
-    {
-        if editingStyle == .delete
-        {
+    func tableView(_ tableView           : UITableView,
+                     commit editingStyle : UITableViewCell.EditingStyle,
+                     forRowAt indexPath  : IndexPath ) {
+        
+        if editingStyle == .delete {
+            
             logVerbose( "delete recipe at row [ %d ]", indexPath.row )
-            if UIDevice.current.userInterfaceIdiom == .pad
-            {
-                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+            if UIDevice.current.userInterfaceIdiom == .pad {
                 
+                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
                 
                 detailNavigationViewController?.viewControllers = []
             }
             
-            DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute:
-            {
+            DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                 ChefbookCentral.sharedInstance.deleteRecipeAtIndex( index: indexPath.row )
             })
 
@@ -363,18 +331,16 @@ extension RecipeListViewController: UITableViewDataSource
 
 extension RecipeListViewController: UITableViewDelegate
 {
-    func tableView(_ tableView: UITableView,
-                     didSelectRowAt indexPath: IndexPath)
-    {
+    func tableView(_ tableView                : UITableView,
+                     didSelectRowAt indexPath : IndexPath ) {
+        
         logVerbose( "[ %d ]", indexPath.row )
         tableView.deselectRow( at: indexPath, animated: false )
         
-        if ChefbookCentral.sharedInstance.recipeArray[indexPath.row].isFormulaType
-        {
+        if ChefbookCentral.sharedInstance.recipeArray[indexPath.row].isFormulaType {
             launchFormulaEditorFor( index: indexPath.row )
         }
-        else
-        {
+        else {
             launchRecipeEditorFor( index: indexPath.row )
         }
 

@@ -11,16 +11,15 @@ import UIKit
 
 
 
-class HowToUseViewController: UIViewController
-{
+class HowToUseViewController: UIViewController {
+    
     @IBOutlet weak var myTextView: UITextView!
     
     
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
         
@@ -37,8 +36,7 @@ class HowToUseViewController: UIViewController
     }
     
     
-    override func viewDidLayoutSubviews()
-    {
+    override func viewDidLayoutSubviews() {
         logTrace()
         super.viewDidLayoutSubviews()
         
@@ -46,8 +44,7 @@ class HowToUseViewController: UIViewController
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }

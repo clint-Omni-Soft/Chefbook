@@ -9,23 +9,28 @@
 import UIKit
 
 
-protocol FormulaIngredientTableViewCellDelegate: class
-{
+protocol FormulaIngredientTableViewCellDelegate: class {
+    
     func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
                                          ingredientIndexPath            : IndexPath,
                                          isNew                          : Bool,
                                          editedIngredientName           : String,
                                          editedPercentage               : String )
+
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
+                                         ingredientIndexPath            : IndexPath,
+                                         didStartEditing                : Bool )
 }
 
 
-class FormulaIngredientTableViewCell: UITableViewCell
-{
+class FormulaIngredientTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var addOrEditButton      : UIButton!
-    @IBOutlet weak var ingredientTextField  : UITextField!
-    @IBOutlet weak var percentageTextField  : UITextField!
-    @IBOutlet weak var weightLabel          : UILabel!
+    @IBOutlet weak var addOrEditButton           : UIButton!
+    @IBOutlet weak var ingredientTextField       : UITextField!
+    @IBOutlet weak var invisibleIngredientButton : UIButton!
+    @IBOutlet weak var invisiblePercentageButton : UIButton!
+    @IBOutlet weak var percentageTextField       : UITextField!
+    @IBOutlet weak var weightLabel               : UILabel!
     
     
 
@@ -36,73 +41,105 @@ class FormulaIngredientTableViewCell: UITableViewCell
     
     // MARK: Private Variables
     
-    private var inEditMode  = false
-    private var isFlour     = false
-    private var isNew       = false
-    private var myIndexPath : IndexPath!
-    
+    private var inEditMode         = false
+    private var isFlour            = false
+    private var isNew              = false
+    private var myIndexPath        : IndexPath!
+    private var percentageHasFocus = true
+
     
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
     }
 
     
-    override func setSelected(_ selected: Bool, animated: Bool )
-    {
-        super.setSelected( false, animated: animated )
+    override func setSelected(_ selected: Bool, animated: Bool ) {
+        super.setSelected( false, animated: false )
     }
     
     
     
+    // MARK: Public Initializers
+    
+    func setupAsHeader() {
+//        logTrace()
+        backgroundColor = .lightGray
+
+        ingredientTextField.text = NSLocalizedString( "LabelText.Ingredient", comment: "Ingredient" )
+        percentageTextField.text = "%"
+        weightLabel        .text = NSLocalizedString( "LabelText.Weight",     comment: "Weight"     )
+        
+        ingredientTextField.borderStyle = .none
+        percentageTextField.borderStyle = .none
+        
+        addOrEditButton          .isHidden = true
+        invisibleIngredientButton.isHidden = true
+        invisiblePercentageButton.isHidden = true
+    }
+    
+    
+    func initializeWithRecipeAt( recipeIndex         : Int,
+                                 ingredientIndexPath : IndexPath,
+                                 isNew               : Bool,
+                                 delegate            : FormulaIngredientTableViewCellDelegate ) {
+//        logTrace()
+        self.delegate = delegate
+        self.isNew    = isNew
+        myIndexPath   = ingredientIndexPath
+        isFlour       = ( myIndexPath.section == ForumlaTableSections.flour )
+        
+        backgroundColor = isFlour ? .yellow : .white
+        
+        addOrEditButton.setImage( UIImage( named: "checkmark" ), for: .normal )
+        addOrEditButton.setTitle( "", for: .normal )
+        
+        if isNew {
+            ingredientTextField.text = isFlour ? NSLocalizedString( "CellTitle.Flour", comment: "Flour" ) : "???"
+            percentageTextField.text = isFlour ? ( self.myIndexPath.row == 0 ? "100" : "" ) : ""
+            weightLabel        .text = ""
+            
+            DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
+                self.invisiblePercentageButtonTouched( self )
+            })
+            
+        }
+        else {
+            let recipe     = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+            let ingredient = ingredientFrom( recipe : recipe )
+            
+            ingredientTextField.text = ingredient.name
+            percentageTextField.text = String( format : "%d",   ingredient.percentOfFlour )
+            weightLabel        .text = String( format : "%d g", ingredient.weight         )
+
+            configureControls()
+        }
+        
+    }
+    
+    
+
     // MARK: Target/Action Methods
     
-    @IBAction func addOrEditButtonTouched(_ sender: Any)
-    {
+    @IBAction func addOrEditButtonTouched(_ sender: Any) {
+        
         let     percentage = Int( percentageTextField.text ?? "0" )
         
-        
-        if inEditMode && ( ( ingredientTextField.text?.isEmpty ?? true ) || ( percentageTextField.text?.isEmpty ?? true ) || ( percentage == 0 ) )
-        {
+        if inEditMode && ( ( ingredientTextField.text?.isEmpty ?? true ) || ( percentageTextField.text?.isEmpty ?? true ) || ( percentage == 0 ) ) {
             logTrace( "ERROR:  ingredientTextField?.isEmpty or percentage == 0" )
             return
         }
-        
 
-        logTrace()
+//        logTrace()
         inEditMode = !inEditMode
         
-        ingredientTextField.borderStyle = inEditMode ? .roundedRect : .none
-        ingredientTextField.isEnabled   = inEditMode
+        configureControls()
         
-        ingredientTextField.backgroundColor = .white
-        
-        if myIndexPath.section == ForumlaTableSections.flour
-        {
-            ingredientTextField.backgroundColor = inEditMode ? .white : .yellow
-            percentageTextField.backgroundColor = inEditMode ? .white : .yellow
-        }
-        
-        if isNew && ( myIndexPath == IndexPath( item: 0, section: 1 ) )
-        {
-            percentageTextField.borderStyle = .none
-            percentageTextField.isEnabled   = false
-        }
-        else
-        {
-            percentageTextField.borderStyle = inEditMode ? .roundedRect : .none
-            percentageTextField.isEnabled   = inEditMode
-        }
-        
-        addOrEditButton.setImage( UIImage(named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
-        
-        if !inEditMode
-        {
-            ingredientTextField.endEditing( true )
-            percentageTextField.endEditing( true )
+        if !inEditMode {
+            ingredientTextField.resignFirstResponder()
+            percentageTextField.resignFirstResponder()
             
             delegate.formulaIngredientTableViewCell( formulaIngredientTableViewCell : self,
                                                      ingredientIndexPath            : myIndexPath,
@@ -114,98 +151,96 @@ class FormulaIngredientTableViewCell: UITableViewCell
     }
     
     
-    
-    // MARK: Public Initializers
-    
-    func setupAsHeader()
-    {
-//        logTrace()
-        backgroundColor = .lightGray
-
-        ingredientTextField.text = NSLocalizedString( "LabelText.Ingredient", comment: "Ingredient" )
-        percentageTextField.text = "%"
-        weightLabel        .text = NSLocalizedString( "LabelText.Weight",     comment: "Weight"     )
+    @IBAction func invisibleIngredientButtonTouched(_ sender: Any ) {
+        percentageHasFocus = false
+        delegate.formulaIngredientTableViewCell( formulaIngredientTableViewCell: self,
+                                                 ingredientIndexPath            : myIndexPath,
+                                                 didStartEditing                : true )
+        inEditMode = !inEditMode
         
-        ingredientTextField.borderStyle = .none
-        percentageTextField.borderStyle = .none
-
-        addOrEditButton.isHidden = true
+        configureControls()
     }
     
     
-    func initializeWithRecipeAt( recipeIndex         : Int,
-                                 ingredientIndexPath : IndexPath,
-                                 isNew               : Bool,
-                                 delegate            : FormulaIngredientTableViewCellDelegate )
-    {
-//        logTrace()
-        self.delegate = delegate
-        self.isNew    = isNew
-        isFlour       = ( ingredientIndexPath.section == ForumlaTableSections.flour )
-        myIndexPath   = ingredientIndexPath
+    @IBAction func invisiblePercentageButtonTouched(_ sender: Any ) {
+        percentageHasFocus = true
+        delegate.formulaIngredientTableViewCell( formulaIngredientTableViewCell: self,
+                                                 ingredientIndexPath            : myIndexPath,
+                                                 didStartEditing                : true )
+        inEditMode = !inEditMode
         
-        setupCell()
-
-        if isNew
-        {
-            ingredientTextField.text = isFlour ? NSLocalizedString( "CellTitle.Flour", comment: "Flour" ) : "???"
-            percentageTextField.text = isFlour ? ( self.myIndexPath.row == 0 ? "100" : "" ) : ""
-            weightLabel        .text = ""
-            
-            addOrEditButtonTouched( self )
-        }
-        else
-        {
-            let recipe     = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
-            let ingredient = ingredientFrom( recipe : recipe )
-            
-            
-            ingredientTextField.text = ingredient.name
-            percentageTextField.text = String( format : "%d",   ingredient.percentOfFlour )
-            weightLabel        .text = String( format : "%d g", ingredient.weight         )
-        }
-
-    }
-
+        configureControls()
+  }
+    
     
     
     // MARK: Utility Methods
     
-    private func ingredientFrom( recipe : Recipe ) -> BreadIngredient
-    {
+    private func configureControls() {
+        
+        ingredientTextField.borderStyle = inEditMode ? .roundedRect : .none
+        ingredientTextField.isEnabled   = inEditMode
+        ingredientTextField.textColor   = inEditMode ? .black : .blue
+
+        percentageTextField.borderStyle = inEditMode ? .roundedRect : .none
+        percentageTextField.isEnabled   = inEditMode
+        percentageTextField.textColor   = inEditMode ? .black : .blue
+
+        ingredientTextField.backgroundColor = .white
+        
+        if myIndexPath.section == ForumlaTableSections.flour {
+            
+            ingredientTextField.backgroundColor = inEditMode ? .white : .yellow
+            percentageTextField.backgroundColor = inEditMode ? .white : .yellow
+        }
+        
+        if isNew && ( myIndexPath == IndexPath( item: 0, section: 1 ) ) {
+            
+            percentageTextField.borderStyle = .none
+            percentageTextField.isEnabled   = false
+        }
+        else {
+            percentageTextField.borderStyle = inEditMode ? .roundedRect : .none
+            percentageTextField.isEnabled   = inEditMode
+        }
+        
+        addOrEditButton          .isHidden = !inEditMode
+        invisibleIngredientButton.isHidden =  inEditMode
+        invisiblePercentageButton.isHidden =  inEditMode
+        
+        if inEditMode {
+            
+            if percentageHasFocus {
+                percentageTextField.becomeFirstResponder()
+            }
+            else {
+                ingredientTextField.becomeFirstResponder()
+            }
+            
+        }
+        
+    }
+    
+    
+    private func ingredientFrom( recipe : Recipe ) -> BreadIngredient {
+        
         var     selectedIngredient : BreadIngredient!
         let     dataSource         = ( isFlour ? recipe.flourIngredients : recipe.breadIngredients )
         let     ingredientArray    = dataSource?.allObjects as! [BreadIngredient]
         
         
-        for ingredient in ingredientArray
-        {
-            if ingredient.index == myIndexPath.row
-            {
+        for ingredient in ingredientArray {
+            
+            if ingredient.index == myIndexPath.row {
+                
 //              logVerbose( "Found it ... [ %@ ]", ingredient.name ?? "Unknown" )
                 selectedIngredient = ingredient
                 break
             }
-
+            
         }
         
         return selectedIngredient
-    }
-    
-    
-    private func setupCell()
-    {
-        backgroundColor = isFlour ? .yellow : .white
-        
-        addOrEditButton.isHidden = false
-        addOrEditButton.setImage( UIImage( named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
-        addOrEditButton.setTitle( "", for: .normal )
-
-        ingredientTextField.borderStyle = .none
-        percentageTextField.borderStyle = .none
-
-        ingredientTextField.isEnabled = false
-        percentageTextField.isEnabled = false
     }
     
     

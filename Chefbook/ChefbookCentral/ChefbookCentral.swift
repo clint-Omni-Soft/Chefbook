@@ -12,8 +12,8 @@ import CoreData
 
 
 
-protocol ChefbookCentralDelegate: class
-{
+protocol ChefbookCentralDelegate: class {
+    
     func chefbookCentral( chefbookCentral: ChefbookCentral,
                           didOpenDatabase: Bool )
     
@@ -22,8 +22,8 @@ protocol ChefbookCentralDelegate: class
 
 
 
-class ChefbookCentral: NSObject
-{
+class ChefbookCentral: NSObject {
+    
     // MARK: Public Variables
     weak var delegate:      ChefbookCentralDelegate?
 
@@ -51,8 +51,8 @@ class ChefbookCentral: NSObject
     
     // MARK: Database Access Methods (Public)
     
-    func openDatabase()
-    {
+    func openDatabase() {
+        
         logTrace()
         didOpenDatabase     = false
         recipeArray         = Array.init()
@@ -61,24 +61,21 @@ class ChefbookCentral: NSObject
         persistentContainer.loadPersistentStores( completionHandler:
         { ( storeDescription, error ) in
             
-            if let error = error as NSError?
-            {
+            if let error = error as NSError? {
                 logVerbose( "Unresolved error[ %@ ]", error.localizedDescription )
             }
-            else
-            {
+            else {
                 self.loadCoreData()
                 
-                if !self.didOpenDatabase    // This is just in case I screw up and don't properly version the data model
-                {
+                if !self.didOpenDatabase  {  // This is just in case I screw up and don't properly version the data model
+
                     self.deleteDatabase()
                     self.loadCoreData()
                 }
 
             }
             
-            DispatchQueue.main.async
-            {
+            DispatchQueue.main.async {
                 logVerbose( "didOpenDatabase[ %@ ]", stringFor( self.didOpenDatabase ) )
                 self.delegate?.chefbookCentral( chefbookCentral: self,
                                                 didOpenDatabase: self.didOpenDatabase )
@@ -94,21 +91,17 @@ class ChefbookCentral: NSObject
     
     func addBreadIngredientToFormulaRecipeAt( ingredientIndex : Int,
                                               name            : String,
-                                              percentage      : Int )
-    {
-        if !self.didOpenDatabase
-        {
+                                              percentage      : Int ) {
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logVerbose( "[ %@ ] index[ %d ] percentage[ %d ]", name, ingredientIndex, percentage )
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             let     recipe          = self.recipeArray[self.selectedRecipeIndex]
             let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
-            
             
             breadIngredient.index           = Int16( ingredientIndex )
             breadIngredient.isFlour         = ingredientIndex == 0
@@ -127,21 +120,17 @@ class ChefbookCentral: NSObject
     
     func addFlourIngredientToFormulaRecipeAt( ingredientIndex : Int,
                                               name            : String,
-                                              percentage      : Int )
-    {
-        if !self.didOpenDatabase
-        {
+                                              percentage      : Int ) {
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logVerbose( "[ %@ ] index[ %d ] percentage[ %d ]", name, ingredientIndex, percentage )
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             let     recipe          = self.recipeArray[self.selectedRecipeIndex]
             let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
-            
             
             breadIngredient.index           = Int16( ingredientIndex )
             breadIngredient.isFlour         = true
@@ -162,20 +151,17 @@ class ChefbookCentral: NSObject
     
     func addFormulaRecipe( name          : String,
                            yieldQuantity : Int,
-                           yieldWeight   : Int )
-    {
-        if !self.didOpenDatabase
-        {
+                           yieldWeight   : Int ) {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logVerbose( "[ %@ ][ %d ][ %d ]", name, yieldQuantity, yieldWeight )
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
-            
             
             recipe.guid                 = UUID().uuidString
             recipe.isFormulaType        = true
@@ -199,18 +185,16 @@ class ChefbookCentral: NSObject
                     isFormulaType   : Bool,
                     steps           : String,
                     yield           : String,
-                    yieldOptions    : String )
-    {
-        if !self.didOpenDatabase
-        {
+                    yieldOptions    : String ) {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logVerbose( "[ %@ ][ %@ ][ %@ ]", name, ingredients, steps )
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
             
             
@@ -234,38 +218,32 @@ class ChefbookCentral: NSObject
     
     
     func adjustFlourIngredientsPercentagesIn( recipe                   : Recipe,
-                                              aroundIngredientAt index : Int )
-    {
+                                              aroundIngredientAt index : Int ) {
         logTrace()
         var     existingPercentageTotal = 0
         let     flourIngredientsArray   = recipe.flourIngredients?.allObjects as! [BreadIngredient]
         var     updatedPercentOfFlour   = 0
         
-        
         // Populate our variables
-        for ingredient in flourIngredientsArray
-        {
-            if ingredient.index == index
-            {
+        for ingredient in flourIngredientsArray {
+            
+            if ingredient.index == index {
                 updatedPercentOfFlour = Int( ingredient.percentOfFlour )
             }
-            else
-            {
+            else {
                 existingPercentageTotal += Int( ingredient.percentOfFlour )
             }
             
         }
         
-        
         var     totalAdjustedPercentage = 100 - updatedPercentOfFlour
         let     scalingFactor           = ( Float( totalAdjustedPercentage ) / Float( existingPercentageTotal ) )
         
-        
         // Now we remove each ingredient, adjust its percentage and then add it back to the recipe
-        for ingredient in flourIngredientsArray
-        {
-            if ingredient.index != index        // We want to change the percentage of the everything except the one we just updated
-            {
+        for ingredient in flourIngredientsArray {
+            
+            if ingredient.index != index  {      // We want to change the percentage of the everything except the one we just updated
+
                 recipe.removeFromFlourIngredients( ingredient )
                 
                 ingredient.percentOfFlour = Int16( round( Float( ingredient.percentOfFlour ) * scalingFactor ) )
@@ -277,8 +255,8 @@ class ChefbookCentral: NSObject
         }
         
         // Now we guarantee that the total will always be 100
-        if totalAdjustedPercentage != 0 && flourIngredientsArray.count != 0
-        {
+        if totalAdjustedPercentage != 0 && flourIngredientsArray.count != 0 {
+            
             let ingredient = flourIngredientsArray[0]
             
             recipe.removeFromFlourIngredients( ingredient )
@@ -290,21 +268,18 @@ class ChefbookCentral: NSObject
     }
     
     
-    func deleteFormulaRecipeBreadIngredientAt( index : Int )
-    {
-        if !self.didOpenDatabase
-        {
+    func deleteFormulaRecipeBreadIngredientAt( index : Int ) {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logVerbose( "[ %d ]", index )
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             let     recipe                = self.recipeArray[self.selectedRecipeIndex]
             let     breadIngredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
-            
             
                 // First we sort the ingredients by their index value
             var sortedBreadIngredientsArray = breadIngredientsArray.sorted( by:
@@ -312,14 +287,13 @@ class ChefbookCentral: NSObject
                 
                     ingredient1.index < ingredient2.index
                 })
-            
 
             recipe.removeFromBreadIngredients( sortedBreadIngredientsArray[index] )
             sortedBreadIngredientsArray.remove( at: index )
             
             // Now we need to renumber all the indexes and update the store with our sorted & renumbered array
-            for i in 0..<sortedBreadIngredientsArray.count
-            {
+            for i in 0..<sortedBreadIngredientsArray.count {
+                
                 recipe.removeFromBreadIngredients( sortedBreadIngredientsArray[i] )
 
                 sortedBreadIngredientsArray[i].index = Int16( i )
@@ -333,21 +307,18 @@ class ChefbookCentral: NSObject
     }
     
     
-    func deleteFormulaRecipeFlourIngredientAt( index : Int )
-    {
-        if !self.didOpenDatabase
-        {
+    func deleteFormulaRecipeFlourIngredientAt( index : Int ) {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logVerbose( "[ %d ]", index )
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             let     recipe                = self.recipeArray[self.selectedRecipeIndex]
             let     flourIngredientsArray = recipe.flourIngredients?.allObjects as! [BreadIngredient]
-            
             
             // First we sort the ingredients by their index value
             var sortedFlourIngredientsArray = flourIngredientsArray.sorted( by:
@@ -356,13 +327,12 @@ class ChefbookCentral: NSObject
                 ingredient1.index < ingredient2.index
             })
             
-            
             recipe.removeFromFlourIngredients( sortedFlourIngredientsArray[index] )
             sortedFlourIngredientsArray.remove( at: index )
             
             // Now we need to renumber all the indexes and update the store with our sorted & renumbered array
-            for i in 0..<sortedFlourIngredientsArray.count
-            {
+            for i in 0..<sortedFlourIngredientsArray.count {
+                
                 recipe.removeFromFlourIngredients( sortedFlourIngredientsArray[i] )
                 
                 sortedFlourIngredientsArray[i].index = Int16( i )
@@ -376,19 +346,16 @@ class ChefbookCentral: NSObject
     }
     
     
-    func deleteRecipeAtIndex( index: Int )
-    {
-        if !self.didOpenDatabase
-        {
+    func deleteRecipeAtIndex( index: Int ) {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             logVerbose( "deleting recipe at [ %d ]", index )
             let     recipe = self.recipeArray[index]
-            
             
             self.managedObjectContext.delete( recipe )
             
@@ -399,28 +366,25 @@ class ChefbookCentral: NSObject
     }
     
     
-    func fetchRecipes()
-    {
-        if !self.didOpenDatabase
-        {
+    func fetchRecipes() {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
         logTrace()
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             self.refetchRecipesAndNotifyDelegate()
         }
         
     }
     
     
-    func saveUpdatedRecipe( recipe: Recipe )
-    {
-        if !self.didOpenDatabase
-        {
+    func saveUpdatedRecipe( recipe: Recipe ) {
+        
+        if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
@@ -429,8 +393,7 @@ class ChefbookCentral: NSObject
 
         selectedRecipeGuid = recipe.guid!       // We know this will always have been set
         
-        persistentContainer.viewContext.perform
-        {
+        persistentContainer.viewContext.perform {
             self.saveContext()
             self.refetchRecipesAndNotifyDelegate()
         }
@@ -438,36 +401,32 @@ class ChefbookCentral: NSObject
     }
     
     
-    func updateIngredientsIn( recipe: Recipe )
-    {
+    func updateIngredientsIn( recipe: Recipe ) {
+        
         logTrace()
         let     breadIngredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
         let     flourIngredientsArray = recipe.flourIngredients?.allObjects as! [BreadIngredient]
         var     totalPercentage       = 100 // We start with the fixed percentage of flour
-        
 
         // Add all of the bread percentages to the flour percentage
-        for ingredient in breadIngredientsArray
-        {
+        for ingredient in breadIngredientsArray {
             totalPercentage += Int( ingredient.percentOfFlour )
         }
-        
         
         let     totalYieldWeight = Float( recipe.formulaYieldQuantity ) * Float( recipe.formulaYieldWeight )
         let     onePercent       = totalYieldWeight / Float( totalPercentage )
         
-        
         // Now we assign new computed weights for the current yield for all of the ingredients
-        for flourIngredient in flourIngredientsArray
-        {
+        for flourIngredient in flourIngredientsArray {
+            
             recipe.removeFromFlourIngredients( flourIngredient )
             
             flourIngredient.weight = Int64( round( Float( flourIngredient.percentOfFlour ) * onePercent ) )
             recipe.addToFlourIngredients( flourIngredient )
         }
         
-        for breadIngredient in breadIngredientsArray
-        {
+        for breadIngredient in breadIngredientsArray {
+            
             recipe.removeFromBreadIngredients( breadIngredient )
             
             breadIngredient.weight = Int64( round( Float( breadIngredient.percentOfFlour ) * onePercent ) )
@@ -480,28 +439,23 @@ class ChefbookCentral: NSObject
 
     // MARK: Image Convenience Methods (Public)
     
-    func deleteImageWith( name: String ) -> Bool
-    {
+    func deleteImageWith( name: String ) -> Bool {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
-        
-        if !directoryPath.isEmpty
-        {
+        if !directoryPath.isEmpty {
             let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
             let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( name )
 
 
-            do
-            {
+            do {
                 try FileManager.default.removeItem( at: imageFileURL )
                 
                 logVerbose( "deleted image named [ %@ ]", name )
                 return true
             }
                 
-            catch let error as NSError
-            {
+            catch let error as NSError {
                 logVerbose( "ERROR!  Failed to delete image named [ %@ ] ... Error[ %@ ]", name, error.localizedDescription )
             }
             
@@ -511,36 +465,32 @@ class ChefbookCentral: NSObject
     }
     
     
-    func imageWith( name: String ) -> UIImage
-    {
+    func imageWith( name: String ) -> UIImage {
+        
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
-
         
-        if !directoryPath.isEmpty
-        {
+        if !directoryPath.isEmpty {
+            
             let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
             let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( name )
             let     imageFileData        = FileManager.default.contents( atPath: imageFileURL.path )
             
             
-            if let imageData = imageFileData
-            {
-                if let image = UIImage.init( data: imageData )
-                {
+            if let imageData = imageFileData {
+                
+                if let image = UIImage.init( data: imageData ) {
 //                    logVerbose( "Loaded image named [ %@ ]", name )
                     return image
                 }
                 
             }
-            else
-            {
+            else {
                 logVerbose( "ERROR!  Failed to load data for image [ %@ ]", name )
             }
             
         }
-        else
-        {
+        else {
             logVerbose( "ERROR!  directoryPath is Empty!" )
         }
         
@@ -548,39 +498,32 @@ class ChefbookCentral: NSObject
     }
     
     
-    func saveImage( image: UIImage ) -> String
-    {
+    func saveImage( image: UIImage ) -> String {
+        
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
-        
-        if directoryPath.isEmpty
-        {
+        if directoryPath.isEmpty {
             return String.init()
         }
-        
         
         let     imageFilename        = UUID().uuidString
         let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
         let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( imageFilename )
         
-        
-        guard let imageData = image.jpegData( compressionQuality: 1 ) ?? image.pngData() else
-        {
+        guard let imageData = image.jpegData( compressionQuality: 1 ) ?? image.pngData() else {
             logTrace( "ERROR!  Could NOT convert UIImage to Data!" )
             return String.init()
         }
         
-        do
-        {
+        do {
             try imageData.write( to: pictureFileURL, options: .atomic )
             
             logVerbose( "Saved image to file named[ %@ ]", imageFilename )
             return imageFilename
         }
             
-        catch let error as NSError
-        {
+        catch let error as NSError {
             logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", imageFilename, error.localizedDescription )
         }
         
@@ -591,28 +534,22 @@ class ChefbookCentral: NSObject
 
     // MARK: Utility Methods
     
-    private func deleteDatabase()
-    {
-        guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else
-        {
+    private func deleteDatabase() {
+        
+        guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else {
             logTrace( "Error!  Unable to resolve document directory" )
             return
         }
         
-        
         let     storeURL = docURL.appendingPathComponent( DATABASE_NAME )
         
-        
-        do
-        {
+        do {
             try FileManager.default.removeItem( at: storeURL )
             logVerbose( "deleted database @ [ %@ ]", storeURL.path )
         }
         
-        catch
-        {
+        catch {
             let     nsError = error as NSError
-            
             
             logVerbose( "Error!  Unable delete store! ... Error[ %@ ]", nsError.localizedDescription )
         }
@@ -620,21 +557,13 @@ class ChefbookCentral: NSObject
     }
     
     
-    private func description() -> String
-    {
-        return "ChefbookCentral"
-    }
-    
-    
-    private func fetchAllRecipeObjects()     // Must be called from within persistentContainer.viewContext
-    {
+    private func fetchAllRecipeObjects() {    // Must be called from within persistentContainer.viewContext
+
         selectedRecipeIndex = NO_SELECTION
 
-        do
-        {
+        do {
             let     request : NSFetchRequest<Recipe> = Recipe.fetchRequest()
             let     fetchedRecipes = try managedObjectContext.fetch( request )
-        
             
             recipeArray = fetchedRecipes.sorted( by:
                         { (recipe1, recipe2) -> Bool in
@@ -642,10 +571,9 @@ class ChefbookCentral: NSObject
                             recipe1.name! < recipe2.name!     // We can do this because the name is a required field that must be unique
                         } )
             
-            for index in 0 ..< self.recipeArray.count
-            {
-                if recipeArray[index].guid == selectedRecipeGuid
-                {
+            for index in 0 ..< self.recipeArray.count {
+                
+                if recipeArray[index].guid == selectedRecipeGuid {
                     selectedRecipeIndex = index
                     break
                 }
@@ -654,8 +582,7 @@ class ChefbookCentral: NSObject
             
         }
             
-        catch
-        {
+        catch {
             recipeArray = [Recipe]()
             logTrace( "Error!  Fetch failed!" )
         }
@@ -663,53 +590,43 @@ class ChefbookCentral: NSObject
     }
     
     
-    private func loadCoreData()
-    {
-        guard let modelURL = Bundle.main.url( forResource: "ChefbookDataModel", withExtension: "momd" ) else
-        {
+    private func loadCoreData() {
+        
+        guard let modelURL = Bundle.main.url( forResource: "ChefbookDataModel", withExtension: "momd" ) else {
             logTrace( "Error!  Could NOT load model from bundle!" )
             return
         }
         
         logVerbose( "modelURL[ %@ ]", modelURL.path )
 
-        guard let managedObjectModel = NSManagedObjectModel( contentsOf: modelURL ) else
-        {
+        guard let managedObjectModel = NSManagedObjectModel( contentsOf: modelURL ) else {
             logVerbose( "Error!  Could NOT initialize managedObjectModel from URL[ %@ ]", modelURL.path )
             return
         }
         
-        
         let     persistentStoreCoordinator = NSPersistentStoreCoordinator( managedObjectModel: managedObjectModel )
-
     
         managedObjectContext = NSManagedObjectContext( concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType )
         managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
         
-        guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else
-        {
+        guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else {
             logTrace( "Error!  Unable to resolve document directory!" )
             return
         }
         
-        
         let     storeURL = docURL.appendingPathComponent( DATABASE_NAME )
-        
         
         logVerbose( "storeURL[ %@ ]", storeURL.path )
 
-        do
-        {
+        do {
             try persistentStoreCoordinator.addPersistentStore( ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil )
             
             self.didOpenDatabase = true
 //            logTrace( "added Recipes store to coordinator" )
         }
             
-        catch
-        {
+        catch {
             let     nsError = error as NSError
-            
             
             logVerbose( "Error!  Unable migrate store[ %@ ]", nsError.localizedDescription )
         }
@@ -717,32 +634,28 @@ class ChefbookCentral: NSObject
     }
     
     
-    private func pictureDirectoryPath() -> String
-    {
+    private func pictureDirectoryPath() -> String {
+        
         let         fileManager = FileManager.default
         
-        
-        if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first
-        {
+        if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            
             let     picturesDirectoryURL = documentDirectoryURL.appendingPathComponent( "RecipePictures" )
             
-            
-            if !fileManager.fileExists( atPath: picturesDirectoryURL.path )
-            {
-                do
-                {
+            if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
+                
+                do {
                     try fileManager.createDirectory( atPath: picturesDirectoryURL.path, withIntermediateDirectories: true, attributes: nil )
                 }
-                catch let error as NSError
-                {
+                    
+                catch let error as NSError {
                     logVerbose( "ERROR!  Failed to create photos directory ... Error[ %@ ]", error.localizedDescription )
                     return String.init()
                 }
                 
             }
             
-            if !fileManager.fileExists( atPath: picturesDirectoryURL.path )
-            {
+            if !fileManager.fileExists( atPath: picturesDirectoryURL.path ) {
                 logTrace( "ERROR!  photos directory does NOT exist!" )
                 return String.init()
             }
@@ -756,35 +669,31 @@ class ChefbookCentral: NSObject
     }
     
     
-    private func refetchRecipesAndNotifyDelegate()       // Must be called from within a persistentContainer.viewContext
-    {
+    private func refetchRecipesAndNotifyDelegate() {      // Must be called from within a persistentContainer.viewContext
+    
         fetchAllRecipeObjects()
         
-        DispatchQueue.main.async
-        {
+        DispatchQueue.main.async {
             self.delegate?.chefbookCentralDidReloadRecipeArray( chefbookCentral: self )
         }
 
-        if .pad == UIDevice.current.userInterfaceIdiom
-        {
+        if .pad == UIDevice.current.userInterfaceIdiom {
             NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPES_UPDATED ), object: self )
         }
 
     }
     
 
-    private func saveContext()
-    {
-        if managedObjectContext.hasChanges
-        {
-            do
-            {
+    private func saveContext() {
+        
+        if managedObjectContext.hasChanges {
+            
+            do {
                 try managedObjectContext.save()
             }
-            catch
-            {
-                let     nsError = error as NSError
                 
+            catch {
+                let     nsError = error as NSError
                 
                 logVerbose( "Unresolved error[ %@ ]", nsError.localizedDescription )
             }
@@ -817,8 +726,8 @@ let     NOTIFICATION_RECIPES_UPDATED    = "RecipesUpdated"
 
 
 
-func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
-{
+func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
+    
     logVerbose( "[ %@ ]", storyboardId )
     let     storyboardName = ( ( .pad == UIDevice.current.userInterfaceIdiom ) ? "Main_iPad" : "Main_iPhone" )
     let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )
@@ -829,8 +738,8 @@ func viewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
 }
 
 
-func iPhoneViewControllerWithStoryboardId( storyboardId: String ) -> UIViewController
-{
+func iPhoneViewControllerWithStoryboardId( storyboardId: String ) -> UIViewController {
+    
     logVerbose( "[ %@ ]", storyboardId )
     let     storyboardName = "Main_iPhone"
     let     storyboard     = UIStoryboard.init( name: storyboardName, bundle: nil )

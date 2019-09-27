@@ -9,8 +9,7 @@
 import UIKit
 
 
-class RecipeNameTableViewCell: UITableViewCell
-{
+class RecipeNameTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     
@@ -18,16 +17,14 @@ class RecipeNameTableViewCell: UITableViewCell
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
         logTrace()
     }
 
     
     override func setSelected(_ selected: Bool,
-                                animated: Bool )
-    {
+                                animated: Bool ) {
         super.setSelected( false, animated: animated )
     }
 
@@ -35,8 +32,7 @@ class RecipeNameTableViewCell: UITableViewCell
     
     // MARK: Public Initializer
     
-    func initializeWith( recipeName: String )
-    {
+    func initializeWith( recipeName: String ) {
         logTrace()
         titleLabel?.text = recipeName
     }

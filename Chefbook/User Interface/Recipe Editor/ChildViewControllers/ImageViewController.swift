@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ImageViewController: UIViewController, UIScrollViewDelegate
-{
+class ImageViewController: UIViewController,
+                           UIScrollViewDelegate {
+    
     var imageName : String!     // Set by our creator
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -19,8 +20,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
         
@@ -31,16 +31,14 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     }
     
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
         imageView.image = ChefbookCentral.sharedInstance.imageWith( name: imageName )
     }
     
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
+    override func viewWillDisappear(_ animated: Bool) {
         logTrace()
         super.viewWillDisappear( animated )
     }
@@ -49,8 +47,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: UIScrollViewDelegate Methods
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView?
-    {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 //        logTrace()
         return imageView
     }

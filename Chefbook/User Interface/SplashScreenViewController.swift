@@ -11,17 +11,16 @@ import UIKit
 
 
 
-class SplashScreenViewController: UIViewController
-{
-    @IBOutlet weak var contactUsLabel           : UILabel!
-    @IBOutlet weak var titleLabel               : UILabel!
+class SplashScreenViewController: UIViewController {
+    
+    @IBOutlet weak var contactUsLabel : UILabel!
+    @IBOutlet weak var titleLabel     : UILabel!
     
     
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
         
@@ -32,35 +31,23 @@ class SplashScreenViewController: UIViewController
     }
     
     
-    override func viewWillAppear(_ animated: Bool )
-    {
+    override func viewWillAppear(_ animated: Bool ) {
         logTrace()
         super.viewWillAppear( animated )
     }
     
     
-    override func viewWillDisappear(_ animated: Bool )
-    {
+    override func viewWillDisappear(_ animated: Bool ) {
         logTrace()
         super.viewWillDisappear( animated )
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
     
     
     
-    // MARK: Utility Methods
-    
-    private func description() -> String
-    {
-        return "SplashScreenViewController"
-    }
-    
-    
-
 }

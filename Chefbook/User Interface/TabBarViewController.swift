@@ -12,11 +12,12 @@ import UIKit
 
 
 class TabBarViewController: UITabBarController,
-                            ChefbookCentralDelegate
-{
+                            ChefbookCentralDelegate {
 
-    override func viewDidLoad()
-    {
+    
+    // MARK: UIViewController Lifecycle Methods
+    
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
 
@@ -27,8 +28,7 @@ class TabBarViewController: UITabBarController,
         let     chefbookCentral = ChefbookCentral.sharedInstance
         
         
-        if !chefbookCentral.didOpenDatabase
-        {
+        if !chefbookCentral.didOpenDatabase {
             chefbookCentral.delegate = self
             chefbookCentral.openDatabase()
         }
@@ -36,15 +36,13 @@ class TabBarViewController: UITabBarController,
     }
     
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool ) {
         logTrace()
         super.viewWillAppear( animated )
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
@@ -54,15 +52,14 @@ class TabBarViewController: UITabBarController,
     // MARK: ChefbookCentralDelegate Methods
     
     func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool )
-    {
+                          didOpenDatabase: Bool ) {
+        
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
-        if didOpenDatabase
-        {
+        
+        if didOpenDatabase {
             chefbookCentral.fetchRecipes()
         }
-        else
-        {
+        else {
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
         }
@@ -70,12 +67,11 @@ class TabBarViewController: UITabBarController,
     }
     
     
-    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral )
-    {
+    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
+        
         logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
         
-        if UIDevice.current.userInterfaceIdiom == .pad
-        {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             loadExampleRecipeOnFirstTimeIn()
         }
         
@@ -85,20 +81,20 @@ class TabBarViewController: UITabBarController,
 
     // MARK: Utility Methods
 
-    private func loadExampleRecipeOnFirstTimeIn()
-    {
+    private func loadExampleRecipeOnFirstTimeIn() {
+        
         let userDefaults = UserDefaults.standard
         let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
         
         logVerbose( "dirtyFlag[ %@ ]", stringFor( dirtyFlag ) )
         
-        if !dirtyFlag
-        {
+        if !dirtyFlag {
+            
             userDefaults.set( true, forKey: "Dirty" )
             let chefbookCentral = ChefbookCentral.sharedInstance
             
-            if chefbookCentral.recipeArray.count == 0
-            {
+            if chefbookCentral.recipeArray.count == 0 {
+                
                 chefbookCentral.addRecipe( name: "Example Recipe",
                                            imageName: "",
                                            ingredients: "1 lb. Bacon\n4 oz grated Parmesan",

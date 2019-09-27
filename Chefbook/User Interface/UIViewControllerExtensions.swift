@@ -11,10 +11,10 @@ import UIKit
 
 
 
-extension UIViewController
-{
-    func presentAlert( title: String, message: String )
-    {
+extension UIViewController {
+    
+    func presentAlert( title: String, message: String ) {
+        
         logVerbose( "[ %@ ][ %@ ]", title, message )
         let         alert    = UIAlertController.init( title: title, message: message, preferredStyle: UIAlertController.Style.alert )
         let         okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ),

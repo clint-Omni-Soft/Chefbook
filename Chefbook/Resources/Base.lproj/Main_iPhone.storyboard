@@ -403,6 +403,12 @@
                                                         <outlet property="delegate" destination="tkR-Hr-NQy" id="aHp-Ki-1iK"/>
                                                     </connections>
                                                 </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ync-d4-QUY" userLabel="invisibleNameButton">
+                                                    <rect key="frame" x="16" y="7" width="289" height="30"/>
+                                                    <connections>
+                                                        <action selector="invisibleNameButtonTouched:" destination="6yH-fg-ge8" eventType="touchUpInside" id="PzG-2d-T4d"/>
+                                                    </connections>
+                                                </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RZ0-BN-bJZ" userLabel="editButton">
                                                     <rect key="frame" x="313" y="11" width="22" height="22"/>
                                                     <constraints>
@@ -420,13 +426,18 @@
                                                 <constraint firstItem="RZ0-BN-bJZ" firstAttribute="leading" secondItem="Hh0-nB-iQl" secondAttribute="trailing" constant="8" id="3pz-VE-c3g"/>
                                                 <constraint firstItem="RZ0-BN-bJZ" firstAttribute="bottom" secondItem="EmN-QX-sqn" secondAttribute="bottomMargin" id="BhN-Zv-J5D"/>
                                                 <constraint firstItem="RZ0-BN-bJZ" firstAttribute="top" secondItem="EmN-QX-sqn" secondAttribute="topMargin" id="HtY-Dx-Bbu"/>
+                                                <constraint firstItem="Hh0-nB-iQl" firstAttribute="leading" secondItem="ync-d4-QUY" secondAttribute="leading" id="JG8-2T-w45"/>
                                                 <constraint firstAttribute="trailing" secondItem="RZ0-BN-bJZ" secondAttribute="trailing" constant="8" id="U8g-DQ-ciN"/>
+                                                <constraint firstItem="Hh0-nB-iQl" firstAttribute="bottom" secondItem="ync-d4-QUY" secondAttribute="bottom" id="VnT-JC-7Sa"/>
+                                                <constraint firstItem="Hh0-nB-iQl" firstAttribute="trailing" secondItem="ync-d4-QUY" secondAttribute="trailing" id="YH3-w5-u4y"/>
                                                 <constraint firstItem="Hh0-nB-iQl" firstAttribute="top" secondItem="EmN-QX-sqn" secondAttribute="top" constant="7" id="bkV-5M-jzQ"/>
                                                 <constraint firstItem="Hh0-nB-iQl" firstAttribute="leading" secondItem="EmN-QX-sqn" secondAttribute="leading" constant="16" id="lfd-2h-YBE"/>
+                                                <constraint firstItem="Hh0-nB-iQl" firstAttribute="top" secondItem="ync-d4-QUY" secondAttribute="top" id="r0d-QY-3Tk"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="editButton" destination="RZ0-BN-bJZ" id="fdW-hG-5nO"/>
+                                            <outlet property="invisibleNameButton" destination="ync-d4-QUY" id="2XN-9Y-rZQ"/>
                                             <outlet property="nameTextField" destination="Hh0-nB-iQl" id="sId-TA-Tt6"/>
                                         </connections>
                                     </tableViewCell>
@@ -466,6 +477,12 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JYQ-vU-9Fh" userLabel="invisibleQuantityButton">
+                                                    <rect key="frame" x="104" y="2" width="44" height="30"/>
+                                                    <connections>
+                                                        <action selector="invisibleQuantityButtonTouched:" destination="doY-bg-qff" eventType="touchUpInside" id="MaA-Ec-gMw"/>
+                                                    </connections>
+                                                </button>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="utx-dB-STh" userLabel="weightTextField">
                                                     <rect key="frame" x="180" y="2" width="54" height="30"/>
                                                     <constraints>
@@ -476,6 +493,12 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JAJ-dX-4TJ" userLabel="invisibleWeightButton">
+                                                    <rect key="frame" x="180" y="2" width="54" height="30"/>
+                                                    <connections>
+                                                        <action selector="invisibleWeightButtonTouched:" destination="doY-bg-qff" eventType="touchUpInside" id="6E2-PN-SBN"/>
+                                                    </connections>
+                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="g" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zTU-09-KHJ" userLabel="gLabel">
                                                     <rect key="frame" x="242" y="5" width="20" height="24"/>
                                                     <constraints>
@@ -509,23 +532,33 @@
                                             <constraints>
                                                 <constraint firstItem="utx-dB-STh" firstAttribute="leading" secondItem="Ist-xm-mpm" secondAttribute="trailing" constant="4" id="3Nx-CO-QhJ"/>
                                                 <constraint firstItem="isc-JQ-UNR" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="2" id="6BM-Jv-tOY"/>
+                                                <constraint firstItem="JAJ-dX-4TJ" firstAttribute="trailing" secondItem="utx-dB-STh" secondAttribute="trailing" id="8p5-yJ-wPe"/>
                                                 <constraint firstItem="KTh-N8-wjZ" firstAttribute="leading" secondItem="qDG-X9-npF" secondAttribute="leading" constant="16" id="B6z-jk-FyP"/>
                                                 <constraint firstItem="IUy-Oq-QF3" firstAttribute="leading" secondItem="KTh-N8-wjZ" secondAttribute="trailing" constant="8" id="BCf-hp-mCO"/>
+                                                <constraint firstItem="JYQ-vU-9Fh" firstAttribute="trailing" secondItem="IUy-Oq-QF3" secondAttribute="trailing" id="BXi-5Q-xjP"/>
                                                 <constraint firstItem="rOz-i6-rpK" firstAttribute="leading" secondItem="isc-JQ-UNR" secondAttribute="trailing" constant="8" id="BuQ-L8-4eR"/>
+                                                <constraint firstItem="JYQ-vU-9Fh" firstAttribute="top" secondItem="IUy-Oq-QF3" secondAttribute="top" id="Bug-J3-82e"/>
+                                                <constraint firstItem="JAJ-dX-4TJ" firstAttribute="top" secondItem="utx-dB-STh" secondAttribute="top" id="Hew-ZD-W51"/>
                                                 <constraint firstItem="zTU-09-KHJ" firstAttribute="leading" secondItem="utx-dB-STh" secondAttribute="trailing" constant="8" id="KKn-0f-Wrp"/>
                                                 <constraint firstItem="KTh-N8-wjZ" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="5" id="MrE-nW-ZsR"/>
                                                 <constraint firstItem="Ist-xm-mpm" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="5" id="O9R-6M-uhY"/>
                                                 <constraint firstItem="isc-JQ-UNR" firstAttribute="leading" secondItem="zTU-09-KHJ" secondAttribute="trailing" id="VQq-xt-yY5"/>
                                                 <constraint firstAttribute="trailing" secondItem="rOz-i6-rpK" secondAttribute="trailing" constant="8" id="VfU-wf-ng1"/>
+                                                <constraint firstItem="JYQ-vU-9Fh" firstAttribute="bottom" secondItem="IUy-Oq-QF3" secondAttribute="bottom" id="WQY-CA-cvo"/>
                                                 <constraint firstItem="utx-dB-STh" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="2" id="WuJ-ZY-M8p"/>
+                                                <constraint firstItem="JAJ-dX-4TJ" firstAttribute="leading" secondItem="utx-dB-STh" secondAttribute="leading" id="YUc-Vj-Hcz"/>
+                                                <constraint firstItem="JAJ-dX-4TJ" firstAttribute="bottom" secondItem="utx-dB-STh" secondAttribute="bottom" id="Yp1-X6-15b"/>
                                                 <constraint firstItem="IUy-Oq-QF3" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="2" id="gy6-Rh-Rgu"/>
                                                 <constraint firstItem="zTU-09-KHJ" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="5" id="pk0-hG-Jlr"/>
                                                 <constraint firstItem="Ist-xm-mpm" firstAttribute="leading" secondItem="IUy-Oq-QF3" secondAttribute="trailing" constant="8" id="rRl-Be-t6s"/>
                                                 <constraint firstItem="rOz-i6-rpK" firstAttribute="top" secondItem="qDG-X9-npF" secondAttribute="top" constant="6" id="zhv-bL-T7D"/>
+                                                <constraint firstItem="JYQ-vU-9Fh" firstAttribute="leading" secondItem="IUy-Oq-QF3" secondAttribute="leading" id="zsZ-Ly-7y3"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="editButton" destination="rOz-i6-rpK" id="oeB-Zh-pua"/>
+                                            <outlet property="invisibleQuantityButton" destination="JYQ-vU-9Fh" id="W7r-0O-plp"/>
+                                            <outlet property="invisibleWeightButton" destination="JAJ-dX-4TJ" id="V0J-PR-4N0"/>
                                             <outlet property="quantityTextField" destination="IUy-Oq-QF3" id="uSb-mR-Bj4"/>
                                             <outlet property="weightTextField" destination="utx-dB-STh" id="XYv-vI-BkL"/>
                                             <outlet property="yieldLabel" destination="KTh-N8-wjZ" id="o2v-UN-Cm6"/>
@@ -548,6 +581,12 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFb-WZ-xie" userLabel="invisiblePercentageButton">
+                                                    <rect key="frame" x="16" y="7" width="40" height="30"/>
+                                                    <connections>
+                                                        <action selector="invisiblePercentageButtonTouched:" destination="k9J-yd-QvP" eventType="touchUpInside" id="a8h-wl-va6"/>
+                                                    </connections>
+                                                </button>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Ingredient" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xmQ-SM-gSJ" userLabel="ingredientTextField">
                                                     <rect key="frame" x="64" y="7" width="158" height="30"/>
                                                     <constraints>
@@ -557,6 +596,12 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M8P-of-zG8" userLabel="invisibleIngredientButton">
+                                                    <rect key="frame" x="64" y="7" width="158" height="30"/>
+                                                    <connections>
+                                                        <action selector="invisibleIngredientButtonTouched:" destination="k9J-yd-QvP" eventType="touchUpInside" id="1K9-Nb-ikS"/>
+                                                    </connections>
+                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3b-Iy-KyU" userLabel="weightLabel">
                                                     <rect key="frame" x="230" y="4" width="75" height="36"/>
                                                     <constraints>
@@ -581,19 +626,29 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="xmQ-SM-gSJ" firstAttribute="top" secondItem="ru9-Yx-v1l" secondAttribute="top" constant="7" id="0rq-zC-rlf"/>
+                                                <constraint firstItem="TFb-WZ-xie" firstAttribute="bottom" secondItem="hBf-3Q-2B3" secondAttribute="bottom" id="E8M-8E-0j7"/>
                                                 <constraint firstItem="vfz-Jz-CR6" firstAttribute="top" secondItem="ru9-Yx-v1l" secondAttribute="top" constant="9" id="Kmz-jb-aLd"/>
                                                 <constraint firstAttribute="trailing" secondItem="vfz-Jz-CR6" secondAttribute="trailing" constant="8" id="LsV-wi-3zp"/>
+                                                <constraint firstItem="M8P-of-zG8" firstAttribute="bottom" secondItem="xmQ-SM-gSJ" secondAttribute="bottom" id="Q32-FK-FmF"/>
                                                 <constraint firstItem="vfz-Jz-CR6" firstAttribute="leading" secondItem="c3b-Iy-KyU" secondAttribute="trailing" constant="8" id="Rt2-kx-TWb"/>
+                                                <constraint firstItem="TFb-WZ-xie" firstAttribute="leading" secondItem="hBf-3Q-2B3" secondAttribute="leading" id="Sg1-9y-HeN"/>
                                                 <constraint firstItem="c3b-Iy-KyU" firstAttribute="leading" secondItem="xmQ-SM-gSJ" secondAttribute="trailing" constant="8" id="TiP-qB-hqR"/>
                                                 <constraint firstItem="xmQ-SM-gSJ" firstAttribute="leading" secondItem="hBf-3Q-2B3" secondAttribute="trailing" constant="8" id="Tmv-0r-JDB"/>
+                                                <constraint firstItem="TFb-WZ-xie" firstAttribute="trailing" secondItem="hBf-3Q-2B3" secondAttribute="trailing" id="Tnc-TU-cKj"/>
                                                 <constraint firstItem="hBf-3Q-2B3" firstAttribute="leading" secondItem="ru9-Yx-v1l" secondAttribute="leading" constant="16" id="Y6u-Ds-WYv"/>
                                                 <constraint firstItem="hBf-3Q-2B3" firstAttribute="top" secondItem="ru9-Yx-v1l" secondAttribute="top" constant="7" id="YaQ-ko-69I"/>
+                                                <constraint firstItem="M8P-of-zG8" firstAttribute="leading" secondItem="xmQ-SM-gSJ" secondAttribute="leading" id="f4H-Rl-5q2"/>
+                                                <constraint firstItem="TFb-WZ-xie" firstAttribute="top" secondItem="hBf-3Q-2B3" secondAttribute="top" id="gtB-gx-hNl"/>
+                                                <constraint firstItem="M8P-of-zG8" firstAttribute="trailing" secondItem="xmQ-SM-gSJ" secondAttribute="trailing" id="kg2-fL-c0J"/>
+                                                <constraint firstItem="M8P-of-zG8" firstAttribute="top" secondItem="xmQ-SM-gSJ" secondAttribute="top" id="m2S-g8-xrP"/>
                                                 <constraint firstItem="c3b-Iy-KyU" firstAttribute="top" secondItem="ru9-Yx-v1l" secondAttribute="top" constant="4" id="x5z-a6-IxL"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="addOrEditButton" destination="vfz-Jz-CR6" id="zJw-0W-zaF"/>
                                             <outlet property="ingredientTextField" destination="xmQ-SM-gSJ" id="UqS-j6-rwh"/>
+                                            <outlet property="invisibleIngredientButton" destination="M8P-of-zG8" id="Nv3-yZ-RqJ"/>
+                                            <outlet property="invisiblePercentageButton" destination="TFb-WZ-xie" id="73V-KO-4mH"/>
                                             <outlet property="percentageTextField" destination="hBf-3Q-2B3" id="fPw-Je-C4t"/>
                                             <outlet property="weightLabel" destination="c3b-Iy-KyU" id="Pea-QX-UMR"/>
                                         </connections>

@@ -29,15 +29,13 @@ class RecipeEditorViewController: UIViewController,
     
     
     // MARK: Private Variables
-    private struct StoryboardIds
-    {
+    private struct StoryboardIds {
         static let imageViewer       = "ImageViewController"
         static let ingredientsEditor = "IngredientsEditorViewController"
         static let stepsEditor       = "StepsEditorViewController"
     }
     
-    private struct CellHeights
-    {
+    private struct CellHeights {
         static let image        : CGFloat = 240.0
         static let ingredients  : CGFloat =   0.0       // Calculated
         static let name         : CGFloat =  44.0
@@ -46,8 +44,7 @@ class RecipeEditorViewController: UIViewController,
         static let yieldOptions : CGFloat =  70.0
     }
     
-    private struct CellIdentifiers
-    {
+    private struct CellIdentifiers {
         static let image        = "RecipeImageTableViewCell"
         static let ingredients  = "RecipeIngredientsTableViewCell"
         static let name         = "RecipeNameTableViewCell"
@@ -56,8 +53,7 @@ class RecipeEditorViewController: UIViewController,
         static let yieldOptions = "RecipeYieldOptionsTableViewCell"
     }
     
-    private struct CellIndexes
-    {
+    private struct CellIndexes {
         static let name         = 0
         static let image        = 1
         static let yield        = 2
@@ -87,10 +83,10 @@ class RecipeEditorViewController: UIViewController,
     private var     yieldOptions                = String()
 
     
+    
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
 
@@ -99,20 +95,17 @@ class RecipeEditorViewController: UIViewController,
         preferredContentSize = CGSize( width: 320, height: 460 )
         myTableView.separatorStyle = .none
 
-        if UIDevice.current.userInterfaceIdiom == .pad
-        {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             waitingForNotification = true
         }
-        else
-        {
+        else {
             initializeVariables()
         }
         
     }
     
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
         
@@ -130,23 +123,20 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
+    override func viewWillDisappear(_ animated: Bool) {
         logTrace()
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
         
-        if !imageAssigned && !imageName.isEmpty
-        {
+        if !imageAssigned && !imageName.isEmpty {
             deleteImage()
         }
         
     }
     
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         logTrace( "MEMORY WARNING!!!" )
         super.didReceiveMemoryWarning()
     }
@@ -156,26 +146,23 @@ class RecipeEditorViewController: UIViewController,
     // MARK: ChefbookCentralDelegate Methods
     
     func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool )
-    {
+                          didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
     }
     
     
-    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral )
-    {
+    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
         logVerbose( "loaded [ %d ] recipes ... indexOfItemBeingEdited[ %d ]", chefbookCentral.recipeArray.count, indexOfItemBeingEdited )
         
         logVerbose( "recovering recipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
         indexOfItemBeingEdited = chefbookCentral.selectedRecipeIndex
         
-        if loadingImageView
-        {
+        if loadingImageView {
+            
             loadingImageView = false
             launchImageViewController()
         }
-        else
-        {
+        else {
             self.myTableView.reloadData()
         }
         
@@ -186,8 +173,7 @@ class RecipeEditorViewController: UIViewController,
     // MARK: IngredientsEditorViewControllerDelegate Methods
     
     func ingredientsEditorViewController( ingredientsEditorViewController: IngredientsEditorViewController,
-                                          didEditIngredients: Bool )
-    {
+                                          didEditIngredients: Bool ) {
         logTrace()
         ingredientsText = ingredientsEditorViewController.ingredients
         
@@ -198,8 +184,7 @@ class RecipeEditorViewController: UIViewController,
 
     // MARK: NSNotification Methods
     
-    @objc func recipeSelected( notification: NSNotification )
-    {
+    @objc func recipeSelected( notification: NSNotification ) {
         logTrace()
         waitingForNotification = false
         
@@ -210,13 +195,12 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    @objc func recipesUpdated( notification: NSNotification )
-    {
+    @objc func recipesUpdated( notification: NSNotification ) {
+        
         let     chefbookCentral = ChefbookCentral.sharedInstance
         
         
-        if waitingForNotification
-        {
+        if waitingForNotification {
             logTrace( "ignorning ... waitingForNotification" )
             return
         }
@@ -227,8 +211,7 @@ class RecipeEditorViewController: UIViewController,
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
         // This approach allows a change in one to immediately be reflected in the other.
         
-        if !imageAssigned && !imageName.isEmpty
-        {
+        if !imageAssigned && !imageName.isEmpty {
             deleteImage()
         }
         
@@ -242,17 +225,14 @@ class RecipeEditorViewController: UIViewController,
     // MARK: RecipeImageTableViewCellDelegate Methods
     
     func recipeImageTableViewCell( recipeImageTableViewCell: RecipeImageTableViewCell,
-                                   cameraButtonTouched: Bool )
-    {
+                                   cameraButtonTouched: Bool ) {
         logTrace()
         imageCell = recipeImageTableViewCell
         
-        if imageName.isEmpty
-        {
+        if imageName.isEmpty {
             promptForImageSource()
         }
-        else
-        {
+        else {
             promptForImageDispostion()
         }
         
@@ -263,8 +243,7 @@ class RecipeEditorViewController: UIViewController,
     // MARK: StepsEditorViewControllerDelegate Methods
     
     func stepsEditorViewController( stepsEditorViewController: StepsEditorViewController,
-                                    didEditSteps: Bool )
-    {
+                                    didEditSteps: Bool ) {
         logTrace()
         stepsText = stepsEditorViewController.steps
        
@@ -275,8 +254,7 @@ class RecipeEditorViewController: UIViewController,
     
     // MARK: Target/Action Methods
     
-    @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem )
-    {
+    @IBAction func cancelBarButtonTouched( sender: UIBarButtonItem ) {
         logTrace()
         dismissView()
     }
@@ -285,11 +263,9 @@ class RecipeEditorViewController: UIViewController,
     
     // MARK: UIImagePickerControllerDelegate Methods
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController )
-    {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController ) {
         logTrace()
-        if nil != presentedViewController
-        {
+        if nil != presentedViewController {
             dismiss( animated: true, completion: nil )
         }
         
@@ -297,51 +273,40 @@ class RecipeEditorViewController: UIViewController,
     
     
     func imagePickerController(_ picker: UIImagePickerController,
-                                 didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any] )
-    {
+                                 didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any] ) {
         logTrace()
-        if nil != presentedViewController
-        {
+        if nil != presentedViewController {
             dismiss( animated: true, completion: nil )
         }
         
-        DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.01 ) )
-        {
+        DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.01 ) ) {
+            
             if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String
             {
-                if "public.image" == mediaType
-                {
+                if "public.image" == mediaType {
                     var     imageToSave: UIImage? = nil
                     
-                    
-                    if let originalImage: UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-                    {
+                    if let originalImage: UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                         imageToSave = originalImage
                     }
-                    else if let editedImage: UIImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-                    {
+                    else if let editedImage: UIImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
                         imageToSave = editedImage
                     }
                     
-                    if let myImageToSave = imageToSave
-                    {
-                        if .camera == picker.sourceType
-                        {
+                    if let myImageToSave = imageToSave {
+                        
+                        if .camera == picker.sourceType {
                             UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( RecipeEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
                         }
                         
-                        
                         let     imageName = ChefbookCentral.sharedInstance.saveImage( image: myImageToSave )
                         
-                        
-                        if imageName.isEmpty
-                        {
+                        if imageName.isEmpty {
                             logTrace( "ERROR:  Image save FAILED!" )
                             self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                                message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
-                        else
-                        {
+                        else {
                             self.imageAssigned = false
                             self.imageName     = imageName
                             
@@ -353,22 +318,19 @@ class RecipeEditorViewController: UIViewController,
                         }
                         
                     }
-                    else
-                    {
+                    else {
                         logTrace( "ERROR:  Unable to unwrap imageToSave!" )
                     }
                     
                 }
-                else
-                {
+                else {
                     logVerbose( "ERROR:  Invalid media type[ %@ ]", mediaType )
                     self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.InvalidMediaType", comment: "We can't save the item you selected.  We can only save photos." ) )
                 }
                 
             }
-            else
-            {
+            else {
                 logTrace( "ERROR:  Unable to convert info[UIImagePickerControllerMediaType] to String" )
             }
             
@@ -384,14 +346,12 @@ class RecipeEditorViewController: UIViewController,
                      didFinishSavingWithError error: NSError?,
                      contextInfo: UnsafeRawPointer )
     {
-        guard error == nil else
-        {
-            if let myError = error
-            {
+        guard error == nil else {
+            
+            if let myError = error {
                 logVerbose( "ERROR:  Save to photo album failed!  Error[ %@ ]", myError.localizedDescription )
             }
-            else
-            {
+            else {
                 logTrace( "ERROR:  Save to photo album failed!  Error[ Unknown ]" )
             }
             
@@ -405,8 +365,7 @@ class RecipeEditorViewController: UIViewController,
     
     // MARK: UIPopoverPresentationControllerDelegate Methods
     
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle
-    {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
     
@@ -415,8 +374,7 @@ class RecipeEditorViewController: UIViewController,
     // MARK: UITableViewDataSource Methods
     
     func tableView(_ tableView: UITableView,
-                     numberOfRowsInSection section: Int) -> Int
-    {
+                     numberOfRowsInSection section: Int) -> Int {
 //        logTrace()
         let numberOfRows = waitingForNotification ? 0 : CellIndexes.numberOfCells
         
@@ -425,28 +383,20 @@ class RecipeEditorViewController: UIViewController,
     
     
     func tableView(_ tableView: UITableView,
-                     cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-//        logVerbose( "row[ %d ]", indexPath.row)
-        var     cell : UITableViewCell!
+                     cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+//        logVerbose( "row[ %d ]", indexPath.row)
+        var     cell = UITableViewCell.init()
         
         switch indexPath.row
         {
-        case CellIndexes.image:
-            cell = loadImageViewCell()
-        case CellIndexes.name:
-            cell = loadRecipeNameCell()
-        case CellIndexes.ingredients:
-            cell = loadIngredientsCell()
-        case CellIndexes.steps:
-            cell = loadStepsCell()
-        case CellIndexes.yield:
-            cell = loadYieldCell()
-        case CellIndexes.yieldOptions:
-            cell = loadYieldOptionsCell()
-        default:
-            cell = UITableViewCell.init()
+        case CellIndexes.image:         cell = loadImageViewCell()
+        case CellIndexes.name:          cell = loadRecipeNameCell()
+        case CellIndexes.ingredients:   cell = loadIngredientsCell()
+        case CellIndexes.steps:         cell = loadStepsCell()
+        case CellIndexes.yield:         cell = loadYieldCell()
+        case CellIndexes.yieldOptions:  cell = loadYieldOptionsCell()
+        default:                        break
         }
         
         return cell
@@ -456,56 +406,37 @@ class RecipeEditorViewController: UIViewController,
     
     // MARK: UITableViewDelegate Methods
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath )
-    {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath ) {
+        
         tableView.deselectRow( at: indexPath, animated: false )
         
         switch indexPath.row
         {
-        case CellIndexes.ingredients:
-            launchIngredientsEditorViewController()
-            
-        case CellIndexes.name:
-            editRecipeName()
-            
-        case CellIndexes.steps:
-            launchStepsEditorViewController()
-        
-        case CellIndexes.yield:
-            editRecipeYield()
-
-        case CellIndexes.yieldOptions:
-            editRecipeYieldOptions()
-
-        default:
-            break
+        case CellIndexes.ingredients:       launchIngredientsEditorViewController()
+        case CellIndexes.name:              editRecipeName()
+        case CellIndexes.steps:             launchStepsEditorViewController()
+        case CellIndexes.yield:             editRecipeYield()
+        case CellIndexes.yieldOptions:      editRecipeYieldOptions()
+        default:                            break
         }
         
     }
     
     
     func tableView(_ tableView: UITableView,
-                     heightForRowAt indexPath: IndexPath) -> CGFloat
-    {
-        var     height : CGFloat = 44.0
+                     heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        var     height : CGFloat = 44.0
         
         switch indexPath.row
         {
-        case CellIndexes.image:
-            height = CellHeights.image
-        case CellIndexes.ingredients:
-            height = cellHeightForIngredients()
-        case CellIndexes.name:
-            height = CellHeights.name
-        case CellIndexes.steps:
-            height = cellHeightForSteps()
-        case CellIndexes.yield:
-            height = CellHeights.yield
-        case CellIndexes.yieldOptions:
-            height = CellHeights.yieldOptions
-        default:
-            break
+        case CellIndexes.image:             height = CellHeights.image
+        case CellIndexes.ingredients:       height = cellHeightForIngredients()
+        case CellIndexes.name:              height = CellHeights.name
+        case CellIndexes.steps:             height = cellHeightForSteps()
+        case CellIndexes.yield:             height = CellHeights.yield
+        case CellIndexes.yieldOptions:      height = CellHeights.yieldOptions
+        default:                            break
         }
         
         return height
@@ -515,34 +446,32 @@ class RecipeEditorViewController: UIViewController,
     
     // MARK: Utility Methods
     
-    private func cellHeightForIngredients() -> CGFloat
-    {
+    private func cellHeightForIngredients() -> CGFloat {
+        
         let     arrayOfLines  = ingredientsText.components( separatedBy: "\n" )
         var     cellHeight    : CGFloat = 40.0
         let     heightPerLine : CGFloat = 21.0
         
-        
         cellHeight += CGFloat( arrayOfLines.count ) * heightPerLine
         
         return cellHeight
     }
     
     
-    private func cellHeightForSteps() -> CGFloat
-    {
+    private func cellHeightForSteps() -> CGFloat {
+        
         let     arrayOfLines  = stepsText.components( separatedBy: "\n" )
         var     cellHeight    : CGFloat = 40.0
         let     heightPerLine : CGFloat = 21.0
         
-        
         cellHeight += CGFloat( arrayOfLines.count ) * heightPerLine
         
         return cellHeight
     }
     
     
-    private func configureBarButtonItem()
-    {
+    private func configureBarButtonItem() {
+        
         let launchedFromMasterView = UIDevice.current.userInterfaceIdiom == .pad
 
         navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: ( launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   ) ),
@@ -552,18 +481,17 @@ class RecipeEditorViewController: UIViewController,
     }
     
 
-    private func dataChanged() -> Bool
-    {
-        var     dataChanged  = false
+    private func dataChanged() -> Bool {
         
+        var     dataChanged  = false
 
         if ( ( recipeName       != originalRecipeName   ) ||
              ( imageName        != originalImageName    ) ||
              ( ingredientsText  != originalIngredients  ) ||
              ( stepsText        != originalSteps        ) ||
              ( yield            != originalYield        ) ||
-             ( yieldOptions     != originalYieldOptions ) )
-        {
+             ( yieldOptions     != originalYieldOptions ) ) {
+            
             dataChanged = true
         }
         
@@ -573,10 +501,9 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func deleteImage()
-    {
-        if !ChefbookCentral.sharedInstance.deleteImageWith( name: imageName )
-        {
+    private func deleteImage() {
+        
+        if !ChefbookCentral.sharedInstance.deleteImageWith( name: imageName ) {
             logVerbose( "ERROR: Unable to delete image[ %@ ]!", self.imageName )
             presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
                           message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
@@ -589,27 +516,24 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func dismissView()
-    {
+    private func dismissView() {
+        
         logTrace()
-        if UIDevice.current.userInterfaceIdiom == .pad
-        {
-            let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
+        if UIDevice.current.userInterfaceIdiom == .pad {
             
+            let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
             
             detailNavigationViewController?.visibleViewController?.view.frame = CGRect( x: 0, y: 0, width: 0, height: 0 )
             navigationItem.leftBarButtonItem = nil
-       }
-        else
-        {
+        }
+        else {
             navigationController?.popViewController( animated: true )
         }
         
     }
     
     
-    @objc private func editRecipeName()
-    {
+    @objc private func editRecipeName() {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditRecipeName", comment: "Edit recipe name" ),
                                                 message: nil,
@@ -620,37 +544,32 @@ class RecipeEditorViewController: UIViewController,
             logTrace( "Save Action" )
             let     nameTextField = alert.textFields![0] as UITextField
             
-            
-            if var textStringName = nameTextField.text
-            {
+            if var textStringName = nameTextField.text {
+                
                 textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
                 
-                if !textStringName.isEmpty
-                {
+                if !textStringName.isEmpty {
                     logTrace( "We have a non-zero length string" )
                     
-                    if textStringName == self.recipeName
-                    {
+                    if textStringName == self.recipeName {
                         logTrace( "No changes ... do nothing!" )
                         return
                     }
                     
-                    if self.unique( recipeName: textStringName )
-                    {
+                    if self.unique( recipeName: textStringName ) {
+                        
                         self.recipeName = textStringName
                         
                         self.updateChefbookCentral()
                     }
-                    else
-                    {
+                    else {
                         logTrace( "ERROR:  Duplicate name field!" )
                         self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error",                 comment: "Error!" ),
                                            message: NSLocalizedString( "AlertMessage.DuplicateRecipeName", comment: "The recipe name you choose already exists.  Please try again." ) )
                     }
                     
                 }
-                else
-                {
+                else {
                     logTrace( "ERROR:  Name field cannot be left blank!" )
                     self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error",               comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank" ) )
@@ -662,16 +581,13 @@ class RecipeEditorViewController: UIViewController,
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        
         alert.addTextField
             { ( textField ) in
                 
-                if self.recipeName.isEmpty
-                {
+                if self.recipeName.isEmpty {
                     textField.placeholder = NSLocalizedString( "LabelText.Name", comment: "Name" )
                 }
-                else
-                {
+                else {
                     textField.text = self.recipeName
                 }
                 
@@ -685,8 +601,8 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    @objc private func editRecipeYield()
-    {
+    @objc private func editRecipeYield() {
+        
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditRecipeYield", comment: "Edit recipe yield" ),
                                                 message: nil,
@@ -698,16 +614,13 @@ class RecipeEditorViewController: UIViewController,
             let     yieldTextField = alert.textFields![0] as UITextField
             
             
-            if var textStringName = yieldTextField.text
-            {
+            if var textStringName = yieldTextField.text {
                 textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
                 
-                if !textStringName.isEmpty
-                {
+                if !textStringName.isEmpty {
                     logTrace( "We have a non-zero length string" )
                     
-                    if textStringName == self.yield
-                    {
+                    if textStringName == self.yield {
                         logTrace( "No changes ... do nothing!" )
                         return
                     }
@@ -716,8 +629,7 @@ class RecipeEditorViewController: UIViewController,
                     
                     self.updateChefbookCentral()
                 }
-                else
-                {
+                else {
                     logTrace( "ERROR:  Yield field cannot be left blank!" )
                     self.presentAlert( title:   NSLocalizedString( "AlertTitle.Error",               comment: "Error!" ),
                                        message: NSLocalizedString( "AlertMessage.YieldCannotBeBlank", comment: "Yield cannot be left blank" ) )
@@ -729,16 +641,13 @@ class RecipeEditorViewController: UIViewController,
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        
         alert.addTextField
             { ( textField ) in
                 
-                if self.recipeName.isEmpty
-                {
+                if self.recipeName.isEmpty {
                     textField.placeholder = NSLocalizedString( "LabelText.Yield", comment: "Yield" )
                 }
-                else
-                {
+                else {
                     textField.text = self.yield
                 }
                 
@@ -752,8 +661,8 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    @objc private func editRecipeYieldOptions()
-    {
+    @objc private func editRecipeYieldOptions() {
+        
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.EditRecipeYieldOptions", comment: "Edit recipe yield options" ),
                                                 message: nil,
@@ -765,16 +674,13 @@ class RecipeEditorViewController: UIViewController,
             let     yieldOptionsTextField = alert.textFields![0] as UITextField
             
             
-            if var textStringName = yieldOptionsTextField.text
-            {
+            if var textStringName = yieldOptionsTextField.text {
                 textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
                 
-                if !textStringName.isEmpty
-                {
+                if !textStringName.isEmpty {
                     logTrace( "We have a non-zero length string" )
                     
-                    if textStringName == self.yieldOptions
-                    {
+                    if textStringName == self.yieldOptions {
                         logTrace( "No changes ... do nothing!" )
                         return
                     }
@@ -790,16 +696,13 @@ class RecipeEditorViewController: UIViewController,
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        
         alert.addTextField
             { ( textField ) in
                 
-                if self.recipeName.isEmpty
-                {
+                if self.recipeName.isEmpty {
                     textField.placeholder = NSLocalizedString( "LabelText.YieldOptions", comment: "Yield Options" )
                 }
-                else
-                {
+                else {
                     textField.text = self.yieldOptions
                 }
                 
@@ -813,12 +716,10 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func initializeVariables()
-    {
+    private func initializeVariables() {
         logTrace()
         let         chefbookCentral = ChefbookCentral.sharedInstance
         var         frame           = CGRect.zero
-        
         
         frame.size.height = .leastNormalMagnitude
         
@@ -826,8 +727,8 @@ class RecipeEditorViewController: UIViewController,
         myTableView.tableFooterView = UIView( frame: frame )
         myTableView.contentInsetAdjustmentBehavior = .never
         
-        if NEW_RECIPE == indexOfItemBeingEdited
-        {
+        if NEW_RECIPE == indexOfItemBeingEdited {
+            
             imageName       = String()
             ingredientsText = String()
             recipeName      = String()
@@ -835,10 +736,8 @@ class RecipeEditorViewController: UIViewController,
             yield           = String()
             yieldOptions    = String()
         }
-        else
-        {
+        else {
             let         recipe = chefbookCentral.recipeArray[indexOfItemBeingEdited]
-            
             
             imageName       = recipe.imageName     ?? ""
             ingredientsText = recipe.ingredients   ?? ""
@@ -860,71 +759,64 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func launchImageViewController()
-    {
+    private func launchImageViewController() {
+        
         logVerbose( "imageName[ %@ ]", imageName )
-        if let imageViewController: ImageViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.imageViewer ) as? ImageViewController
-        {
+        if let imageViewController: ImageViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.imageViewer ) as? ImageViewController {
             imageViewController.imageName = imageName
             
             navigationController?.pushViewController( imageViewController, animated: true )
         }
-        else
-        {
+        else {
             logTrace( "ERROR: Could NOT load ImageViewController!" )
         }
         
     }
     
     
-    private func launchIngredientsEditorViewController()
-    {
+    private func launchIngredientsEditorViewController() {
+        
         logVerbose( "ingredientsText[ %@ ]", ingredientsText )
-        if let ingredientsEditorViewController: IngredientsEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.ingredientsEditor ) as? IngredientsEditorViewController
-        {
+        if let ingredientsEditorViewController: IngredientsEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.ingredientsEditor ) as? IngredientsEditorViewController {
+            
             ingredientsEditorViewController.delegate    = self
             ingredientsEditorViewController.ingredients = ingredientsText
             
             navigationController?.pushViewController( ingredientsEditorViewController, animated: true )
         }
-        else
-        {
+        else {
             logTrace( "ERROR: Could NOT load IngredientsEditorViewController!" )
         }
         
     }
     
     
-    private func launchStepsEditorViewController()
-    {
+    private func launchStepsEditorViewController() {
+        
         logVerbose( "stepsText[ %@ ]", stepsText )
-        if let stepsEditorViewController: StepsEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.stepsEditor ) as? StepsEditorViewController
-        {
+        if let stepsEditorViewController: StepsEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.stepsEditor ) as? StepsEditorViewController {
+            
             stepsEditorViewController.delegate = self
             stepsEditorViewController.steps    = stepsText
             
             navigationController?.pushViewController( stepsEditorViewController, animated: true )
         }
-        else
-        {
+        else {
             logTrace( "ERROR: Could NOT load StepsEditorViewController!" )
         }
         
     }
     
     
-    private func loadImageViewCell() -> UITableViewCell
-    {
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.image ) else
-        {
+    private func loadImageViewCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.image ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-        
         logVerbose( "[ %@ ]", imageName )
         let imageCell = cell as! RecipeImageTableViewCell
-        
         
         imageCell.delegate = self
         imageCell.initializeWith( imageName: imageName )
@@ -933,18 +825,15 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func loadIngredientsCell() -> UITableViewCell
-    {
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.ingredients ) else
-        {
+    private func loadIngredientsCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.ingredients ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-        
         logVerbose( "[ %@ ]", ingredientsText )
         let ingredientsCell = cell as! RecipeIngredientsTableViewCell
-        
         
         ingredientsCell.initializeWith( ingredientsList: ingredientsText )
         
@@ -952,27 +841,22 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func loadRecipeNameCell() -> UITableViewCell
-    {
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.name ) else
-        {
+    private func loadRecipeNameCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.name ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-        
         logTrace()
         let recipeNameCell = cell as! RecipeNameTableViewCell
         
-        
         recipeNameCell.initializeWith( recipeName: recipeName )
         
-        if firstTimeIn && ( NEW_RECIPE == indexOfItemBeingEdited )
-        {
+        if firstTimeIn && ( NEW_RECIPE == indexOfItemBeingEdited ) {
             firstTimeIn = false
             
-            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ) )
-            {
+            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ) ) {
                 self.editRecipeName()
             }
             
@@ -982,18 +866,15 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func loadStepsCell() -> UITableViewCell
-    {
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.steps ) else
-        {
+    private func loadStepsCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.steps ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-        
         logVerbose( "[ %@ ]", stepsText )
         let stepsCell = cell as! RecipeStepsTableViewCell
-        
         
         stepsCell.initializeWith( stepsList: stepsText )
         
@@ -1001,18 +882,15 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func loadYieldCell() -> UITableViewCell
-    {
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else
-        {
+    private func loadYieldCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-        
         logVerbose( "[ %@ ]", yield )
         let yieldCell = cell as! RecipeYieldTableViewCell
-        
         
         yieldCell.initializeWith( yield: yield )
         
@@ -1020,18 +898,15 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func loadYieldOptionsCell() -> UITableViewCell
-    {
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yieldOptions ) else
-        {
+    private func loadYieldOptionsCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yieldOptions ) else {
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-        
         logVerbose( "[ %@ ]", yieldOptions )
         let yieldOptionsCell = cell as! RecipeYieldOptionsTableViewCell
-        
         
         yieldOptionsCell.initializeWith( yieldOptions: yieldOptions )
         
@@ -1039,11 +914,10 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func openImagePickerFor( sourceType: UIImagePickerController.SourceType )
-    {
+    private func openImagePickerFor( sourceType: UIImagePickerController.SourceType ) {
+        
         logVerbose( "[ %@ ]", ( ( .camera == sourceType ) ? "Camera" : "Photo Album" ) )
         let     imagePickerVC = UIImagePickerController.init()
-        
         
         imagePickerVC.allowsEditing = false
         imagePickerVC.delegate      = self
@@ -1059,8 +933,7 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func promptForImageDispostion()
-    {
+    private func promptForImageDispostion() {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ),
                                                 message: nil,
@@ -1090,13 +963,12 @@ class RecipeEditorViewController: UIViewController,
         { ( alertAction ) in
             logTrace( "Zoom In Action" )
             
-            if self.dataChanged()
-            {
+            if self.dataChanged() {
+                
                 self.loadingImageView = true
                 self.updateChefbookCentral()
             }
-            else
-            {
+            else {
                 self.launchImageViewController()
             }
             
@@ -1137,9 +1009,7 @@ class RecipeEditorViewController: UIViewController,
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
         
-        
-        if UIImagePickerController.isSourceTypeAvailable( .camera )
-        {
+        if UIImagePickerController.isSourceTypeAvailable( .camera ) {
             alert.addAction( cameraAction )
         }
         
@@ -1150,26 +1020,22 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func unique( recipeName: String ) -> Bool
-    {
+    private func unique( recipeName: String ) -> Bool {
+        
         let     chefbookCentral   = ChefbookCentral.sharedInstance
         var     numberOfInstances = 0
         
-        
-        for recipe in chefbookCentral.recipeArray
-        {
-            if ( recipeName.uppercased() == recipe.name?.uppercased() )
-            {
-                if indexOfItemBeingEdited == NEW_RECIPE
-                {
+        for recipe in chefbookCentral.recipeArray {
+            
+            if ( recipeName.uppercased() == recipe.name?.uppercased() ) {
+                
+                if indexOfItemBeingEdited == NEW_RECIPE {
                     logTrace( "Found a duplicate! [New]." )
                     numberOfInstances += 1
                 }
-                else
-                {
+                else {
                     let     recipeBeingEdited = chefbookCentral.recipeArray[indexOfItemBeingEdited]
 
-                    
                     if recipe.guid != recipeBeingEdited.guid
                     {
                         logTrace( "Found a duplicate! [Existing]." )
@@ -1186,16 +1052,14 @@ class RecipeEditorViewController: UIViewController,
     }
     
     
-    private func updateChefbookCentral()
-    {
+    private func updateChefbookCentral() {
         logTrace()
         let     chefbookCentral = ChefbookCentral.sharedInstance
         
-        
         chefbookCentral.delegate = self
         
-        if NEW_RECIPE == indexOfItemBeingEdited
-        {
+        if NEW_RECIPE == indexOfItemBeingEdited {
+            
             chefbookCentral.addRecipe( name: recipeName,
                                        imageName: imageName,
                                        ingredients: ingredientsText,
@@ -1204,8 +1068,7 @@ class RecipeEditorViewController: UIViewController,
                                        yield: yield,
                                        yieldOptions: yieldOptions )
         }
-        else
-        {
+        else {
             let     recipe = chefbookCentral.recipeArray[indexOfItemBeingEdited]
             
             

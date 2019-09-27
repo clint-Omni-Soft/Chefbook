@@ -10,42 +10,41 @@
 import UIKit
 
 
-protocol FormulaYieldTableViewCellDelegate: class
-{
+protocol FormulaYieldTableViewCellDelegate: class {
+    
     func formulaYieldTableViewCell( formulaYieldTableViewCell: FormulaYieldTableViewCell,
                                     editedQuantity           : String,
                                     editedWeight             : String )
 }
 
 
-class FormulaYieldTableViewCell: UITableViewCell
-{
+class FormulaYieldTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var editButton        : UIButton!
-    @IBOutlet weak var quantityTextField : UITextField!
-    @IBOutlet weak var weightTextField   : UITextField!
-    @IBOutlet weak var yieldLabel        : UILabel!
-    
+    @IBOutlet weak var editButton               : UIButton!
+    @IBOutlet weak var invisibleQuantityButton  : UIButton!
+    @IBOutlet weak var invisibleWeightButton    : UIButton!
+    @IBOutlet weak var quantityTextField        : UITextField!
+    @IBOutlet weak var weightTextField          : UITextField!
+    @IBOutlet weak var yieldLabel               : UILabel!
     
     weak var delegate : FormulaYieldTableViewCellDelegate!
     
-    private var inEditMode    = false
-    private var yieldQuantity = ""
-    private var yieldWeight   = ""
+    private var inEditMode       = false
+    private var quantityHasFocus = true
+    private var yieldQuantity    = ""
+    private var yieldWeight      = ""
     
 
     
     // MARK: UITableViewCell Lifecycle Methods
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
     }
 
     
     override func setSelected(_ selected: Bool,
-                                animated: Bool )
-    {
+                                animated: Bool ) {
         super.setSelected( false, animated: animated )
     }
 
@@ -55,11 +54,9 @@ class FormulaYieldTableViewCell: UITableViewCell
     
     func initializeWith( quantity : Int,
                          weight   : Int,
-                         delegate : FormulaYieldTableViewCellDelegate )
-    {
+                         delegate : FormulaYieldTableViewCellDelegate ) {
 //        logTrace()
         let     isNew = ( quantity == 0 && weight == 0 )
-        
         
         inEditMode    = isNew
         yieldQuantity = String( format: "%d", quantity )
@@ -68,28 +65,25 @@ class FormulaYieldTableViewCell: UITableViewCell
         
         yieldLabel.text = NSLocalizedString( "LabelText.Yield", comment: "Yield" )
         
-        quantityTextField.borderStyle = isNew ? .roundedRect : .none
-        quantityTextField.isEnabled   = isNew
+        editButton.setImage( UIImage( named: "checkmark" ), for: .normal )
+        editButton.setTitle( "", for: .normal )
+        
         quantityTextField.placeholder = quantity == 0 ? "#" : ""
         quantityTextField.text        = quantity == 0 ? ""  : yieldQuantity
         
-        weightTextField  .borderStyle = isNew ? .roundedRect : .none
-        weightTextField  .isEnabled   = isNew
         weightTextField  .placeholder = weight == 0 ? "W" : ""
         weightTextField  .text        = weight == 0 ? ""  : yieldWeight
         
-        editButton.setImage( UIImage( named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
-        editButton.setTitle( "", for: .normal )
+        configureControls()
     }
     
     
     
     // MARK: Target/Action Methods
     
-    @IBAction func editButtonTouched(_ sender: Any )
-    {
-        if inEditMode && ( ( quantityTextField.text?.isEmpty ?? true ) || ( weightTextField.text?.isEmpty ?? true ) )
-        {
+    @IBAction func editButtonTouched(_ sender: Any ) {
+        
+        if inEditMode && ( ( quantityTextField.text?.isEmpty ?? true ) || ( weightTextField.text?.isEmpty ?? true ) ) {
             logTrace( "ERROR:  quantity or weight TextField.text?.isEmpty" )
             return
         }
@@ -97,21 +91,14 @@ class FormulaYieldTableViewCell: UITableViewCell
 //        logTrace()
         inEditMode = !inEditMode
         
-        quantityTextField.borderStyle = inEditMode ? .roundedRect : .none
-        quantityTextField.isEnabled   = inEditMode
+        configureControls()
         
-        weightTextField  .borderStyle = inEditMode ? .roundedRect : .none
-        weightTextField  .isEnabled   = inEditMode
-        
-        editButton.setImage( UIImage( named: ( inEditMode ? "checkmark" : "pencil" ) ), for: .normal )
-        
-        if !inEditMode
-        {
+        if !inEditMode {
             yieldQuantity = quantityTextField.text ?? "1"
             yieldWeight   = weightTextField  .text ?? "1"
             
-            quantityTextField.endEditing( true )
-            weightTextField  .endEditing( true )
+            quantityTextField.resignFirstResponder()
+            weightTextField  .resignFirstResponder()
             
             delegate.formulaYieldTableViewCell( formulaYieldTableViewCell : self,
                                                 editedQuantity            : yieldQuantity,
@@ -120,5 +107,45 @@ class FormulaYieldTableViewCell: UITableViewCell
         
     }
     
+    
+    @IBAction func invisibleQuantityButtonTouched(_ sender: Any ) {
+        quantityHasFocus = true
+        editButtonTouched( self )
+   }
+    
+    
+    @IBAction func invisibleWeightButtonTouched(_ sender: Any ) {
+        quantityHasFocus = false
+        editButtonTouched( self )
+    }
+    
+    
+    
+    // MARK: Utility Methods
+    
+    private func configureControls() {
+        
+        quantityTextField.borderStyle = inEditMode ? .roundedRect : .none
+        quantityTextField.isEnabled   = inEditMode
+        quantityTextField.textColor   = inEditMode ? .black : .blue
+
+        weightTextField  .borderStyle = inEditMode ? .roundedRect : .none
+        weightTextField  .isEnabled   = inEditMode
+        weightTextField  .textColor   = inEditMode ? .black : .blue
+
+        editButton              .isHidden = !inEditMode
+        invisibleQuantityButton .isHidden =  inEditMode
+        invisibleWeightButton   .isHidden =  inEditMode
+        
+        if inEditMode {
+            
+            if quantityHasFocus {
+                quantityTextField.becomeFirstResponder()
+            }
+            else {
+                weightTextField.becomeFirstResponder()
+            }
+        }
+    }
     
 }

@@ -9,19 +9,17 @@
 import UIKit
 
 
-protocol IngredientsEditorViewControllerDelegate: class
-{
+protocol IngredientsEditorViewControllerDelegate: class {
+    
     func ingredientsEditorViewController( ingredientsEditorViewController : IngredientsEditorViewController,
-                                          didEditIngredients: Bool )
+                                          didEditIngredients              : Bool )
 }
 
 
 
-class IngredientsEditorViewController: UIViewController
-{
+class IngredientsEditorViewController: UIViewController {
+    
     @IBOutlet weak var myTextView: UITextView!
-    
-    
     
     weak var delegate : IngredientsEditorViewControllerDelegate?
     
@@ -31,8 +29,7 @@ class IngredientsEditorViewController: UIViewController
     
     // MARK: UIViewController Lifecycle Methods
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
         
@@ -40,8 +37,7 @@ class IngredientsEditorViewController: UIViewController
     }
     
 
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool ) {
         logTrace()
         super.viewWillAppear( animated )
         
@@ -49,13 +45,12 @@ class IngredientsEditorViewController: UIViewController
     }
 
     
-    override func viewWillDisappear(_ animated: Bool)
-    {
+    override func viewWillDisappear(_ animated: Bool ) {
         logTrace()
         super.viewWillAppear( animated )
         
-        if myTextView.text != ingredients
-        {
+        if myTextView.text != ingredients {
+            
             ingredients = myTextView.text
             delegate?.ingredientsEditorViewController( ingredientsEditorViewController: self,
                                                        didEditIngredients: true )
