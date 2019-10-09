@@ -233,7 +233,7 @@ class RecipeListViewController: UIViewController,
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ),
                                                 message: nil,
-                                                preferredStyle: .alert)
+                                                preferredStyle: .actionSheet )
         
         let     standardAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Standard", comment: "Standard" ), style: .default )
         { ( alertAction ) in

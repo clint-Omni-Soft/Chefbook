@@ -25,10 +25,12 @@
 "AlertTitle.EditRecipeYieldOptions"         = "Editar opciones de rendimiento de recetas";
 "AlertTitle.Error"                          = "Error";
 "AlertTitle.ImageDisposition"               = "¿Qué te gustaría hacer con esta imagen?";
+"AlertTitle.PreFermentOptions"              = "Opciones de Fermentación Previa";
 "AlertTitle.RecipeType"                     = "Tipo de receta?";
 "AlertTitle.SelectMediaSource"              = "Seleccionar fuente de medios para foto";
 
 "ButtonTitle.Back"                          = "Espalda";
+"ButtonTitle.Biga"                          = "Biga";
 "ButtonTitle.BreadFormula"                  = "Fórmula de pan";
 "ButtonTitle.Camera"                        = "Cámara";
 "ButtonTitle.Cancel"                        = "Cancelar";
@@ -37,8 +39,10 @@
 "ButtonTitle.No"                            = "¡No!";
 "ButtonTitle.OK"                            = "DE ACUERDO";
 "ButtonTitle.PhotoAlbum"                    = "Album de fotos";
+"ButtonTitle.Poolish"                       = "Poolish";
 "ButtonTitle.Replace"                       = "Reemplazar";
 "ButtonTitle.Save"                          = "Salvar";
+"ButtonTitle.Sour"                          = "Agrio";
 "ButtonTitle.Standard"                      = "Estándar";
 "ButtonTitle.ZoomIn"                        = "Acercarse";
 "ButtonTitle.Yes"                           = "Sí";
@@ -46,9 +50,14 @@
 "CellTitle.Flour"                           = "Harina";
 "CellTitle.Ingredients"                     = "Ingredientes";
 "CellTitle.Name"                            = "Nombre";
+"CellTitle.Poolish"                         = "Poolish";
 "CellTitle.Steps"                           = "Pasos";
 "CellTitle.Yield"                           = "Rendimiento";
 "CellTitle.YieldOptions"                    = "Opciones de Rendimiento";
+
+"IngredientType.Flour"                      = "Harina";
+"IngredientType.Water"                      = "Auga";
+"IngredientType.Yeist"                      = "Yeist";
 
 "LabelText.About"                           = "Acerca de";
 "LabelText.ContactUs"                       = "Todos los derechos reservados. Contactanos en";
@@ -58,7 +67,10 @@
 "LableText.HowToUse04"                      = "AJUSTES\n\nToque cualquier fila poblada en la tabla para obtener información/datos de configuración sobre esta aplicación.\n\Acerca de - Nuestra información de contacto.\n\nCómo Utilizar - Esta vista.\n\n\n";
 "LabelText.Ingredient"                      = "Ingrediente";
 "LabelText.Name"                            = "Nombre";
-"LabelText.PercentOfFlour"                  = "Porcentaje de harina";
+"LabelText.PercentOfFlour"                  = "Porcentaje de Harina";
+"LabelText.PercentOfTotal"                  = "Porcentaje del Total";
+"LabelText.PercentOfWater"                  = "Porcentaje de Auga";
+"LabelText.PercentOfYeist"                  = "Porcentaje of Yeist";
 "LabelText.Quantity"                        = "Cantidad";
 "LabelText.Weight"                          = "Peso";
 "LabelText.Yield"                           = "Rendimiento";
@@ -66,11 +78,16 @@
 "LabelText.YieldQuantity"                   = "Cantidad de Rendimiento";
 "LabelText.YieldWeight"                     = "Peso de Rendimiento";
 
+"SectionTitle.Flour"                        = "Harina";
+"SectionTitle.Ingredients"                  = "Ingredientes";
+"SectionTitle.PreFerment"                   = "Ascenso";
+
 "Title.About"                               = "Acerca de";
 "Title.App"                                 = "My Chefbook";
 "Title.BreadFormulaEditor"                  = "Editor de Fórmulas de Pan";
 "Title.HowToUse"                            = "Cómo Utilizar";
 "Title.Ingredients"                         = "Ingredientes";
+"Title.PoolishEditor"                       = "Editor Polaco";
 "Title.RecipeEditor"                        = "Editor de Recetas";
 "Title.RecipeImage"                         = "Imagen de Receta";
 "Title.RecipeList"                          = "Recetas";

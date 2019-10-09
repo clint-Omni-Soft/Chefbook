@@ -76,8 +76,11 @@ class SectionHeaderView: UITableViewHeaderFooterView {
     
     func initWith( title         : String,
                    for section   : Int,
+                   hideAddButton : Bool,
                    with delegate : SectionHeaderViewDelegate ) {
 //        logTrace()
+        addButton.isHidden = hideAddButton
+
         self.delegate   = delegate
         self.section    = section
         textLabel?.text = title

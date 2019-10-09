@@ -34,9 +34,11 @@ class ChefbookCentral: NSObject {
     
     // MARK: Private Variables
     private let DATABASE_NAME                = "RecipeDB.sqlite"
-    private let ENTITY_NAME_RECIPE           = "Recipe"
     private let ENTITY_NAME_BREAD_INGREDIENT = "BreadIngredient"
-    
+    private let ENTITY_NAME_POOLISH          = "Poolish"
+    private let ENTITY_NAME_PRE_FERMENT      = "PreFerment"
+    private let ENTITY_NAME_RECIPE           = "Recipe"
+
     private var managedObjectContext : NSManagedObjectContext!
     private var selectedRecipeGuid   = ""
     private var persistentContainer  : NSPersistentContainer!
@@ -89,65 +91,46 @@ class ChefbookCentral: NSObject {
     
     // MARK: Recipe Access/Modifier Methods (Public)
     
-    func addBreadIngredientToFormulaRecipeAt( ingredientIndex : Int,
-                                              name            : String,
-                                              percentage      : Int ) {
+    func addBreadIngredientToFormulaRecipeAt( index      : Int,
+                                              isFlour    : Bool,
+                                              name       : String,
+                                              percentage : Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        logVerbose( "[ %@ ] index[ %d ] percentage[ %d ]", name, ingredientIndex, percentage )
+        logVerbose( "[ %@ ]  index[ %d ]  isFlour[ %@ ]  percentage[ %d ]", name, index, stringFor( isFlour ), percentage )
         
         persistentContainer.viewContext.perform {
             let     recipe          = self.recipeArray[self.selectedRecipeIndex]
             let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
             
-            breadIngredient.index           = Int16( ingredientIndex )
-            breadIngredient.isFlour         = ingredientIndex == 0
+            breadIngredient.index           = Int16( index )
+            breadIngredient.ingredientType  = isFlour ? BreadIngredientTypes.flour : self.typeForIngredientWith( name : name )
             breadIngredient.name            = name
             breadIngredient.percentOfFlour  = Int16( percentage )
             breadIngredient.weight          = 0
             
-            recipe.addToBreadIngredients( breadIngredient )
+            self.removePoolishFrom( recipe: recipe )
+
+            if breadIngredient.ingredientType == BreadIngredientTypes.flour {
+                recipe.addToFlourIngredients( breadIngredient )
+                
+                self.adjustFlourIngredientsPercentagesIn( recipe             : recipe,
+                                                          aroundIngredientAt : index )
+            }
+            else {
+                recipe.addToBreadIngredients( breadIngredient )
+            }
             
-            self.updateIngredientsIn( recipe: recipe )
-            self.saveUpdatedRecipe(   recipe: recipe )
+            self.updateIngredientsIn(           recipe : recipe )
+            self.adjustIngredientsForPoolishin( recipe : recipe )
+
+            self.saveUpdatedRecipe( recipe : recipe )
         }
         
     }
-    
-    
-    func addFlourIngredientToFormulaRecipeAt( ingredientIndex : Int,
-                                              name            : String,
-                                              percentage      : Int ) {
-        if !self.didOpenDatabase {
-            logTrace( "ERROR!  Database NOT open yet!" )
-            return
-        }
-        
-        logVerbose( "[ %@ ] index[ %d ] percentage[ %d ]", name, ingredientIndex, percentage )
-        
-        persistentContainer.viewContext.perform {
-            let     recipe          = self.recipeArray[self.selectedRecipeIndex]
-            let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
-            
-            breadIngredient.index           = Int16( ingredientIndex )
-            breadIngredient.isFlour         = true
-            breadIngredient.name            = name
-            breadIngredient.percentOfFlour  = Int16( percentage )
-            breadIngredient.weight          = 0
-            
-            recipe.addToFlourIngredients( breadIngredient )
-            
-            self.adjustFlourIngredientsPercentagesIn( recipe             : recipe,
-                                                      aroundIngredientAt : ingredientIndex )
-            self.updateIngredientsIn( recipe: recipe )
-            self.saveUpdatedRecipe(   recipe: recipe )
-        }
-        
-    }
-    
     
     func addFormulaRecipe( name          : String,
                            yieldQuantity : Int,
@@ -179,6 +162,69 @@ class ChefbookCentral: NSObject {
     }
     
     
+    func addPoolishToFormulaRecipe( recipe         : Recipe,
+                                    percentOfTotal : Int16,
+                                    percentOfFlour : Int16,
+                                    percentOfWater : Int16,
+                                    percentOfYeist : Int16 ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        persistentContainer.viewContext.perform {
+            let     poolish = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_POOLISH, into: self.managedObjectContext ) as! Poolish
+            
+            poolish.percentOfFlour = percentOfFlour
+            poolish.percentOfTotal = percentOfTotal
+            poolish.percentOfWater = percentOfWater
+            poolish.percentOfYeist = percentOfYeist
+            poolish.weight         = Int64( ( Float( recipe.formulaYieldWeight ) * Float( recipe.formulaYieldQuantity ) ) * ( Float( percentOfTotal ) / 100.0 ) )
+
+            recipe.poolish = poolish
+            
+            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
+            
+            self.adjustIngredientsForPoolishin( recipe: recipe )
+            
+            self.saveContext()
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+
+
+    func addPreFermentToFormulaRecipeWith( name  : String,
+                                           type  : Int ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ]", name )
+        
+        persistentContainer.viewContext.perform {
+            let     recipe     = self.recipeArray[self.selectedRecipeIndex]
+            let     preFerment = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_PRE_FERMENT, into: self.managedObjectContext ) as! PreFerment
+            
+            preFerment.name  = name
+            preFerment.type  = Int16( type )
+            
+            recipe.preFerment = preFerment
+            
+            self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
+            
+            self.saveContext()
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
     func addRecipe( name            : String,
                     imageName       : String,
                     ingredients     : String,
@@ -196,7 +242,6 @@ class ChefbookCentral: NSObject {
         
         persistentContainer.viewContext.perform {
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
-            
             
             recipe.guid             = UUID().uuidString
             recipe.imageName        = imageName
@@ -288,6 +333,8 @@ class ChefbookCentral: NSObject {
                     ingredient1.index < ingredient2.index
                 })
 
+            self.removePoolishFrom( recipe: recipe )
+            
             recipe.removeFromBreadIngredients( sortedBreadIngredientsArray[index] )
             sortedBreadIngredientsArray.remove( at: index )
             
@@ -300,8 +347,10 @@ class ChefbookCentral: NSObject {
                 recipe.addToBreadIngredients(sortedBreadIngredientsArray[i] )
             }
             
-            self.updateIngredientsIn( recipe: recipe )
-            self.saveUpdatedRecipe(   recipe: recipe )
+            self.updateIngredientsIn(           recipe : recipe )
+            self.adjustIngredientsForPoolishin( recipe : recipe )
+            
+            self.saveUpdatedRecipe( recipe: recipe )
         }
 
     }
@@ -327,6 +376,8 @@ class ChefbookCentral: NSObject {
                 ingredient1.index < ingredient2.index
             })
             
+            self.removePoolishFrom( recipe: recipe )
+            
             recipe.removeFromFlourIngredients( sortedFlourIngredientsArray[index] )
             sortedFlourIngredientsArray.remove( at: index )
             
@@ -339,8 +390,51 @@ class ChefbookCentral: NSObject {
                 recipe.addToFlourIngredients( sortedFlourIngredientsArray[i] )
             }
             
-            self.updateIngredientsIn( recipe: recipe )
+            self.updateIngredientsIn(           recipe : recipe )
+            self.adjustIngredientsForPoolishin( recipe : recipe )
+            
             self.saveUpdatedRecipe(   recipe: recipe )
+        }
+        
+    }
+    
+    
+    func deleteFormulaRecipePoolish() {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        persistentContainer.viewContext.perform {
+            let     recipe = self.recipeArray[self.selectedRecipeIndex]
+            
+            self.removePoolishFrom( recipe : recipe )
+            recipe.poolish = nil
+
+            self.saveUpdatedRecipe( recipe: recipe )
+        }
+        
+    }
+    
+    
+    func deleteFormulaRecipePreFerment() {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        persistentContainer.viewContext.perform {
+            let     recipe = self.recipeArray[self.selectedRecipeIndex]
+            
+            recipe.preFerment = nil
+            
+            self.saveUpdatedRecipe( recipe: recipe )
         }
         
     }
@@ -534,6 +628,43 @@ class ChefbookCentral: NSObject {
 
     // MARK: Utility Methods
     
+    private func adjustIngredientsForPoolishin( recipe : Recipe ) {
+        if recipe.poolish == nil {
+            logTrace( "No poolish in this recipe ... do nothing" )
+            return
+        }
+        
+        logTrace()
+        let reductionPercentage = 100 - ( recipe.poolish?.percentOfTotal ?? 1 )
+
+        if recipe.flourIngredients != nil {
+            let flourIngredients = recipe.flourIngredients?.allObjects  as! [BreadIngredient]
+
+            for ingredient in flourIngredients {
+                ingredient.weight = Int64( round( ( Float( ingredient.weight) * Float( reductionPercentage ) ) / 100.0 ) )
+            }
+            
+        }
+        
+        if recipe.breadIngredients != nil {
+            let breadIngredients = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+            
+            for ingredient in breadIngredients {
+                
+                if ingredient.ingredientType == BreadIngredientTypes.water {
+                    ingredient.weight = Int64( round( ( Float( ingredient.weight) * Float( reductionPercentage ) ) / 100.0 ) )
+                }
+                else if ingredient.ingredientType == BreadIngredientTypes.yeist {
+                    ingredient.weight = Int64( round( ( Float( ingredient.weight) * Float( reductionPercentage ) ) / 100.0 ) )
+                }
+                
+            }
+            
+        }
+
+    }
+    
+    
     private func deleteDatabase() {
         
         guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else {
@@ -684,6 +815,60 @@ class ChefbookCentral: NSObject {
     }
     
 
+    private func removePoolishFrom( recipe : Recipe ) {
+        if recipe.poolish == nil {
+            logTrace( "No poolish in this recipe ... do nothing" )
+            return
+        }
+        
+        logTrace()
+
+        let reductionPercentage = 100 - ( recipe.poolish?.percentOfTotal ?? 1 )
+
+        if recipe.flourIngredients != nil {
+            let flourIngredients = recipe.flourIngredients?.allObjects  as! [BreadIngredient]
+            
+            for ingredient in flourIngredients {
+                ingredient.weight = Int64( round( 100.0 * ( Float( ingredient.weight ) / Float( reductionPercentage ) ) ) )
+            }
+            
+        }
+        
+        if recipe.breadIngredients != nil {
+            let breadIngredients = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+            
+            for ingredient in breadIngredients {
+                
+                if ingredient.ingredientType == BreadIngredientTypes.water {
+                    ingredient.weight = Int64( round( 100.0 * ( Float( ingredient.weight ) / Float( reductionPercentage ) ) ) )
+                }
+                else if ingredient.ingredientType == BreadIngredientTypes.yeist {
+                    ingredient.weight = Int64( round( 100.0 * ( Float( ingredient.weight ) / Float( reductionPercentage ) ) ) )
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    
+    private func typeForIngredientWith( name : String ) -> Int16 {
+        var     ingredientType = BreadIngredientTypes.other
+        let     myName         = name.uppercased().trimmingCharacters(in: .whitespaces )
+        
+        // We don't check for flour because we know coming in whether or not it is a flour
+        if myName.contains( NSLocalizedString( "IngredientType.Water", comment: "Water" ).uppercased() ) || myName.contains( "H2O" ) {
+            ingredientType = BreadIngredientTypes.water
+        }
+        else if myName.contains( NSLocalizedString( "IngredientType.Yeist", comment: "Yeist" ).uppercased() ) {
+            ingredientType = BreadIngredientTypes.yeist
+        }
+
+        return ingredientType
+    }
+    
+    
     private func saveContext() {
         
         if managedObjectContext.hasChanges {
@@ -709,12 +894,25 @@ class ChefbookCentral: NSObject {
 
 // MARK: Public Definitions & Utility Methods
 
-struct ForumlaTableSections
-{
+struct BreadIngredientTypes {
+    static let flour = Int16( 0 )
+    static let water = Int16( 1 )
+    static let yeist = Int16( 2 )
+    static let other = Int16( 3 )
+}
+
+struct ForumlaTableSections {
     static let nameAndYield = 0
     static let flour        = 1
     static let ingredients  = 2
-    static let none         = 3
+    static let preFerment   = 3
+    static let none         = 4
+}
+
+struct PreFermentTypes {
+    static let biga    = 0
+    static let poolish = 1
+    static let sour    = 2
 }
 
 

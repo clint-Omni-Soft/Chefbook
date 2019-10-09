@@ -13,6 +13,7 @@ class FormulaEditorViewController: UIViewController,
                                    ChefbookCentralDelegate,
                                    FormulaIngredientTableViewCellDelegate,
                                    FormulaNameTableViewCellDelegate,
+                                   FormulaPreFermentTableViewCellDelegate,
                                    FormulaYieldTableViewCellDelegate,
                                    SectionHeaderViewDelegate,
                                    UIImagePickerControllerDelegate,
@@ -34,6 +35,7 @@ class FormulaEditorViewController: UIViewController,
     private struct CellIdentifiers {
         static let ingredients   = "FormulaIngredientTableViewCell"
         static let name          = "FormulaNameTableViewCell"
+        static let preFerment    = "FormulaPreFermentTableViewCell"
         static let sectionHeader = "SectionHeaderView"
         static let yield         = "FormulaYieldTableViewCell"
     }
@@ -45,7 +47,8 @@ class FormulaEditorViewController: UIViewController,
     }
     
     private struct StoryboardIds {
-        static let imageViewer = "ImageViewController"
+        static let imageViewer   = "ImageViewController"
+        static let poolishEditor = "PoolishEditorViewController"
     }
     
     private enum StateMachine {
@@ -54,11 +57,11 @@ class FormulaEditorViewController: UIViewController,
         case ingredients
     }
     
-    private var     newIngredientForSection     = ForumlaTableSections.none
     private var     currentState                = StateMachine.name
+    private var     indexPathOfCellBeingEdited  = IndexPath(item: 0, section: 0)
+    private var     newIngredientForSection     = ForumlaTableSections.none
     private var     waitingForNotification      = false
     private var     weightOfFlour               = 0
-    private var     indexPathOfCellBeingEdited  = IndexPath(item: 0, section: 0)
 
     
     
@@ -139,7 +142,10 @@ class FormulaEditorViewController: UIViewController,
         logVerbose( "recovering recipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
         recipeIndex = chefbookCentral.selectedRecipeIndex
 
-        self.myTableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            self.myTableView.reloadData()
+        })
+
     }
     
     
@@ -178,6 +184,30 @@ class FormulaEditorViewController: UIViewController,
         processNameInput( name: editedName )
     }
     
+    
+    
+    // MARK: FormulaPreFermentTableViewCellDelegate Methods
+    
+    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
+                                         indexPath                      : IndexPath,
+                                         editedName                     : String,
+                                         editedPercentage               : String,
+                                         editedWeight                   : String ) {
+        logTrace()
+        processInputsForPreFerment( name       : editedName,
+                                    percentage : editedPercentage,
+                                    weight     : editedWeight )
+    }
+
+    
+    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
+                                         indexPath                      : IndexPath,
+                                         didStartEditing                : Bool ) {
+        
+        logVerbose( "[ %d ][ %d ]", indexPath.section, indexPath.row )
+        indexPathOfCellBeingEdited = indexPath
+    }
+
     
     
     // MARK: FormulaYieldTableViewCellDelegate Methods
@@ -243,7 +273,13 @@ class FormulaEditorViewController: UIViewController,
     func sectionHeaderView( sectionHeaderView        : SectionHeaderView,
                             didRequestAddFor section : Int) {
         logVerbose( "[ %d ]", section )
-        newIngredientForSection = section
+        
+        if section == ForumlaTableSections.preFerment {
+            presentPreFermentOptions( sectionHeaderView : sectionHeaderView )
+        }
+        else {
+            newIngredientForSection = section
+        }
         
         myTableView.reloadData()
     }
@@ -274,7 +310,7 @@ class FormulaEditorViewController: UIViewController,
         
         
         if !waitingForNotification {
-            numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : 3
+            numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : 4
         }
         
 //        logVerbose( "[ %d ]", numberOfSections )
@@ -285,32 +321,42 @@ class FormulaEditorViewController: UIViewController,
     
     func tableView(_ tableView                     : UITableView,
                      numberOfRowsInSection section : Int ) -> Int {
-        var numberOfRows = 0
         
+        let chefbookCentral = ChefbookCentral.sharedInstance
+        var numberOfRows    = 0
+
         if !waitingForNotification {
             
-            if section == ForumlaTableSections.nameAndYield {
-                
+            switch section {
+            case ForumlaTableSections.nameAndYield:
                 switch currentState {
                 case .name:     numberOfRows = 1
                 case .yield:    numberOfRows = 2
                 default:        numberOfRows = 3    // 3rd row is the % Name Weight header for the following sections
                 }
-
+                
+            case ForumlaTableSections.flour:
+                let     indexOfNextFlourComponent = chefbookCentral.recipeArray[recipeIndex].flourIngredients?.count ?? 0
+                
+                numberOfRows = indexOfNextFlourComponent + ( newIngredientForSection == ForumlaTableSections.flour ? 1 : 0 )
+                
+            case ForumlaTableSections.ingredients:
+                let     indexOfNextIngredient = chefbookCentral.recipeArray[recipeIndex].breadIngredients?.count ?? 0
+                
+                numberOfRows = indexOfNextIngredient + ( newIngredientForSection == ForumlaTableSections.ingredients ? 1 : 0 )
+                
+            case ForumlaTableSections.preFerment:
+                if chefbookCentral.recipeArray[recipeIndex].preFerment != nil {
+                    numberOfRows = 1
+                }
+                else if chefbookCentral.recipeArray[recipeIndex].poolish != nil {
+                    numberOfRows = 1
+                }
+                
+            default:
+                numberOfRows = 0
             }
-            else if section == ForumlaTableSections.flour {
-                let     indexOfNextFlourIngredient = ChefbookCentral.sharedInstance.recipeArray[recipeIndex].flourIngredients?.count ?? 0
-                
-                
-                numberOfRows = indexOfNextFlourIngredient + ( newIngredientForSection == ForumlaTableSections.flour ? 1 : 0 )
-            }
-            else { // section 2 ... ForumlaTableSections.ingredients
-                let     indexOfNextBreadIngredient = ChefbookCentral.sharedInstance.recipeArray[recipeIndex].breadIngredients?.count ?? 0
-                
-                
-                numberOfRows = indexOfNextBreadIngredient + ( newIngredientForSection == ForumlaTableSections.ingredients ? 1 : 0 )
-            }
-
+            
         }
         
 //        logVerbose( "[ %d ][ %d ]", section, numberOfRows )
@@ -324,7 +370,9 @@ class FormulaEditorViewController: UIViewController,
 //        logVerbose( "row[ %d ]", indexPath.row)
         var     cell : UITableViewCell!
         
-        if indexPath.section == ForumlaTableSections.nameAndYield {
+        switch indexPath.section {
+            
+        case ForumlaTableSections.nameAndYield:
             
             switch indexPath.row {
             case 0:     cell = loadFormulaNameCell()
@@ -332,9 +380,14 @@ class FormulaEditorViewController: UIViewController,
             default:    cell = loadFormulaIngredientCellFor( indexPath: indexPath )     // Creates the % Name Weight header for the following sections
             }
             
-        }
-        else {   // flour & ingredients
+        case ForumlaTableSections.flour:
             cell = loadFormulaIngredientCellFor( indexPath: indexPath )
+            
+        case ForumlaTableSections.ingredients:
+            cell = loadFormulaIngredientCellFor( indexPath: indexPath )
+            
+        default:
+            cell = loadFormulaPreFermentCellFor( indexPath: indexPath )
         }
         
         return cell
@@ -361,11 +414,23 @@ class FormulaEditorViewController: UIViewController,
                 
                 chefbookCentral.selectedRecipeIndex = self.recipeIndex
                 
-                if indexPath.section == ForumlaTableSections.flour {
+                switch indexPath.section {
+                case ForumlaTableSections.flour:
                     chefbookCentral.deleteFormulaRecipeFlourIngredientAt( index: indexPath.row )
-                }
-                else  {  // ForumlaTableSections.ingredients
+
+                case ForumlaTableSections.ingredients:
                     chefbookCentral.deleteFormulaRecipeBreadIngredientAt( index: indexPath.row )
+
+                case ForumlaTableSections.preFerment:
+                    if chefbookCentral.recipeArray[self.recipeIndex].preFerment != nil {
+                        chefbookCentral.deleteFormulaRecipePreFerment()
+                    }
+                    else if chefbookCentral.recipeArray[self.recipeIndex].poolish != nil {
+                        chefbookCentral.deleteFormulaRecipePoolish()
+                    }
+                
+                default:
+                    break
                 }
                 
             })
@@ -382,13 +447,21 @@ class FormulaEditorViewController: UIViewController,
                      didSelectRowAt indexPath : IndexPath ) {
         
 //        tableView.deselectRow( at: indexPath, animated: false )
+        if indexPath.section == ForumlaTableSections.preFerment && ChefbookCentral.sharedInstance.recipeArray[self.recipeIndex].poolish != nil {
+            
+            if let sectionHeaderView = tableView.headerView( forSection: indexPath.section ) as? SectionHeaderView {
+                loadPoolishEditorPopover( sectionHeaderView: sectionHeaderView )
+            }
+
+        }
+
     }
     
     
     func tableView(_ tableView                        : UITableView,
                      heightForHeaderInSection section : Int ) -> CGFloat {
         
-        let     height = section == 0 ? 0.0 : 44.0 as CGFloat
+        let     height = section == ForumlaTableSections.nameAndYield ? 0.0 : 44.0 as CGFloat
         
         return height
     }
@@ -398,13 +471,24 @@ class FormulaEditorViewController: UIViewController,
                      viewForHeaderInSection section : Int ) -> UIView? {
         
         let     sectionHeaderView = tableView.dequeueReusableHeaderFooterView( withIdentifier: SectionHeaderView.reuseIdentifier ) as? SectionHeaderView
-        let     flourHeaderText   = String( format: "100     %@", NSLocalizedString( "CellTitle.Flour", comment: "Flour" ) )
-        let     title             = ( section == ForumlaTableSections.flour ) ? flourHeaderText : NSLocalizedString( "CellTitle.Ingredients", comment: "Ingredients" )
-
+        var     hideAddButton     = false
+        var     title             = ""
         
-        sectionHeaderView?.initWith( title : title,
-                                     for   : section,
-                                     with  : self )
+        switch section {
+        case ForumlaTableSections.flour:
+            title = String( format: "100     %@", NSLocalizedString( "SectionTitle.Flour", comment: "Flour" ) )
+        case ForumlaTableSections.ingredients:
+            title = String( format: "        %@", NSLocalizedString( "SectionTitle.Ingredients", comment: "Ingredients" ) )
+        default: // ForumlaTableSections.preFerment
+            title = String( format: "        %@", NSLocalizedString( "SectionTitle.PreFerment", comment: "PreFerment" ) )
+            
+            hideAddButton = ( ChefbookCentral.sharedInstance.recipeArray[recipeIndex].poolish != nil ) || ( ChefbookCentral.sharedInstance.recipeArray[recipeIndex].preFerment != nil )
+        }
+        
+        sectionHeaderView?.initWith( title          : title,
+                                     for            : section,
+                                     hideAddButton  : hideAddButton,
+                                     with           : self )
         return sectionHeaderView
     }
     
@@ -596,6 +680,24 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
+    private func loadFormulaPreFermentCellFor(indexPath : IndexPath) -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.preFerment ) else {
+            
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+//        logTrace()
+        let     formulaPreFermentCell = cell as! FormulaPreFermentTableViewCell
+        
+        formulaPreFermentCell.initializeWithRecipeAt( recipeIndex : recipeIndex,
+                                                      indexPath   : indexPath,
+                                                      delegate    : self )
+        return cell
+    }
+    
+    
     private func loadFormulaYieldCell() -> UITableViewCell {
         
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else {
@@ -625,11 +727,100 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
+    private func loadPoolishEditorPopover( sectionHeaderView : SectionHeaderView ) {
+        logTrace()
+        if let poolishEditorViewController: PoolishEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.poolishEditor ) as? PoolishEditorViewController {
+            
+            let     chefbookCentral         = ChefbookCentral.sharedInstance
+            let     recipe                  = chefbookCentral.recipeArray[recipeIndex]
+            var     sectionHeaderViewFrame  = sectionHeaderView.frame
+            
+            poolishEditorViewController.recipe = recipe
+
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                
+                if UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown {
+                    sectionHeaderViewFrame.origin.x = view.center.x - ( 290.0 / 2 ) - 24
+                    sectionHeaderViewFrame.origin.y = sectionHeaderViewFrame.origin.y + 64.0
+                }
+                else {
+                    sectionHeaderViewFrame.origin.x = 0.0
+                    sectionHeaderViewFrame.origin.y = 280.0 + 36.0 // Height of popover + offset to tableView
+                }
+
+            }
+            else {
+                // TODO: Fill me in!
+            }
+            
+            poolishEditorViewController.modalPresentationStyle = ( UIDevice.current.userInterfaceIdiom == .phone ? .popover : .formSheet )
+            poolishEditorViewController.preferredContentSize   = CGSize( width: 290.0, height: 280.0 )
+            
+            poolishEditorViewController.popoverPresentationController?.delegate                 = self
+            poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .any
+            poolishEditorViewController.popoverPresentationController?.sourceRect               = sectionHeaderViewFrame
+            poolishEditorViewController.popoverPresentationController?.sourceView               = view
+
+            self.present( poolishEditorViewController,
+                          animated: true,
+                          completion: nil )
+        }
+        else {
+            logTrace( "ERROR: Could NOT load PoolishEditorViewController!" )
+        }
+        
+    }
+
+    
+    private func presentPreFermentOptions( sectionHeaderView : SectionHeaderView ) {
+        logTrace()
+        let     chefbookCentral = ChefbookCentral.sharedInstance
+        let     alert           = UIAlertController.init( title          : NSLocalizedString( "AlertTitle.PreFermentOptions", comment: "Pre-Ferment Options" ),
+                                                          message        : nil,
+                                                          preferredStyle : ( UIDevice.current.userInterfaceIdiom == .phone ? .actionSheet : .alert ) )
+        
+        let     bigaAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Biga", comment: "Biga" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Biga Action" )
+            chefbookCentral.selectedRecipeIndex = self.recipeIndex
+            
+            chefbookCentral.addPreFermentToFormulaRecipeWith( name : NSLocalizedString( "ButtonTitle.Biga", comment: "Biga" ),
+                                                              type : PreFermentTypes.biga )
+        }
+            
+        let     poolishAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Poolish", comment: "Poolish" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Poolish Action" )
+            chefbookCentral.selectedRecipeIndex = self.recipeIndex
+            
+            self.loadPoolishEditorPopover( sectionHeaderView : sectionHeaderView )
+        }
+        
+        let     sourAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Sour", comment: "Sour" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Sour Action" )
+            chefbookCentral.selectedRecipeIndex = self.recipeIndex
+            
+            chefbookCentral.addPreFermentToFormulaRecipeWith( name : NSLocalizedString( "ButtonTitle.Sour", comment: "Sour" ),
+                                                              type : PreFermentTypes.sour )
+       }
+        
+
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        alert.addAction( bigaAction    )
+        alert.addAction( poolishAction )
+        alert.addAction( sourAction    )
+        alert.addAction( cancelAction  )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
     private func processIngredientInputs( ingredientIndexPath : IndexPath,
                                           isNew               : Bool,
                                           ingredientName      : String,
                                           percentOfFlour      : String ) {
-        
         logTrace()
         let     newName = ingredientName.trimmingCharacters( in: .whitespacesAndNewlines )
         
@@ -645,17 +836,19 @@ class FormulaEditorViewController: UIViewController,
                 chefbookCentral.selectedRecipeIndex = recipeIndex
                 
                 if isNew {
-                    
+
                     if ingredientIndexPath.section == ForumlaTableSections.flour {
                         
-                        chefbookCentral.addFlourIngredientToFormulaRecipeAt( ingredientIndex : ( chefbookCentral.recipeArray[self.recipeIndex].flourIngredients?.count ?? 0 ),
-                                                                             name            : newName,
-                                                                             percentage      : Int( myPercentOfFlour ) )
+                        chefbookCentral.addBreadIngredientToFormulaRecipeAt( index      : ( chefbookCentral.recipeArray[self.recipeIndex].flourIngredients?.count ?? 0 ),
+                                                                             isFlour    : true,
+                                                                             name       : newName,
+                                                                             percentage : Int( myPercentOfFlour ) )
                     }
                     else {
-                        chefbookCentral.addBreadIngredientToFormulaRecipeAt( ingredientIndex : ( chefbookCentral.recipeArray[self.recipeIndex].breadIngredients?.count ?? 0 ),
-                                                                             name            : newName,
-                                                                             percentage      : Int( myPercentOfFlour ) )
+                        chefbookCentral.addBreadIngredientToFormulaRecipeAt( index      : ( chefbookCentral.recipeArray[self.recipeIndex].breadIngredients?.count ?? 0 ),
+                                                                             isFlour    : false,
+                                                                             name       : newName,
+                                                                             percentage : Int( myPercentOfFlour ) )
                     }
 
                     newIngredientForSection = ForumlaTableSections.none
@@ -669,7 +862,6 @@ class FormulaEditorViewController: UIViewController,
                     ingredient.percentOfFlour = Int16( myPercentOfFlour )
                     
                     if updatePercentages {
-                        
                         chefbookCentral.adjustFlourIngredientsPercentagesIn( recipe             : recipe,
                                                                              aroundIngredientAt : ingredientIndexPath.row )
                     }
@@ -739,6 +931,29 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
+    private func processInputsForPreFerment( name       : String,
+                                             percentage : String,
+                                             weight     : String ) {
+        logTrace()
+        let     chefbookCentral  = ChefbookCentral.sharedInstance
+        let     myName           = name.trimmingCharacters( in: .whitespaces )
+        let     myPercentage     = Int( percentage ) ?? 0
+        let     myWeight         = Int( weight ) ?? 0
+        let     recipe           = chefbookCentral.recipeArray[recipeIndex]
+
+        
+        if let preFerment = recipe.preFerment {
+            
+            preFerment.name           = myName
+            preFerment.percentOfTotal = Int16( myPercentage )
+            preFerment.weight         = Int64( myWeight )
+            
+            chefbookCentral.saveUpdatedRecipe( recipe : recipe )
+        }
+
+    }
+
+
     private func processYieldInputs( yieldQuantity : String,
                                      yieldWeight   : String ) {
         logTrace()

@@ -25,10 +25,12 @@
 "AlertTitle.EditRecipeYieldOptions"         = "Edit recipe yield options";
 "AlertTitle.Error"                          = "Error";
 "AlertTitle.ImageDisposition"               = "What would you like to do with this image?";
+"AlertTitle.PreFermentOptions"              = "Pre-Ferment Options";
 "AlertTitle.RecipeType"                     = "Recipe Type?";
 "AlertTitle.SelectMediaSource"              = "Select Media Source for Photo";
 
 "ButtonTitle.Back"                          = "Back";
+"ButtonTitle.Biga"                          = "Biga";
 "ButtonTitle.BreadFormula"                  = "Bread Formula";
 "ButtonTitle.Camera"                        = "Camera";
 "ButtonTitle.Cancel"                        = "Cancel";
@@ -37,8 +39,10 @@
 "ButtonTitle.No"                            = "No!";
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.PhotoAlbum"                    = "Photo Album";
+"ButtonTitle.Poolish"                       = "Poolish";
 "ButtonTitle.Replace"                       = "Replace";
 "ButtonTitle.Save"                          = "Save";
+"ButtonTitle.Sour"                          = "Sour";
 "ButtonTitle.Standard"                      = "Standard";
 "ButtonTitle.ZoomIn"                        = "Zoom In";
 "ButtonTitle.Yes"                           = "Yes";
@@ -46,9 +50,14 @@
 "CellTitle.Flour"                           = "Flour";
 "CellTitle.Ingredients"                     = "Ingredients";
 "CellTitle.Name"                            = "Name";
+"CellTitle.Poolish"                         = "Poolish";
 "CellTitle.Steps"                           = "Steps";
 "CellTitle.Yield"                           = "Yield";
 "CellTitle.YieldOptions"                    = "Yield Options";
+
+"IngredientType.Flour"                      = "Flour";
+"IngredientType.Water"                      = "Water";
+"IngredientType.Yeist"                      = "Yeist";
 
 "LabelText.About"                           = "About";
 "LabelText.ContactUs"                       = "All rights reserved.  Contact us at";
@@ -58,7 +67,10 @@
 "LableText.HowToUse04"                      = "SETTINGS\n\nTouch any populated row in the table to get information/configuration data about this app.\n\nAbout - Our contact information.\n\nHow to Use - This view.\n\n\n";
 "LabelText.Ingredient"                      = "Ingredient";
 "LabelText.Name"                            = "Name";
-"LabelText.PercentOfFlour"                  = "Percent of flour";
+"LabelText.PercentOfFlour"                  = "Percent of Flour";
+"LabelText.PercentOfTotal"                  = "Percent of Total";
+"LabelText.PercentOfWater"                  = "Percent of Water";
+"LabelText.PercentOfYeist"                  = "Percent of Yeist";
 "LabelText.Quantity"                        = "Quantity";
 "LabelText.Weight"                          = "Weight";
 "LabelText.Yield"                           = "Yield";
@@ -66,11 +78,16 @@
 "LabelText.YieldQuantity"                   = "Yield Quantity";
 "LabelText.YieldWeight"                     = "Yield Weight";
 
+"SectionTitle.Flour"                        = "Flour";
+"SectionTitle.Ingredients"                  = "Ingredients";
+"SectionTitle.PreFerment"                   = "Pre-Ferment";
+
 "Title.About"                               = "About";
 "Title.App"                                 = "My Chefbook";
 "Title.BreadFormulaEditor"                  = "Bread Formula Editor";
 "Title.HowToUse"                            = "How to Use";
 "Title.Ingredients"                         = "Ingredients";
+"Title.PoolishEditor"                       = "Poolish Editor";
 "Title.RecipeEditor"                        = "Recipe Editor";
 "Title.RecipeImage"                         = "Recipe Image";
 "Title.RecipeList"                          = "Recipes";

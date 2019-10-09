@@ -70,7 +70,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
 
         ingredientTextField.text = NSLocalizedString( "LabelText.Ingredient", comment: "Ingredient" )
         percentageTextField.text = "%"
-        weightLabel        .text = NSLocalizedString( "LabelText.Weight",     comment: "Weight"     )
+        weightLabel        .text = String( format: "%@ g", NSLocalizedString( "LabelText.Weight", comment: "Weight" ) )
         
         ingredientTextField.borderStyle = .none
         percentageTextField.borderStyle = .none
@@ -96,10 +96,19 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         addOrEditButton.setImage( UIImage( named: "checkmark" ), for: .normal )
         addOrEditButton.setTitle( "", for: .normal )
         
+        let recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+
         if isNew {
-            ingredientTextField.text = isFlour ? NSLocalizedString( "CellTitle.Flour", comment: "Flour" ) : "???"
-            percentageTextField.text = isFlour ? ( self.myIndexPath.row == 0 ? "100" : "" ) : ""
-            weightLabel        .text = ""
+            if isFlour {
+                ingredientTextField.text = NSLocalizedString( "CellTitle.Flour", comment: "Flour" )
+                percentageTextField.text = ( self.myIndexPath.row == 0 ? "100" : "" )
+                weightLabel        .text = ""
+            }
+            else {
+                ingredientTextField.text = ingredientNameFor( recipe : recipe )
+                percentageTextField.text = ( self.myIndexPath.row == 0 ? "50" : "" )
+                weightLabel        .text = ""
+            }
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                 self.invisiblePercentageButtonTouched( self )
@@ -107,12 +116,11 @@ class FormulaIngredientTableViewCell: UITableViewCell {
             
         }
         else {
-            let recipe     = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
             let ingredient = ingredientFrom( recipe : recipe )
             
             ingredientTextField.text = ingredient.name
-            percentageTextField.text = String( format : "%d",   ingredient.percentOfFlour )
-            weightLabel        .text = String( format : "%d g", ingredient.weight         )
+            percentageTextField.text = String( format : "%d", ingredient.percentOfFlour )
+            weightLabel        .text = String( format : "%d", ingredient.weight         )
 
             configureControls()
         }
@@ -194,7 +202,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
             percentageTextField.backgroundColor = inEditMode ? .white : .yellow
         }
         
-        if isNew && ( myIndexPath == IndexPath( item: 0, section: 1 ) ) {
+        if isNew && ( myIndexPath == IndexPath( item: 0, section: ForumlaTableSections.flour ) ) {
             
             percentageTextField.borderStyle = .none
             percentageTextField.isEnabled   = false
@@ -243,5 +251,33 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         return selectedIngredient
     }
     
+    
+    private func ingredientNameFor( recipe : Recipe ) -> String {
+        let     ingredientArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
+        var     name            = "??"
+        var     waterPresent    = false
+        var     yeistPresent    = false
+
+        
+        for ingredient in ingredientArray {
+            
+            switch ingredient.ingredientType {
+            case BreadIngredientTypes.water:    waterPresent = true
+            case BreadIngredientTypes.yeist:    yeistPresent = true
+            default:
+                break
+            }
+            
+        }
+
+        if !waterPresent {
+            name = NSLocalizedString( "IngredientType.Water", comment: "Water" )
+        }
+        else if !yeistPresent {
+            name = NSLocalizedString( "IngredientType.Yeist", comment: "Yeist" )
+        }
+        
+        return name
+    }
     
 }

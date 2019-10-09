@@ -2,7 +2,7 @@
 //  Recipe+CoreDataProperties.swift
 //  Chefbook
 //
-//  Created by Clint Shank on 9/16/19.
+//  Created by Clint Shank on 10/9/19.
 //  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
 //
 //
@@ -30,6 +30,8 @@ extension Recipe {
     @NSManaged public var yieldOptions: String?
     @NSManaged public var breadIngredients: NSSet?
     @NSManaged public var flourIngredients: NSSet?
+    @NSManaged public var poolish: Poolish?
+    @NSManaged public var preFerment: PreFerment?
 
 }
 
