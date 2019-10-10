@@ -754,7 +754,7 @@ class FormulaEditorViewController: UIViewController,
             }
             
             poolishEditorViewController.modalPresentationStyle = ( UIDevice.current.userInterfaceIdiom == .phone ? .popover : .formSheet )
-            poolishEditorViewController.preferredContentSize   = CGSize( width: 290.0, height: 280.0 )
+            poolishEditorViewController.preferredContentSize   = CGSize(width: 300.0, height: 320.0 )
             
             poolishEditorViewController.popoverPresentationController?.delegate                 = self
             poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .any

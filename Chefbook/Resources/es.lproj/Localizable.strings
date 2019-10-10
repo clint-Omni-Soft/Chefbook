@@ -14,6 +14,7 @@
 "AlertMessage.ImageSaveFailed"              = "No pudimos guardar la imagen que seleccionó.";
 "AlertMessage.InvalidMediaType"             = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
 "AlertMessage.NameCannotBeBlank"            = "El nombre no puede dejarse en blanco";
+"AlertMessage.PercentagesDontAddUp"         = "¡Los porcentajes de la fórmula poolish NO suman 100! Ajuste e intente nuevamente.";
 "AlertMessage.UnableToDeleteImage"          = "No hemos podido eliminar la imagen que ha creado.";
 "AlertMessage.YieldCannotBeBlank"           = "El rendimiento no puede dejarse en blanco";
 "AlertTitle.AreYouSure"                     = "¿Estás seguro de que quieres descartar tus cambios?";
@@ -67,10 +68,7 @@
 "LableText.HowToUse04"                      = "AJUSTES\n\nToque cualquier fila poblada en la tabla para obtener información/datos de configuración sobre esta aplicación.\n\Acerca de - Nuestra información de contacto.\n\nCómo Utilizar - Esta vista.\n\n\n";
 "LabelText.Ingredient"                      = "Ingrediente";
 "LabelText.Name"                            = "Nombre";
-"LabelText.PercentOfFlour"                  = "Porcentaje de Harina";
 "LabelText.PercentOfTotal"                  = "Porcentaje del Total";
-"LabelText.PercentOfWater"                  = "Porcentaje de Auga";
-"LabelText.PercentOfYeist"                  = "Porcentaje of Yeist";
 "LabelText.Quantity"                        = "Cantidad";
 "LabelText.Weight"                          = "Peso";
 "LabelText.Yield"                           = "Rendimiento";
@@ -88,6 +86,7 @@
 "Title.HowToUse"                            = "Cómo Utilizar";
 "Title.Ingredients"                         = "Ingredientes";
 "Title.PoolishEditor"                       = "Editor Polaco";
+"Title.PoolishFormula"                      = "Fórmula Poolish";
 "Title.RecipeEditor"                        = "Editor de Recetas";
 "Title.RecipeImage"                         = "Imagen de Receta";
 "Title.RecipeList"                          = "Recetas";

@@ -14,6 +14,7 @@
 "AlertMessage.ImageSaveFailed"              = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
 "AlertMessage.InvalidMediaType"             = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
 "AlertMessage.NameCannotBeBlank"            = "Le nom ne peut pas être laissé en blanc";
+"AlertMessage.PercentagesDontAddUp"         = "Les pourcentages de la formule poolish ne totalisent pas 100! S'il vous plaît ajuster et essayez à nouveau.";
 "AlertMessage.UnableToDeleteImage"          = "Nous n'avons pas pu supprimer l'image que vous avez créée.";
 "AlertMessage.YieldCannotBeBlank"           = "Le rendement ne peut pas être laissé en blanc.";
 "AlertTitle.AreYouSure"                     = "Êtes-vous sûr de vouloir annuler vos modifications?";
@@ -68,10 +69,7 @@
 "LableText.HowToUse04"                      = "RÉGLAGES\n\nTouchez n'importe quelle ligne de la table pour obtenir des informations / données de configuration sur cette application.\n\Sur - Nos coordonnées.\n\nComment Utiliser - Cette vue.\n\n\n";
 "LabelText.Ingredient"                      = "Ingrédient";
 "LabelText.Name"                            = "Nom";
-"LabelText.PercentOfFlour"                  = "Pourcentage de Farine";
 "LabelText.PercentOfTotal"                  = "Pourcentage du Total";
-"LabelText.PercentOfWater"                  = "Pourcentage of Eau";
-"LabelText.PercentOfYeist"                  = "Pourcentage of Levure";
 "LabelText.Quantity"                        = "Quantité";
 "LabelText.Weight"                          = "Poids";
 "LabelText.Yield"                           = "Rendement";
@@ -89,6 +87,7 @@
 "Title.HowToUse"                            = "Comment Utiliser";
 "Title.Ingredients"                         = "Ingrédients";
 "Title.PoolishEditor"                       = "Éditeur Polonais";
+"Title.PoolishFormula"                      = "Formule Poolish";
 "Title.RecipeEditor"                        = "Éditeur de Recettes";
 "Title.RecipeImage"                         = "Image de Recette";
 "Title.RecipeList"                          = "Recettes";
