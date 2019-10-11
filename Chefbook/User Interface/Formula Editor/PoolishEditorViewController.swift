@@ -76,6 +76,8 @@ class PoolishEditorViewController: UIViewController {
 
         cancelButton.setTitle( NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), for: .normal )
         saveButton  .setTitle( NSLocalizedString( "ButtonTitle.Save",   comment: "Save"   ), for: .normal )
+        
+        currentlyActiveTextField = percentOfTotalTextField
     }
     
     

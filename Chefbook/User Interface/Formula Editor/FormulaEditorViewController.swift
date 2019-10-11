@@ -452,7 +452,7 @@ class FormulaEditorViewController: UIViewController,
             if let sectionHeaderView = tableView.headerView( forSection: indexPath.section ) as? SectionHeaderView {
                 loadPoolishEditorPopover( sectionHeaderView: sectionHeaderView )
             }
-
+            
         }
 
     }
@@ -749,21 +749,23 @@ class FormulaEditorViewController: UIViewController,
                 }
 
             }
-            else {
-                // TODO: Fill me in!
-            }
             
             poolishEditorViewController.modalPresentationStyle = ( UIDevice.current.userInterfaceIdiom == .phone ? .popover : .formSheet )
             poolishEditorViewController.preferredContentSize   = CGSize(width: 300.0, height: 320.0 )
             
             poolishEditorViewController.popoverPresentationController?.delegate                 = self
-            poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .any
+            poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .down
             poolishEditorViewController.popoverPresentationController?.sourceRect               = sectionHeaderViewFrame
             poolishEditorViewController.popoverPresentationController?.sourceView               = view
 
-            self.present( poolishEditorViewController,
-                          animated: true,
-                          completion: nil )
+            // WTF??? I discovered that when this method is invoked from tableView:didSelectRowAt indexPath,
+            //        we are not on the main thread!  Looks like a bug to me.
+            DispatchQueue.main.async {
+                self.present( poolishEditorViewController,
+                              animated: true,
+                              completion: nil )
+            }
+
         }
         else {
             logTrace( "ERROR: Could NOT load PoolishEditorViewController!" )

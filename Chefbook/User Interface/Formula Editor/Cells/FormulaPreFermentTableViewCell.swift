@@ -147,7 +147,8 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
         nameTextField.textColor   = .black
 
         if preFermentType == PreFermentTypes.poolish {
-            acceptButton.isHidden = true
+            acceptButton         .isHidden = true
+            invisibleWeightButton.isHidden = true
 
             percentageTextField.borderStyle = .none
             percentageTextField.isEnabled   = false
