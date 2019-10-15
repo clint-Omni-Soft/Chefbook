@@ -733,29 +733,15 @@ class FormulaEditorViewController: UIViewController,
             
             let     chefbookCentral         = ChefbookCentral.sharedInstance
             let     recipe                  = chefbookCentral.recipeArray[recipeIndex]
-            var     sectionHeaderViewFrame  = sectionHeaderView.frame
             
             poolishEditorViewController.recipe = recipe
 
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                
-                if UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown {
-                    sectionHeaderViewFrame.origin.x = view.center.x - ( 290.0 / 2 ) - 24
-                    sectionHeaderViewFrame.origin.y = sectionHeaderViewFrame.origin.y + 64.0
-                }
-                else {
-                    sectionHeaderViewFrame.origin.x = 0.0
-                    sectionHeaderViewFrame.origin.y = 280.0 + 36.0 // Height of popover + offset to tableView
-                }
-
-            }
-            
-            poolishEditorViewController.modalPresentationStyle = ( UIDevice.current.userInterfaceIdiom == .phone ? .popover : .formSheet )
-            poolishEditorViewController.preferredContentSize   = CGSize(width: 300.0, height: 320.0 )
+            poolishEditorViewController.modalPresentationStyle = .formSheet
+            poolishEditorViewController.preferredContentSize   = CGSize( width: 300.0, height: 440.0 )
             
             poolishEditorViewController.popoverPresentationController?.delegate                 = self
-            poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .down
-            poolishEditorViewController.popoverPresentationController?.sourceRect               = sectionHeaderViewFrame
+            poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .any
+            poolishEditorViewController.popoverPresentationController?.sourceRect               = sectionHeaderView.frame
             poolishEditorViewController.popoverPresentationController?.sourceView               = view
 
             // WTF??? I discovered that when this method is invoked from tableView:didSelectRowAt indexPath,

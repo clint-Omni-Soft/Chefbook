@@ -20,7 +20,7 @@ extension Poolish {
     @NSManaged public var percentOfFlour: Int16
     @NSManaged public var percentOfTotal: Int16
     @NSManaged public var percentOfWater: Int16
-    @NSManaged public var percentOfYeist: Int16
+    @NSManaged public var percentOfYeast: Int16
     @NSManaged public var weight: Int64
     @NSManaged public var recipe: Recipe?
 

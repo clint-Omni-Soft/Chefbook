@@ -13,7 +13,7 @@
         <attribute name="percentOfFlour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="percentOfTotal" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="percentOfWater" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="percentOfYeist" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="percentOfYeast" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="weight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Recipe" inverseName="poolish" inverseEntity="Recipe" syncable="YES"/>
     </entity>
@@ -42,9 +42,9 @@
         <relationship name="preFerment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PreFerment" inverseName="recipe" inverseEntity="PreFerment" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BreadIngredient" positionX="-33.0703125" positionY="3139.7890625" width="128" height="150"/>
-        <element name="Poolish" positionX="120.71875" positionY="3214.78125" width="128" height="135"/>
-        <element name="PreFerment" positionX="-31.9921875" positionY="3336.6640625" width="128" height="120"/>
-        <element name="Recipe" positionX="-226.64453125" positionY="3079.78125" width="128" height="270"/>
+        <element name="BreadIngredient" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Poolish" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="PreFerment" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Recipe" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

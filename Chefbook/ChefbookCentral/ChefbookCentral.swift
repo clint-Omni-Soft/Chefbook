@@ -125,7 +125,7 @@ class ChefbookCentral: NSObject {
             }
             
             self.updateIngredientsIn(           recipe : recipe )
-            self.adjustIngredientsForPoolishin( recipe : recipe )
+            self.adjustIngredientsForPoolishIn( recipe : recipe )
 
             self.saveUpdatedRecipe( recipe : recipe )
         }
@@ -166,7 +166,7 @@ class ChefbookCentral: NSObject {
                                     percentOfTotal : Int16,
                                     percentOfFlour : Int16,
                                     percentOfWater : Int16,
-                                    percentOfYeist : Int16 ) {
+                                    percentOfYeast : Int16 ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -181,14 +181,14 @@ class ChefbookCentral: NSObject {
             poolish.percentOfFlour = percentOfFlour
             poolish.percentOfTotal = percentOfTotal
             poolish.percentOfWater = percentOfWater
-            poolish.percentOfYeist = percentOfYeist
+            poolish.percentOfYeast = percentOfYeast
             poolish.weight         = Int64( ( Float( recipe.formulaYieldWeight ) * Float( recipe.formulaYieldQuantity ) ) * ( Float( percentOfTotal ) / 100.0 ) )
 
             recipe.poolish = poolish
             
             self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
             
-            self.adjustIngredientsForPoolishin( recipe: recipe )
+            self.adjustIngredientsForPoolishIn( recipe: recipe )
             
             self.saveContext()
             self.refetchRecipesAndNotifyDelegate()
@@ -289,11 +289,10 @@ class ChefbookCentral: NSObject {
             
             if ingredient.index != index  {      // We want to change the percentage of the everything except the one we just updated
 
-                recipe.removeFromFlourIngredients( ingredient )
-                
                 ingredient.percentOfFlour = Int16( round( Float( ingredient.percentOfFlour ) * scalingFactor ) )
-                totalAdjustedPercentage -= Int( ingredient.percentOfFlour )
+                totalAdjustedPercentage  -= Int( ingredient.percentOfFlour )
                 
+                recipe.removeFromFlourIngredients( ingredient )
                 recipe.addToFlourIngredients( ingredient )
             }
             
@@ -348,7 +347,7 @@ class ChefbookCentral: NSObject {
             }
             
             self.updateIngredientsIn(           recipe : recipe )
-            self.adjustIngredientsForPoolishin( recipe : recipe )
+            self.adjustIngredientsForPoolishIn( recipe : recipe )
             
             self.saveUpdatedRecipe( recipe: recipe )
         }
@@ -391,7 +390,7 @@ class ChefbookCentral: NSObject {
             }
             
             self.updateIngredientsIn(           recipe : recipe )
-            self.adjustIngredientsForPoolishin( recipe : recipe )
+            self.adjustIngredientsForPoolishIn( recipe : recipe )
             
             self.saveUpdatedRecipe(   recipe: recipe )
         }
@@ -628,7 +627,7 @@ class ChefbookCentral: NSObject {
 
     // MARK: Utility Methods
     
-    private func adjustIngredientsForPoolishin( recipe : Recipe ) {
+    private func adjustIngredientsForPoolishIn( recipe : Recipe ) {
         if recipe.poolish == nil {
             logTrace( "No poolish in this recipe ... do nothing" )
             return
@@ -654,7 +653,7 @@ class ChefbookCentral: NSObject {
                 if ingredient.ingredientType == BreadIngredientTypes.water {
                     ingredient.weight = Int64( round( ( Float( ingredient.weight) * Float( reductionPercentage ) ) / 100.0 ) )
                 }
-                else if ingredient.ingredientType == BreadIngredientTypes.yeist {
+                else if ingredient.ingredientType == BreadIngredientTypes.yeast {
                     ingredient.weight = Int64( round( ( Float( ingredient.weight) * Float( reductionPercentage ) ) / 100.0 ) )
                 }
                 
@@ -842,7 +841,7 @@ class ChefbookCentral: NSObject {
                 if ingredient.ingredientType == BreadIngredientTypes.water {
                     ingredient.weight = Int64( round( 100.0 * ( Float( ingredient.weight ) / Float( reductionPercentage ) ) ) )
                 }
-                else if ingredient.ingredientType == BreadIngredientTypes.yeist {
+                else if ingredient.ingredientType == BreadIngredientTypes.yeast {
                     ingredient.weight = Int64( round( 100.0 * ( Float( ingredient.weight ) / Float( reductionPercentage ) ) ) )
                 }
                 
@@ -861,8 +860,8 @@ class ChefbookCentral: NSObject {
         if myName.contains( NSLocalizedString( "IngredientType.Water", comment: "Water" ).uppercased() ) || myName.contains( "H2O" ) {
             ingredientType = BreadIngredientTypes.water
         }
-        else if myName.contains( NSLocalizedString( "IngredientType.Yeist", comment: "Yeist" ).uppercased() ) {
-            ingredientType = BreadIngredientTypes.yeist
+        else if myName.contains( NSLocalizedString( "IngredientType.Yeast", comment: "Yeast" ).uppercased() ) {
+            ingredientType = BreadIngredientTypes.yeast
         }
 
         return ingredientType
@@ -897,7 +896,7 @@ class ChefbookCentral: NSObject {
 struct BreadIngredientTypes {
     static let flour = Int16( 0 )
     static let water = Int16( 1 )
-    static let yeist = Int16( 2 )
+    static let yeast = Int16( 2 )
     static let other = Int16( 3 )
 }
 
@@ -921,6 +920,7 @@ let     NEW_RECIPE                      = -2
 let     NO_SELECTION                    = -1
 let     NOTIFICATION_RECIPE_SELECTED    = "RecipeSelected"
 let     NOTIFICATION_RECIPES_UPDATED    = "RecipesUpdated"
+let     groupedTableViewBackgroundColor = UIColor.init( red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0 )
 
 
 

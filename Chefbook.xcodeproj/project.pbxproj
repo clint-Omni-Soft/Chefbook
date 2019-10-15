@@ -48,6 +48,7 @@
 		F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */; };
 		F4C5C0EF22EBBF0700B3CBA4 /* ChefbookDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */; };
 		F4C5C0F122EBC5ED00B3CBA4 /* RecipeEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */; };
+		F4D15FA62354E56700D0668E /* PoolishTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D15FA52354E56700D0668E /* PoolishTableViewCell.swift */; };
 		F4F1B7E8234D243900025EBC /* BreadIngredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F1B7E6234D243900025EBC /* BreadIngredient+CoreDataProperties.swift */; };
 		F4F1B7EC234D370F00025EBC /* PoolishEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F1B7EB234D370F00025EBC /* PoolishEditorViewController.swift */; };
 /* End PBXBuildFile section */
@@ -121,6 +122,7 @@
 		F4C5C0EB22EBA5B100B3CBA4 /* appIcon 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 1024.png"; path = "AppIcon/appIcon 1024.png"; sourceTree = "<group>"; };
 		F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditorViewController.swift; sourceTree = "<group>"; };
+		F4D15FA52354E56700D0668E /* PoolishTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolishTableViewCell.swift; sourceTree = "<group>"; };
 		F4F1B7E6234D243900025EBC /* BreadIngredient+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BreadIngredient+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4F1B7EB234D370F00025EBC /* PoolishEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolishEditorViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,14 +143,14 @@
 			isa = PBXGroup;
 			children = (
 				F417041C231EDAFF00DFFC45 /* FormulaEditorViewController.swift */,
-				F4170423231F083600DFFC45 /* Cells */,
+				F4170423231F083600DFFC45 /* Formula Editor Cells */,
 				F49C27A223319A5E008E8C8D /* HeaderViews */,
-				F4F1B7EB234D370F00025EBC /* PoolishEditorViewController.swift */,
+				F4D15FA32354E48F00D0668E /* Poolish Editor */,
 			);
 			path = "Formula Editor";
 			sourceTree = "<group>";
 		};
-		F4170423231F083600DFFC45 /* Cells */ = {
+		F4170423231F083600DFFC45 /* Formula Editor Cells */ = {
 			isa = PBXGroup;
 			children = (
 				F417042A231F189F00DFFC45 /* FormulaIngredientTableViewCell.swift */,
@@ -156,7 +158,7 @@
 				F481C520234BA1D80003D9E3 /* FormulaPreFermentTableViewCell.swift */,
 				F4170428231F0FDB00DFFC45 /* FormulaYieldTableViewCell.swift */,
 			);
-			path = Cells;
+			path = "Formula Editor Cells";
 			sourceTree = "<group>";
 		};
 		F49C27A223319A5E008E8C8D /* HeaderViews */ = {
@@ -301,6 +303,23 @@
 			path = "CoreData Entities";
 			sourceTree = "<group>";
 		};
+		F4D15FA32354E48F00D0668E /* Poolish Editor */ = {
+			isa = PBXGroup;
+			children = (
+				F4F1B7EB234D370F00025EBC /* PoolishEditorViewController.swift */,
+				F4D15FA42354E51F00D0668E /* Poolish Editor Cells */,
+			);
+			path = "Poolish Editor";
+			sourceTree = "<group>";
+		};
+		F4D15FA42354E51F00D0668E /* Poolish Editor Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F4D15FA52354E56700D0668E /* PoolishTableViewCell.swift */,
+			);
+			path = "Poolish Editor Cells";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -412,6 +431,7 @@
 				F4C5C0F122EBC5ED00B3CBA4 /* RecipeEditorViewController.swift in Sources */,
 				F4AD56C822F23EA600EFC842 /* RecipeIngredientsTableViewCell.swift in Sources */,
 				F417042B231F189F00DFFC45 /* FormulaIngredientTableViewCell.swift in Sources */,
+				F4D15FA62354E56700D0668E /* PoolishTableViewCell.swift in Sources */,
 				F43678DC234E50DA00ABF982 /* Recipe+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

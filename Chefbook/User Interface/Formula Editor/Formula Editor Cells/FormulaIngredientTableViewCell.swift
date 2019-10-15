@@ -256,14 +256,14 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         let     ingredientArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
         var     name            = "??"
         var     waterPresent    = false
-        var     yeistPresent    = false
+        var     yeastPresent    = false
 
         
         for ingredient in ingredientArray {
             
             switch ingredient.ingredientType {
             case BreadIngredientTypes.water:    waterPresent = true
-            case BreadIngredientTypes.yeist:    yeistPresent = true
+            case BreadIngredientTypes.yeast:    yeastPresent = true
             default:
                 break
             }
@@ -273,8 +273,8 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         if !waterPresent {
             name = NSLocalizedString( "IngredientType.Water", comment: "Water" )
         }
-        else if !yeistPresent {
-            name = NSLocalizedString( "IngredientType.Yeist", comment: "Yeist" )
+        else if !yeastPresent {
+            name = NSLocalizedString( "IngredientType.Yeast", comment: "Yeast" )
         }
         
         return name

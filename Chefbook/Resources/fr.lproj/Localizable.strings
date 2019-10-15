@@ -58,7 +58,7 @@
 
 "IngredientType.Flour"                      = "Farine";
 "IngredientType.Water"                      = "Eau";
-"IngredientType.Yeist"                      = "Levure";
+"IngredientType.Yeast"                      = "Levure";
 
 "LabelText.About"                           = "Sur";
 "LabelText.ContactUs"                       = "Tous les droits sont réservés. Contactez-nous à";
@@ -76,6 +76,10 @@
 "LabelText.YieldOptions"                    = "Options de Rendement";
 "LabelText.YieldQuantity"                   = "Quantité de Rendement";
 "LabelText.YieldWeight"                     = "Poids de Rendement";
+
+"PoolishComponent.Flour"                    = "Composants de la Farine";
+"PoolishComponent.Water"                    = "Composants de l'Eau";
+"PoolishComponent.Yeast"                    = "Composants de Levure";
 
 "SectionTitle.Flour"                        = "Farine";
 "SectionTitle.Ingredients"                  = "Ingrédients";

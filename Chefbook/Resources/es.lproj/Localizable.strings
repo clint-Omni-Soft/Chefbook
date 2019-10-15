@@ -58,7 +58,7 @@
 
 "IngredientType.Flour"                      = "Harina";
 "IngredientType.Water"                      = "Auga";
-"IngredientType.Yeist"                      = "Yeist";
+"IngredientType.Yeast"                      = "Levadura";
 
 "LabelText.About"                           = "Acerca de";
 "LabelText.ContactUs"                       = "Todos los derechos reservados. Contactanos en";
@@ -75,6 +75,10 @@
 "LabelText.YieldOptions"                    = "Opciones de Rendimiento";
 "LabelText.YieldQuantity"                   = "Cantidad de Rendimiento";
 "LabelText.YieldWeight"                     = "Peso de Rendimiento";
+
+"PoolishComponent.Flour"                    = "Componentes de Harina";
+"PoolishComponent.Water"                    = "Componentes de Agua";
+"PoolishComponent.Yeast"                    = "Componentes de Levadura";
 
 "SectionTitle.Flour"                        = "Harina";
 "SectionTitle.Ingredients"                  = "Ingredientes";

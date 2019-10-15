@@ -58,7 +58,7 @@
 
 "IngredientType.Flour"                      = "Flour";
 "IngredientType.Water"                      = "Water";
-"IngredientType.Yeist"                      = "Yeist";
+"IngredientType.Yeast"                      = "Yeast";
 
 "LabelText.About"                           = "About";
 "LabelText.ContactUs"                       = "All rights reserved.  Contact us at";
@@ -75,6 +75,10 @@
 "LabelText.YieldOptions"                    = "Yield Options";
 "LabelText.YieldQuantity"                   = "Yield Quantity";
 "LabelText.YieldWeight"                     = "Yield Weight";
+
+"PoolishComponent.Flour"                    = "Flour Components";
+"PoolishComponent.Water"                    = "Water Components";
+"PoolishComponent.Yeast"                    = "Yeast Components";
 
 "SectionTitle.Flour"                        = "Flour";
 "SectionTitle.Ingredients"                  = "Ingredients";

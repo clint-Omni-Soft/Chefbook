@@ -36,7 +36,7 @@ class SectionHeaderView: UITableViewHeaderFooterView {
     // MARK: UITableViewHeaderFooterView Lifecycle Methods
     
     override init( reuseIdentifier: String? ) {
-        logTrace()
+//        logTrace()
         super.init( reuseIdentifier: reuseIdentifier )
         
         addButton = UIButton.init( type: .system )
