@@ -10,18 +10,10 @@ import UIKit
 
 
 class FormulaEditorViewController: UIViewController,
-                                   ChefbookCentralDelegate,
-                                   FormulaIngredientTableViewCellDelegate,
-                                   FormulaNameTableViewCellDelegate,
-                                   FormulaPreFermentTableViewCellDelegate,
-                                   FormulaYieldTableViewCellDelegate,
-                                   SectionHeaderViewDelegate,
                                    UIImagePickerControllerDelegate,
-                                   UINavigationControllerDelegate,  // Required for UIImagePickerControllerDelegate
-                                   UIPopoverPresentationControllerDelegate,
-                                   UITableViewDataSource,
-                                   UITableViewDelegate
+                                   UINavigationControllerDelegate  // Required for UIImagePickerControllerDelegate
 {
+    
     // MARK: Public Variables
 
     var     recipeIndex : Int!                        // Set by caller
@@ -57,11 +49,12 @@ class FormulaEditorViewController: UIViewController,
         case ingredients
     }
     
-    private var     currentState                = StateMachine.name
-    private var     indexPathOfCellBeingEdited  = IndexPath(item: 0, section: 0)
-    private var     newIngredientForSection     = ForumlaTableSections.none
-    private var     waitingForNotification      = false
-    private var     weightOfFlour               = 0
+    private var     currentState                 = StateMachine.name
+    private var     indexPathOfCellBeingEdited   = IndexPath(item: 0, section: 0)
+    private var     newIngredientForSection      = ForumlaTableSections.none
+    private var     originalViewOffset : CGFloat = 0.0
+    private var     waitingForNotification       = false
+    private var     weightOfFlour                = 0
 
     
     
@@ -71,7 +64,7 @@ class FormulaEditorViewController: UIViewController,
         logTrace()
         super.viewDidLoad()
 
-        title = NSLocalizedString( "Title.BreadFormulaEditor", comment: "Bread Formula Editor" )
+        self.navigationItem.title = NSLocalizedString( "Title.BreadFormulaEditor", comment: "Bread Formula Editor" )
         
         preferredContentSize = CGSize( width: 320, height: 460 )
         initializeStateMachine()
@@ -128,100 +121,6 @@ class FormulaEditorViewController: UIViewController,
     
     
 
-    // MARK: ChefbookCentralDelegate Methods
-    
-    func chefbookCentral( chefbookCentral : ChefbookCentral,
-                          didOpenDatabase : Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
-    }
-    
-    
-    func chefbookCentralDidReloadRecipeArray( chefbookCentral : ChefbookCentral ) {
-        logVerbose( "loaded [ %d ] recipes ... recipeIndex[ %d ]", chefbookCentral.recipeArray.count, recipeIndex )
-        
-        logVerbose( "recovering recipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
-        recipeIndex = chefbookCentral.selectedRecipeIndex
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-            self.myTableView.reloadData()
-        })
-
-    }
-    
-    
-    
-    // MARK: FormulaIngredientTableViewCellDelegate Methods
-    
-    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
-                                         ingredientIndexPath            : IndexPath,
-                                         isNew                          : Bool,
-                                         editedIngredientName           : String,
-                                         editedPercentage               : String ) {
-        logTrace()
-        processIngredientInputs( ingredientIndexPath : ingredientIndexPath,
-                                 isNew               : isNew,
-                                 ingredientName      : editedIngredientName,
-                                 percentOfFlour      : editedPercentage )
-    }
-    
-    
-    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
-                                         ingredientIndexPath            : IndexPath,
-                                         didStartEditing                : Bool )
-    {
-        logVerbose( "[ %d ][ %d ]", ingredientIndexPath.section, ingredientIndexPath.row )
-        indexPathOfCellBeingEdited = ingredientIndexPath
-    }
-
-    
-    
-    
-    // MARK: FormulaNameTableViewCellDelegate Methods
-    
-    func formulaNameTableViewCell( formulaNameTableViewCell : FormulaNameTableViewCell,
-                                   editedName               : String ) {
-        logTrace()
-        processNameInput( name: editedName )
-    }
-    
-    
-    
-    // MARK: FormulaPreFermentTableViewCellDelegate Methods
-    
-    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
-                                         indexPath                      : IndexPath,
-                                         editedName                     : String,
-                                         editedPercentage               : String,
-                                         editedWeight                   : String ) {
-        logTrace()
-        processInputsForPreFerment( name       : editedName,
-                                    percentage : editedPercentage,
-                                    weight     : editedWeight )
-    }
-
-    
-    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
-                                         indexPath                      : IndexPath,
-                                         didStartEditing                : Bool ) {
-        
-        logVerbose( "[ %d ][ %d ]", indexPath.section, indexPath.row )
-        indexPathOfCellBeingEdited = indexPath
-    }
-
-    
-    
-    // MARK: FormulaYieldTableViewCellDelegate Methods
-
-    func formulaYieldTableViewCell( formulaYieldTableViewCell : FormulaYieldTableViewCell,
-                                    editedQuantity            : String,
-                                    editedWeight              : String ) {
-        logTrace()
-        processYieldInputs( yieldQuantity : editedQuantity,
-                            yieldWeight   : editedWeight )
-    }
-
-    
-
     // MARK: NSNotification Methods
     
     @objc func keyboardWillHideNotification( notification: NSNotification ) {
@@ -268,228 +167,11 @@ class FormulaEditorViewController: UIViewController,
     
     
     
-    // MARK: SectionHeaderViewDelegate Methods
-    
-    func sectionHeaderView( sectionHeaderView        : SectionHeaderView,
-                            didRequestAddFor section : Int) {
-        logVerbose( "[ %d ]", section )
-        
-        if section == ForumlaTableSections.preFerment {
-            presentPreFermentOptions( sectionHeaderView : sectionHeaderView )
-        }
-        else {
-            newIngredientForSection = section
-        }
-        
-        myTableView.reloadData()
-    }
-    
-    
-    
     // MARK: Target/Action Methods
     
     @IBAction func cancelBarButtonTouched( sender : UIBarButtonItem ) {
         logTrace()
         dismissView()
-    }
-    
-    
-    
-    // MARK: UIPopoverPresentationControllerDelegate Methods
-    
-    func adaptivePresentationStyle(for controller : UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.none
-    }
-    
-    
-    
-    // MARK: UITableViewDataSource Methods
-    
-    func numberOfSections( in tableView : UITableView ) -> Int {
-        var numberOfSections = 0
-        
-        
-        if !waitingForNotification {
-            numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : 4
-        }
-        
-//        logVerbose( "[ %d ]", numberOfSections )
-        
-        return numberOfSections
-    }
-    
-    
-    func tableView(_ tableView                     : UITableView,
-                     numberOfRowsInSection section : Int ) -> Int {
-        
-        let chefbookCentral = ChefbookCentral.sharedInstance
-        var numberOfRows    = 0
-
-        if !waitingForNotification {
-            
-            switch section {
-            case ForumlaTableSections.nameAndYield:
-                switch currentState {
-                case .name:     numberOfRows = 1
-                case .yield:    numberOfRows = 2
-                default:        numberOfRows = 3    // 3rd row is the % Name Weight header for the following sections
-                }
-                
-            case ForumlaTableSections.flour:
-                let     indexOfNextFlourComponent = chefbookCentral.recipeArray[recipeIndex].flourIngredients?.count ?? 0
-                
-                numberOfRows = indexOfNextFlourComponent + ( newIngredientForSection == ForumlaTableSections.flour ? 1 : 0 )
-                
-            case ForumlaTableSections.ingredients:
-                let     indexOfNextIngredient = chefbookCentral.recipeArray[recipeIndex].breadIngredients?.count ?? 0
-                
-                numberOfRows = indexOfNextIngredient + ( newIngredientForSection == ForumlaTableSections.ingredients ? 1 : 0 )
-                
-            case ForumlaTableSections.preFerment:
-                if chefbookCentral.recipeArray[recipeIndex].preFerment != nil {
-                    numberOfRows = 1
-                }
-                else if chefbookCentral.recipeArray[recipeIndex].poolish != nil {
-                    numberOfRows = 1
-                }
-                
-            default:
-                numberOfRows = 0
-            }
-            
-        }
-        
-//        logVerbose( "[ %d ][ %d ]", section, numberOfRows )
-        
-        return numberOfRows
-    }
-    
-    
-    func tableView(_ tableView              : UITableView,
-                     cellForRowAt indexPath : IndexPath) -> UITableViewCell {
-//        logVerbose( "row[ %d ]", indexPath.row)
-        var     cell : UITableViewCell!
-        
-        switch indexPath.section {
-            
-        case ForumlaTableSections.nameAndYield:
-            
-            switch indexPath.row {
-            case 0:     cell = loadFormulaNameCell()
-            case 1:     cell = loadFormulaYieldCell()
-            default:    cell = loadFormulaIngredientCellFor( indexPath: indexPath )     // Creates the % Name Weight header for the following sections
-            }
-            
-        case ForumlaTableSections.flour:
-            cell = loadFormulaIngredientCellFor( indexPath: indexPath )
-            
-        case ForumlaTableSections.ingredients:
-            cell = loadFormulaIngredientCellFor( indexPath: indexPath )
-            
-        default:
-            cell = loadFormulaPreFermentCellFor( indexPath: indexPath )
-        }
-        
-        return cell
-    }
-    
-    
-    func tableView(_ tableView              : UITableView,
-                     canEditRowAt indexPath : IndexPath) -> Bool {
-        let canEdit = indexPath.section != ForumlaTableSections.nameAndYield
-        
-        return canEdit
-    }
-    
-    
-    func tableView(_ tableView           : UITableView,
-                     commit editingStyle : UITableViewCell.EditingStyle,
-                     forRowAt indexPath  : IndexPath) {
-        
-        if editingStyle == .delete {
-            logVerbose( "delete ingredient at row [ %d ]", indexPath.row )
-            
-            DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
-                let  chefbookCentral = ChefbookCentral.sharedInstance
-                
-                chefbookCentral.selectedRecipeIndex = self.recipeIndex
-                
-                switch indexPath.section {
-                case ForumlaTableSections.flour:
-                    chefbookCentral.deleteFormulaRecipeFlourIngredientAt( index: indexPath.row )
-
-                case ForumlaTableSections.ingredients:
-                    chefbookCentral.deleteFormulaRecipeBreadIngredientAt( index: indexPath.row )
-
-                case ForumlaTableSections.preFerment:
-                    if chefbookCentral.recipeArray[self.recipeIndex].preFerment != nil {
-                        chefbookCentral.deleteFormulaRecipePreFerment()
-                    }
-                    else if chefbookCentral.recipeArray[self.recipeIndex].poolish != nil {
-                        chefbookCentral.deleteFormulaRecipePoolish()
-                    }
-                
-                default:
-                    break
-                }
-                
-            })
-            
-        }
-        
-    }
-    
-
-    
-    // MARK: UITableViewDelegate Methods
-    
-    func tableView(_ tableView                : UITableView,
-                     didSelectRowAt indexPath : IndexPath ) {
-        
-//        tableView.deselectRow( at: indexPath, animated: false )
-        if indexPath.section == ForumlaTableSections.preFerment && ChefbookCentral.sharedInstance.recipeArray[self.recipeIndex].poolish != nil {
-            
-            if let sectionHeaderView = tableView.headerView( forSection: indexPath.section ) as? SectionHeaderView {
-                loadPoolishEditorPopover( sectionHeaderView: sectionHeaderView )
-            }
-            
-        }
-
-    }
-    
-    
-    func tableView(_ tableView                        : UITableView,
-                     heightForHeaderInSection section : Int ) -> CGFloat {
-        
-        let     height = section == ForumlaTableSections.nameAndYield ? 0.0 : 44.0 as CGFloat
-        
-        return height
-    }
-    
-    
-    func tableView(_ tableView                      : UITableView,
-                     viewForHeaderInSection section : Int ) -> UIView? {
-        
-        let     sectionHeaderView = tableView.dequeueReusableHeaderFooterView( withIdentifier: SectionHeaderView.reuseIdentifier ) as? SectionHeaderView
-        var     hideAddButton     = false
-        var     title             = ""
-        
-        switch section {
-        case ForumlaTableSections.flour:
-            title = String( format: "100     %@", NSLocalizedString( "SectionTitle.Flour", comment: "Flour" ) )
-        case ForumlaTableSections.ingredients:
-            title = String( format: "        %@", NSLocalizedString( "SectionTitle.Ingredients", comment: "Ingredients" ) )
-        default: // ForumlaTableSections.preFerment
-            title = String( format: "        %@", NSLocalizedString( "SectionTitle.PreFerment", comment: "PreFerment" ) )
-            
-            hideAddButton = ( ChefbookCentral.sharedInstance.recipeArray[recipeIndex].poolish != nil ) || ( ChefbookCentral.sharedInstance.recipeArray[recipeIndex].preFerment != nil )
-        }
-        
-        sectionHeaderView?.initWith( title          : title,
-                                     for            : section,
-                                     hideAddButton  : hideAddButton,
-                                     with           : self )
-        return sectionHeaderView
     }
     
     
@@ -962,7 +644,6 @@ class FormulaEditorViewController: UIViewController,
         chefbookCentral.saveUpdatedRecipe(   recipe: recipe )
     }
     
-    private var originalViewOffset : CGFloat = 0.0
     
     private func scrollCellBeingEdited( keyboardWillShow : Bool,     // false == willHide
                                         topOfKeyboard    : CGFloat ) {
@@ -1015,3 +696,366 @@ class FormulaEditorViewController: UIViewController,
     
     
 }
+
+
+
+
+
+// MARK: ChefbookCentralDelegate Methods
+
+extension FormulaEditorViewController : ChefbookCentralDelegate {
+    
+    func chefbookCentral( chefbookCentral : ChefbookCentral,
+                          didOpenDatabase : Bool ) {
+        logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
+    }
+    
+    
+    func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
+        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
+    }
+    
+    
+    func chefbookCentralDidReloadRecipeArray( chefbookCentral : ChefbookCentral ) {
+        logVerbose( "loaded [ %d ] recipes ... recipeIndex[ %d ]", chefbookCentral.recipeArray.count, recipeIndex )
+        
+        logVerbose( "recovering recipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
+        recipeIndex = chefbookCentral.selectedRecipeIndex
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            self.myTableView.reloadData()
+        })
+        
+    }
+    
+    
+}
+
+
+
+// MARK: FormulaIngredientTableViewCellDelegate Methods
+
+extension FormulaEditorViewController : FormulaIngredientTableViewCellDelegate {
+
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
+                                         ingredientIndexPath            : IndexPath,
+                                         isNew                          : Bool,
+                                         editedIngredientName           : String,
+                                         editedPercentage               : String ) {
+        logTrace()
+        processIngredientInputs( ingredientIndexPath : ingredientIndexPath,
+                                 isNew               : isNew,
+                                 ingredientName      : editedIngredientName,
+                                 percentOfFlour      : editedPercentage )
+    }
+    
+    
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
+                                         ingredientIndexPath            : IndexPath,
+                                         didStartEditing                : Bool )
+    {
+        logVerbose( "[ %d ][ %d ]", ingredientIndexPath.section, ingredientIndexPath.row )
+        indexPathOfCellBeingEdited = ingredientIndexPath
+    }
+    
+    
+}
+
+
+
+// MARK: FormulaNameTableViewCellDelegate Methods
+
+extension FormulaEditorViewController : FormulaNameTableViewCellDelegate {
+    
+    func formulaNameTableViewCell( formulaNameTableViewCell : FormulaNameTableViewCell,
+                                   editedName               : String ) {
+        logTrace()
+        processNameInput( name: editedName )
+    }
+    
+    
+}
+
+
+
+// MARK: FormulaPreFermentTableViewCellDelegate Methods
+
+extension FormulaEditorViewController : FormulaPreFermentTableViewCellDelegate {
+    
+    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
+                                         indexPath                      : IndexPath,
+                                         editedName                     : String,
+                                         editedPercentage               : String,
+                                         editedWeight                   : String ) {
+        logTrace()
+        processInputsForPreFerment( name       : editedName,
+                                    percentage : editedPercentage,
+                                    weight     : editedWeight )
+    }
+    
+    
+    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
+                                         indexPath                      : IndexPath,
+                                         didStartEditing                : Bool ) {
+        
+        logVerbose( "[ %d ][ %d ]", indexPath.section, indexPath.row )
+        indexPathOfCellBeingEdited = indexPath
+    }
+    
+    
+}
+
+
+
+// MARK: FormulaYieldTableViewCellDelegate Methods
+
+extension FormulaEditorViewController : FormulaYieldTableViewCellDelegate {
+    
+    func formulaYieldTableViewCell( formulaYieldTableViewCell : FormulaYieldTableViewCell,
+                                    editedQuantity            : String,
+                                    editedWeight              : String ) {
+        logTrace()
+        processYieldInputs( yieldQuantity : editedQuantity,
+                            yieldWeight   : editedWeight )
+    }
+    
+    
+}
+
+
+
+// MARK: SectionHeaderViewDelegate Methods
+
+extension FormulaEditorViewController : SectionHeaderViewDelegate {
+    
+    func sectionHeaderView( sectionHeaderView        : SectionHeaderView,
+                            didRequestAddFor section : Int) {
+        logVerbose( "[ %d ]", section )
+        
+        if section == ForumlaTableSections.preFerment {
+            presentPreFermentOptions( sectionHeaderView : sectionHeaderView )
+        }
+        else {
+            newIngredientForSection = section
+        }
+        
+        myTableView.reloadData()
+    }
+    
+    
+}
+
+
+
+// MARK: UIPopoverPresentationControllerDelegate Methods
+
+extension FormulaEditorViewController : UIPopoverPresentationControllerDelegate {
+    
+    func adaptivePresentationStyle(for controller : UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.none
+    }
+    
+
+}
+
+// MARK: UITableViewDataSource Methods
+
+extension FormulaEditorViewController : UITableViewDataSource {
+    
+    // MARK: UITableViewDataSource Methods
+    
+    func numberOfSections( in tableView : UITableView ) -> Int {
+        var numberOfSections = 0
+        
+        
+        if !waitingForNotification {
+            numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : 4
+        }
+        
+//        logVerbose( "[ %d ]", numberOfSections )
+        
+        return numberOfSections
+    }
+    
+    
+    func tableView(_ tableView                     : UITableView,
+                   numberOfRowsInSection section : Int ) -> Int {
+        
+        let chefbookCentral = ChefbookCentral.sharedInstance
+        var numberOfRows    = 0
+        
+        if !waitingForNotification {
+            
+            switch section {
+            case ForumlaTableSections.nameAndYield:
+                switch currentState {
+                case .name:     numberOfRows = 1
+                case .yield:    numberOfRows = 2
+                default:        numberOfRows = 3    // 3rd row is the % Name Weight header for the following sections
+                }
+                
+            case ForumlaTableSections.flour:
+                let     indexOfNextFlourComponent = chefbookCentral.recipeArray[recipeIndex].flourIngredients?.count ?? 0
+                
+                numberOfRows = indexOfNextFlourComponent + ( newIngredientForSection == ForumlaTableSections.flour ? 1 : 0 )
+                
+            case ForumlaTableSections.ingredients:
+                let     indexOfNextIngredient = chefbookCentral.recipeArray[recipeIndex].breadIngredients?.count ?? 0
+                
+                numberOfRows = indexOfNextIngredient + ( newIngredientForSection == ForumlaTableSections.ingredients ? 1 : 0 )
+                
+            case ForumlaTableSections.preFerment:
+                if chefbookCentral.recipeArray[recipeIndex].preFerment != nil {
+                    numberOfRows = 1
+                }
+                else if chefbookCentral.recipeArray[recipeIndex].poolish != nil {
+                    numberOfRows = 1
+                }
+                
+            default:
+                numberOfRows = 0
+            }
+            
+        }
+        
+//        logVerbose( "[ %d ][ %d ]", section, numberOfRows )
+        
+        return numberOfRows
+    }
+    
+    
+    func tableView(_ tableView              : UITableView,
+                   cellForRowAt indexPath : IndexPath) -> UITableViewCell {
+//        logVerbose( "row[ %d ]", indexPath.row)
+        var     cell : UITableViewCell!
+        
+        switch indexPath.section {
+            
+        case ForumlaTableSections.nameAndYield:
+            
+            switch indexPath.row {
+            case 0:     cell = loadFormulaNameCell()
+            case 1:     cell = loadFormulaYieldCell()
+            default:    cell = loadFormulaIngredientCellFor( indexPath: indexPath )     // Creates the % Name Weight header for the following sections
+            }
+            
+        case ForumlaTableSections.flour:
+            cell = loadFormulaIngredientCellFor( indexPath: indexPath )
+            
+        case ForumlaTableSections.ingredients:
+            cell = loadFormulaIngredientCellFor( indexPath: indexPath )
+            
+        default:
+            cell = loadFormulaPreFermentCellFor( indexPath: indexPath )
+        }
+        
+        return cell
+    }
+    
+    
+    func tableView(_ tableView              : UITableView,
+                   canEditRowAt indexPath : IndexPath) -> Bool {
+        let canEdit = indexPath.section != ForumlaTableSections.nameAndYield
+        
+        return canEdit
+    }
+    
+    
+    func tableView(_ tableView           : UITableView,
+                   commit editingStyle : UITableViewCell.EditingStyle,
+                   forRowAt indexPath  : IndexPath) {
+        
+        if editingStyle == .delete {
+            logVerbose( "delete ingredient at row [ %d ]", indexPath.row )
+            
+            DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
+                let  chefbookCentral = ChefbookCentral.sharedInstance
+                
+                chefbookCentral.selectedRecipeIndex = self.recipeIndex
+                
+                switch indexPath.section {
+                case ForumlaTableSections.flour:
+                    chefbookCentral.deleteFormulaRecipeFlourIngredientAt( index: indexPath.row )
+                    
+                case ForumlaTableSections.ingredients:
+                    chefbookCentral.deleteFormulaRecipeBreadIngredientAt( index: indexPath.row )
+                    
+                case ForumlaTableSections.preFerment:
+                    if chefbookCentral.recipeArray[self.recipeIndex].preFerment != nil {
+                        chefbookCentral.deleteFormulaRecipePreFerment()
+                    }
+                    else if chefbookCentral.recipeArray[self.recipeIndex].poolish != nil {
+                        chefbookCentral.deleteFormulaRecipePoolish()
+                    }
+                    
+                default:
+                    break
+                }
+                
+            })
+            
+        }
+        
+    }
+    
+    
+    
+}
+
+
+
+// MARK: UITableViewDelegate Methods
+
+extension FormulaEditorViewController : UITableViewDelegate {
+    
+    func tableView(_ tableView                : UITableView,
+                   didSelectRowAt indexPath : IndexPath ) {
+        
+//        tableView.deselectRow( at: indexPath, animated: false )
+        if indexPath.section == ForumlaTableSections.preFerment && ChefbookCentral.sharedInstance.recipeArray[self.recipeIndex].poolish != nil {
+            
+            if let sectionHeaderView = tableView.headerView( forSection: indexPath.section ) as? SectionHeaderView {
+                loadPoolishEditorPopover( sectionHeaderView: sectionHeaderView )
+            }
+            
+        }
+        
+    }
+    
+    
+    func tableView(_ tableView                        : UITableView,
+                   heightForHeaderInSection section : Int ) -> CGFloat {
+        
+        let     height = section == ForumlaTableSections.nameAndYield ? 0.0 : 44.0 as CGFloat
+        
+        return height
+    }
+    
+    
+    func tableView(_ tableView                      : UITableView,
+                   viewForHeaderInSection section : Int ) -> UIView? {
+        
+        let     sectionHeaderView = tableView.dequeueReusableHeaderFooterView( withIdentifier: SectionHeaderView.reuseIdentifier ) as? SectionHeaderView
+        var     hideAddButton     = false
+        var     title             = ""
+        
+        switch section {
+        case ForumlaTableSections.flour:
+            title = String( format: "100     %@", NSLocalizedString( "SectionTitle.Flour", comment: "Flour" ) )
+        case ForumlaTableSections.ingredients:
+            title = String( format: "        %@", NSLocalizedString( "SectionTitle.Ingredients", comment: "Ingredients" ) )
+        default: // ForumlaTableSections.preFerment
+            title = String( format: "        %@", NSLocalizedString( "SectionTitle.PreFerment", comment: "PreFerment" ) )
+            
+            hideAddButton = ( ChefbookCentral.sharedInstance.recipeArray[recipeIndex].poolish != nil ) || ( ChefbookCentral.sharedInstance.recipeArray[recipeIndex].preFerment != nil )
+        }
+        
+        sectionHeaderView?.initWith( title          : title,
+                                     for            : section,
+                                     hideAddButton  : hideAddButton,
+                                     with           : self )
+        return sectionHeaderView
+    }
+    
+}
+

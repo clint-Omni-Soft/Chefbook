@@ -24,7 +24,7 @@ class ImageViewController: UIViewController,
         logTrace()
         super.viewDidLoad()
         
-        title = NSLocalizedString( "Title.RecipeImage", comment: "Recipe Image" )
+        self.navigationItem.title = NSLocalizedString( "Title.RecipeImage", comment: "Recipe Image" )
         
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 6.0

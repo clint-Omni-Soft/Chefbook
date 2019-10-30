@@ -33,7 +33,7 @@ class IngredientsEditorViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-        title = NSLocalizedString( "Title.Ingredients", comment: "Ingredients" )
+        self.navigationItem.title = NSLocalizedString( "Title.Ingredients", comment: "Ingredients" )
     }
     
 

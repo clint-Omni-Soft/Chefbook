@@ -90,6 +90,7 @@ class FormulaNameTableViewCell: UITableViewCell {
 
     }
 
+    
     @IBAction func invisibleNameButtonTouched(_ sender: Any ) {
         editButtonTouched( self )
     }
@@ -112,4 +113,7 @@ class FormulaNameTableViewCell: UITableViewCell {
         }
 
     }
+
+
+
 }

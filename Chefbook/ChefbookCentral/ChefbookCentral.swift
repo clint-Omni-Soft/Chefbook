@@ -17,6 +17,7 @@ protocol ChefbookCentralDelegate: class {
     func chefbookCentral( chefbookCentral: ChefbookCentral,
                           didOpenDatabase: Bool )
     
+    func chefbookCentralDidReloadProvisionArray( chefbookCentral: ChefbookCentral )
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral )
 }
 
@@ -27,21 +28,27 @@ class ChefbookCentral: NSObject {
     // MARK: Public Variables
     weak var delegate:      ChefbookCentralDelegate?
 
-    var didOpenDatabase       = false
-    var recipeArray           = [Recipe].init()
-    var selectedRecipeIndex   = NO_SELECTION
+    var didOpenDatabase        = false
+    var provisionArray         = [Provision].init()
+    var recipeArray            = [Recipe].init()
+    var selectedProvisionIndex = NO_SELECTION
+    var selectedRecipeIndex    = NO_SELECTION
 
     
     // MARK: Private Variables
-    private let DATABASE_NAME                = "RecipeDB.sqlite"
-    private let ENTITY_NAME_BREAD_INGREDIENT = "BreadIngredient"
-    private let ENTITY_NAME_POOLISH          = "Poolish"
-    private let ENTITY_NAME_PRE_FERMENT      = "PreFerment"
-    private let ENTITY_NAME_RECIPE           = "Recipe"
+    private let DATABASE_NAME                   = "RecipeDB.sqlite"
+    
+    private let ENTITY_NAME_BREAD_INGREDIENT    = "BreadIngredient"
+    private let ENTITY_NAME_POOLISH             = "Poolish"
+    private let ENTITY_NAME_PRE_FERMENT         = "PreFerment"
+    private let ENTITY_NAME_PROVISION           = "Provision"
+    private let ENTITY_NAME_PROVISION_ELEMENT   = "ProvisionElement"
+    private let ENTITY_NAME_RECIPE              = "Recipe"
 
-    private var managedObjectContext : NSManagedObjectContext!
-    private var selectedRecipeGuid   = ""
-    private var persistentContainer  : NSPersistentContainer!
+    private var managedObjectContext  : NSManagedObjectContext!
+    private var selectedProvisionGuid = ""
+    private var selectedRecipeGuid    = ""
+    private var persistentContainer   : NSPersistentContainer!
 
     
     
@@ -220,6 +227,57 @@ class ChefbookCentral: NSObject {
             
             self.saveContext()
             self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func addProvisionWith( name  : String ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ]", name )
+        
+        persistentContainer.viewContext.perform {
+            let     provision = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_PROVISION, into: self.managedObjectContext ) as! Provision
+            
+            provision.name  = name
+            provision.guid  = UUID().uuidString
+            
+            self.selectedProvisionGuid = provision.guid!
+            
+            self.saveContext()
+            self.refetchProvisionsAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func addProvisionElementTo( provision : Provision,
+                                recipe   : Recipe,
+                                quantity : Int ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %d ][ %@ ]", quantity, recipe.name ?? "Unknown" )
+        
+        persistentContainer.viewContext.perform {
+            let     element = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_PROVISION_ELEMENT, into: self.managedObjectContext ) as! ProvisionElement
+            
+            element.guid     = UUID().uuidString
+            element.quantity = Int16( quantity )
+            element.recipe   = recipe
+            
+            provision.addToElements( element )
+            
+            self.saveContext()
+            self.refetchProvisionsAndNotifyDelegate()
         }
         
     }
@@ -439,6 +497,53 @@ class ChefbookCentral: NSObject {
     }
     
     
+    func deleteProvisionAtIndex( index: Int ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        persistentContainer.viewContext.perform {
+            logVerbose( "deleting provision at [ %d ]", index )
+            let     provision = self.provisionArray[index]
+            
+            self.managedObjectContext.delete( provision )
+            
+            self.saveContext()
+            self.refetchProvisionsAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func deleteProvisionElementFrom( provision : Provision,
+                                     with guid : String ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        persistentContainer.viewContext.perform {
+            let     provisionElements = provision.elements?.allObjects as! [ProvisionElement]
+            
+            for element in provisionElements {
+                if element.guid == guid {
+                    provision.removeFromElements( element )
+                    break
+                }
+                
+            }
+            
+            self.saveUpdatedProvision( provision: provision )
+        }
+        
+    }
+    
+    
     func deleteRecipeAtIndex( index: Int ) {
         
         if !self.didOpenDatabase {
@@ -459,6 +564,22 @@ class ChefbookCentral: NSObject {
     }
     
     
+    func fetchProvisions() {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        persistentContainer.viewContext.perform {
+            self.refetchProvisionsAndNotifyDelegate()
+        }
+        
+    }
+    
+    
     func fetchRecipes() {
         
         if !self.didOpenDatabase {
@@ -470,6 +591,25 @@ class ChefbookCentral: NSObject {
         
         persistentContainer.viewContext.perform {
             self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func saveUpdatedProvision( provision: Provision ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        selectedProvisionGuid = provision.guid!       // We know this will always have been set
+        
+        persistentContainer.viewContext.perform {
+            self.saveContext()
+            self.refetchProvisionsAndNotifyDelegate()
         }
         
     }
@@ -628,6 +768,7 @@ class ChefbookCentral: NSObject {
     // MARK: Utility Methods
     
     private func adjustIngredientsForPoolishIn( recipe : Recipe ) {
+        
         if recipe.poolish == nil {
             logTrace( "No poolish in this recipe ... do nothing" )
             return
@@ -687,7 +828,40 @@ class ChefbookCentral: NSObject {
     }
     
     
-    private func fetchAllRecipeObjects() {    // Must be called from within persistentContainer.viewContext
+    private func fetchAllProvisionObjects() {   // Must be called from within persistentContainer.viewContext
+        
+        selectedProvisionIndex = NO_SELECTION
+
+        do {
+            let     request : NSFetchRequest<Provision> = Provision.fetchRequest()
+            let     fetchedProvisions = try managedObjectContext.fetch( request )
+            
+            provisionArray = fetchedProvisions.sorted( by:
+                { (provision1, provision2) -> Bool in
+                    
+                    provision1.name! < provision2.name!     // We can do this because the name is a required field that must be unique
+            } )
+            
+            for index in 0 ..< self.provisionArray.count {
+                
+                if provisionArray[index].guid == selectedProvisionGuid {
+                    selectedProvisionIndex = index
+                    break
+                }
+                
+            }
+            
+        }
+            
+        catch {
+            provisionArray = [Provision]()
+            logTrace( "Error!  Fetch failed!" )
+        }
+
+    }
+    
+    
+    private func fetchAllRecipeObjects() {      // Must be called from within persistentContainer.viewContext
 
         selectedRecipeIndex = NO_SELECTION
 
@@ -799,7 +973,18 @@ class ChefbookCentral: NSObject {
     }
     
     
-    private func refetchRecipesAndNotifyDelegate() {      // Must be called from within a persistentContainer.viewContext
+    private func refetchProvisionsAndNotifyDelegate() {     // Must be called from within a persistentContainer.viewContext
+        
+        fetchAllProvisionObjects()
+        
+        DispatchQueue.main.async {
+            self.delegate?.chefbookCentralDidReloadProvisionArray( chefbookCentral: self )
+        }
+        
+    }
+    
+    
+    private func refetchRecipesAndNotifyDelegate() {        // Must be called from within a persistentContainer.viewContext
     
         fetchAllRecipeObjects()
         
@@ -915,7 +1100,8 @@ struct PreFermentTypes {
 }
 
 
-let     NEW_INGREDIENT                  = -3
+let     NEW_INGREDIENT                  = -4
+let     NEW_PROVISION                   = -3
 let     NEW_RECIPE                      = -2
 let     NO_SELECTION                    = -1
 let     NOTIFICATION_RECIPE_SELECTED    = "RecipeSelected"

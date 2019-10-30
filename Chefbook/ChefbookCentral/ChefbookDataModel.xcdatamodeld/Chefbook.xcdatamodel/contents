@@ -24,6 +24,17 @@
         <attribute name="weight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Recipe" inverseName="preFerment" inverseEntity="Recipe" syncable="YES"/>
     </entity>
+    <entity name="Provision" representedClassName="Provision" syncable="YES">
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="elements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProvisionElement" inverseName="provision" inverseEntity="ProvisionElement" syncable="YES"/>
+    </entity>
+    <entity name="ProvisionElement" representedClassName="ProvisionElement" syncable="YES">
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="quantity" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="provision" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Provision" inverseName="elements" inverseEntity="Provision" syncable="YES"/>
+        <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Recipe" inverseName="provisionElement" inverseEntity="Recipe" syncable="YES"/>
+    </entity>
     <entity name="Recipe" representedClassName="Recipe" syncable="YES">
         <attribute name="formulaYieldQuantity" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="formulaYieldWeight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -40,11 +51,14 @@
         <relationship name="flourIngredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BreadIngredient" inverseName="recipeParent" inverseEntity="BreadIngredient" syncable="YES"/>
         <relationship name="poolish" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Poolish" inverseName="recipe" inverseEntity="Poolish" syncable="YES"/>
         <relationship name="preFerment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PreFerment" inverseName="recipe" inverseEntity="PreFerment" syncable="YES"/>
+        <relationship name="provisionElement" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProvisionElement" inverseName="recipe" inverseEntity="ProvisionElement" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BreadIngredient" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Poolish" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="PreFerment" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Recipe" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="BreadIngredient" positionX="-2.2890625" positionY="-17.4375" width="128" height="150"/>
+        <element name="Poolish" positionX="175.74609375" positionY="12.36328125" width="128" height="135"/>
+        <element name="PreFerment" positionX="-3.4140625" positionY="151.515625" width="128" height="120"/>
+        <element name="Provision" positionX="-709.8984375" positionY="72.53125" width="128" height="90"/>
+        <element name="ProvisionElement" positionX="-499.8203125" positionY="87.89453125" width="128" height="105"/>
+        <element name="Recipe" positionX="-275.53125" positionY="-107.2421875" width="128" height="285"/>
     </elements>
 </model>

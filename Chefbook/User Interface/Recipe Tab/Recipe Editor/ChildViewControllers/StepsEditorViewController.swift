@@ -33,7 +33,7 @@ class StepsEditorViewController: UIViewController {
         logTrace()
         super.viewDidLoad()
         
-        title = NSLocalizedString( "Title.Steps", comment: "Steps" )
+        self.navigationItem.title = NSLocalizedString( "Title.Steps", comment: "Steps" )
     }
     
     

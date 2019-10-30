@@ -9,10 +9,7 @@
 import UIKit
 
 
-class PoolishEditorViewController: UIViewController,
-                                   UITableViewDataSource,
-                                   UITableViewDelegate,
-                                   PoolishTableViewCellDelegate
+class PoolishEditorViewController: UIViewController
 {
     // MARK: Public Variables
     
@@ -110,32 +107,6 @@ class PoolishEditorViewController: UIViewController,
     
 
     
-    // MARK: PoolishTableViewCellDelegate: class
-        
-    func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
-                               indexPath            : IndexPath,
-                               didSetNew percentage : String ) {
-        logVerbose( "IndexPath[ %d ][ %d ] ... [ %@ ]", indexPath.section, indexPath.row, percentage )
-        
-        switch indexPath.section {
-        case 0:     percentOfFlourText = percentage
-        case 1:     percentOfWaterText = percentage
-        default:    percentOfYeastText = percentage
-        }
-
-        computeSectionWeights()
-        myTableView.reloadData()
-    }
-    
-    
-    func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
-                               indexPath            : IndexPath,
-                               didStartEditing      : Bool ) {
-        logTrace()
-    }
-
-    
-    
     // MARK: Target/Action Methods
     
     @IBAction func acceptButtonTouched(_ sender: Any) {
@@ -179,43 +150,6 @@ class PoolishEditorViewController: UIViewController,
     
     
     
-    // MARK: UITableViewDataSource Methods
-    
-    func numberOfSections(in tableView: UITableView ) -> Int {
-        return 3
-    }
-    
-    
-    func tableView(_ tableView                     : UITableView,
-                     numberOfRowsInSection section : Int ) -> Int {
-        var     numberOfRows = 0
-        
-        
-        switch section {
-        case 0:     numberOfRows = flourIngredients.count
-        case 1:     numberOfRows = waterIngredients.count
-        default:    numberOfRows = yeastIngredients.count
-        }
-        
-        return numberOfRows + 1 // Adding row for Header
-    }
-    
-    
-    func tableView(_ tableView              : UITableView,
-                     cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
-        
-        let     cell = tableView.dequeueReusableCell( withIdentifier: cellIdentifier ) as! PoolishTableViewCell
-        
-        configure( cell : cell,
-                   at   : indexPath )
-        
-        return cell
-        
-    }
-    
-    
-    
-
     // MARK: Utility Methods
     
     private func computeSectionWeights() {
@@ -384,3 +318,82 @@ class PoolishEditorViewController: UIViewController,
     }
 
 }
+
+
+
+// MARK: PoolishTableViewCellDelegate Methods
+
+extension PoolishEditorViewController : PoolishTableViewCellDelegate {
+    
+    func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
+                               indexPath            : IndexPath,
+                               didSetNew percentage : String ) {
+        logVerbose( "IndexPath[ %d ][ %d ] ... [ %@ ]", indexPath.section, indexPath.row, percentage )
+        
+        switch indexPath.section {
+        case 0:     percentOfFlourText = percentage
+        case 1:     percentOfWaterText = percentage
+        default:    percentOfYeastText = percentage
+        }
+        
+        computeSectionWeights()
+        myTableView.reloadData()
+    }
+    
+    
+    func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
+                               indexPath            : IndexPath,
+                               didStartEditing      : Bool ) {
+        logTrace()
+    }
+    
+}
+
+
+
+// MARK: UITableViewDataSource Methods
+
+extension PoolishEditorViewController : UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView ) -> Int {
+        return 3
+    }
+    
+    
+    func tableView(_ tableView                     : UITableView,
+                   numberOfRowsInSection section : Int ) -> Int {
+        var     numberOfRows = 0
+        
+        
+        switch section {
+        case 0:     numberOfRows = flourIngredients.count
+        case 1:     numberOfRows = waterIngredients.count
+        default:    numberOfRows = yeastIngredients.count
+        }
+        
+        return numberOfRows + 1 // Adding row for Header
+    }
+    
+    
+    func tableView(_ tableView              : UITableView,
+                   cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
+        
+        let     cell = tableView.dequeueReusableCell( withIdentifier: cellIdentifier ) as! PoolishTableViewCell
+        
+        configure( cell : cell,
+                   at   : indexPath )
+        
+        return cell
+        
+    }
+    
+}
+
+
+
+// MARK: UITableViewDelegate Methods
+
+extension PoolishEditorViewController : UITableViewDelegate {
+    
+}
+

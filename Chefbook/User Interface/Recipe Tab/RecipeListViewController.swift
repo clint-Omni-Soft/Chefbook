@@ -8,19 +8,19 @@
 
 import UIKit
 
-class RecipeListViewController: UIViewController,
-                                ChefbookCentralDelegate {
+class RecipeListViewController: UIViewController
+{
     
-    let     CELL_ID                         = "RecipeListViewControllerCell"
-    let     CELL_TAG_LABEL_NAME             = 11
-    let     CELL_TAG_IMAGE_VIEW             = 12
-    let     STORYBOARD_ID_FORMULA_EDITOR    = "FormulaEditorViewController"
-    let     STORYBOARD_ID_RECIPE_EDITOR     = "RecipeEditorViewController"
-
     @IBOutlet weak var myTableView: UITableView!
     
-    private var recipeEditor       : RecipeEditorViewController!
-    private var recipeEditorLoaded = false
+    private let     CELL_ID                         = "RecipeListViewControllerCell"
+    private let     CELL_TAG_LABEL_NAME             = 11
+    private let     CELL_TAG_IMAGE_VIEW             = 12
+    private let     STORYBOARD_ID_FORMULA_EDITOR    = "FormulaEditorViewController"
+    private let     STORYBOARD_ID_RECIPE_EDITOR     = "RecipeEditorViewController"
+    
+    private var     recipeEditor       : RecipeEditorViewController!
+    private var     recipeEditorLoaded = false
     
     
     
@@ -30,7 +30,7 @@ class RecipeListViewController: UIViewController,
         super.viewDidLoad()
         logTrace()
         
-        title = NSLocalizedString( "Title.RecipeList", comment: "Recipes" )
+        self.navigationItem.title = NSLocalizedString( "Title.RecipeList", comment: "Recipes" )
     }
     
 
@@ -89,36 +89,6 @@ class RecipeListViewController: UIViewController,
 
     }
     
-    
-    
-    // MARK: ChefbookCentralDelegate Methods
-    
-    func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
-        
-        if didOpenDatabase {
-            chefbookCentral.fetchRecipes()
-        }
-        else {
-            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
-        }
-        
-    }
-    
-    
-    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
-        
-        logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
-        myTableView.reloadData()
-        
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            loadExampleRecipeOnFirstTimeIn()
-        }
-
-    }
-
     
     
     // MARK: Target / Action Methods
@@ -262,6 +232,52 @@ class RecipeListViewController: UIViewController,
 }
 
 
+
+// MARK: ChefbookCentralDelegate Methods
+
+extension RecipeListViewController: ChefbookCentralDelegate {
+    
+    func chefbookCentral( chefbookCentral: ChefbookCentral,
+                          didOpenDatabase: Bool ) {
+        logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
+        
+        if didOpenDatabase {
+            chefbookCentral.fetchRecipes()
+        }
+        else {
+            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                          message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
+        }
+        
+    }
+    
+    
+    func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
+        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
+
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            loadExampleRecipeOnFirstTimeIn()
+        }
+        
+        myTableView.reloadData()
+    }
+    
+    
+    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
+        
+        logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
+        chefbookCentral.fetchProvisions()
+    }
+    
+    
+    
+
+}
+
+
+
+// MARK: UITableViewDataSource Methods
+
 extension RecipeListViewController: UITableViewDataSource {
     
     func tableView(_ tableView                     : UITableView,
@@ -326,8 +342,12 @@ extension RecipeListViewController: UITableViewDataSource {
         
     }
     
+
 }
 
+
+
+// MARK: UITableViewDelegate Methods
 
 extension RecipeListViewController: UITableViewDelegate
 {

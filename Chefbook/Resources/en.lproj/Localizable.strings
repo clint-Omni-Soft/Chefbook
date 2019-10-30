@@ -8,9 +8,11 @@
 
 
 "AlertMessage.CannotOpenDatabase"           = "Fatal Error!  Cannot open database.";
+"AlertMessage.DatabaseNotOpen"              = "Fatal Error!  Database is NOT open!";
 "AlertMessage.DuplicateFormulaName"         = "The formula name you chose already exists.  Please try again.";
-"AlertMessage.DuplicateIngredientName"      = "The ingredient name you chose already exists.  Please try again.";
-"AlertMessage.DuplicateRecipeName"          = "The recipe name you chose already exists.  Please try again.";
+"AlertMessage.DuplicateIngredientName"      = "The ingredient name you have chosen already exists.  Please try again.";
+"AlertMessage.DuplicateProvisionName"       = "The provision name you have chosen already exists.  Please try again.";
+"AlertMessage.DuplicateRecipeName"          = "The recipe name you have chosen already exists.  Please try again.";
 "AlertMessage.ImageSaveFailed"              = "We were unable to save the image you selected.";
 "AlertMessage.InvalidMediaType"             = "We can't save the item you selected.  We can only save photos.";
 "AlertMessage.NameCannotBeBlank"            = "Name cannot be left blank";
@@ -21,6 +23,7 @@
 "AlertTitle.EditFormulaFlourIngredient"     = "Edit formula FLOUR ingredient";
 "AlertTitle.EditFormulaIngredient"          = "Edit formula ingredient";
 "AlertTitle.EditFormulaNameAndYield"        = "Edit formula name and yield";
+"AlertTitle.EditProvisionName"              = "Edit provision name";
 "AlertTitle.EditRecipeName"                 = "Edit recipe name";
 "AlertTitle.EditRecipeYield"                = "Edit recipe yield";
 "AlertTitle.EditRecipeYieldOptions"         = "Edit recipe yield options";
@@ -37,6 +40,7 @@
 "ButtonTitle.Cancel"                        = "Cancel";
 "ButtonTitle.Delete"                        = "Delete";
 "ButtonTitle.Done"                          = "Done";
+"ButtonTitle.Next"                          = "Next";
 "ButtonTitle.No"                            = "No!";
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.PhotoAlbum"                    = "Photo Album";
@@ -69,6 +73,8 @@
 "LabelText.Ingredient"                      = "Ingredient";
 "LabelText.Name"                            = "Name";
 "LabelText.PercentOfTotal"                  = "Percent of Total";
+"LabelText.ProvisioningFormulaFormat"       = "Quantity: %d   Item Weight: %d";
+"LabelText.ProvisioningNonFormulaFormat"    = "Quantity: %@   Options: %@";
 "LabelText.Quantity"                        = "Quantity";
 "LabelText.Weight"                          = "Weight";
 "LabelText.Yield"                           = "Yield";
@@ -91,6 +97,10 @@
 "Title.Ingredients"                         = "Ingredients";
 "Title.PoolishEditor"                       = "Poolish Editor";
 "Title.PoolishFormula"                      = "Poolish Formula";
+"Title.Provisioning"                        = "Provisioning";
+"Title.ProvisioningSelectItems"             = "Select Items";
+"Title.ProvisioningSetQuantities"           = "Set Quantities";
+"Title.ProvisioningSummary"                 = "Summary";
 "Title.RecipeEditor"                        = "Recipe Editor";
 "Title.RecipeImage"                         = "Recipe Image";
 "Title.RecipeList"                          = "Recipes";

@@ -2,7 +2,7 @@
 //  Recipe+CoreDataProperties.swift
 //  Chefbook
 //
-//  Created by Clint Shank on 10/9/19.
+//  Created by Clint Shank on 10/29/19.
 //  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
 //
 //
@@ -32,6 +32,7 @@ extension Recipe {
     @NSManaged public var flourIngredients: NSSet?
     @NSManaged public var poolish: Poolish?
     @NSManaged public var preFerment: PreFerment?
+    @NSManaged public var provisionElement: NSSet?
 
 }
 
@@ -66,5 +67,22 @@ extension Recipe {
 
     @objc(removeFlourIngredients:)
     @NSManaged public func removeFromFlourIngredients(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for provisionElement
+extension Recipe {
+
+    @objc(addProvisionElementObject:)
+    @NSManaged public func addToProvisionElement(_ value: ProvisionElement)
+
+    @objc(removeProvisionElementObject:)
+    @NSManaged public func removeFromProvisionElement(_ value: ProvisionElement)
+
+    @objc(addProvisionElement:)
+    @NSManaged public func addToProvisionElement(_ values: NSSet)
+
+    @objc(removeProvisionElement:)
+    @NSManaged public func removeFromProvisionElement(_ values: NSSet)
 
 }

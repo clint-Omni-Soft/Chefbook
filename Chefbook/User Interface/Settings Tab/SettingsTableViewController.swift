@@ -28,7 +28,7 @@ class SettingsTableViewController: UITableViewController {
         logTrace()
         super.viewDidLoad()
 
-        title = NSLocalizedString( "Title.Settings",  comment: "Settings"  )
+        navigationController?.navigationBar.topItem?.title = NSLocalizedString( "Title.Settings",  comment: "Settings"  )
         
         rowTitleArray = [ NSLocalizedString( "Title.About",    comment: "About"      ),
                           NSLocalizedString( "Title.HowToUse", comment: "How to Use" ) ]

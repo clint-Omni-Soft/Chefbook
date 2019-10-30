@@ -8,9 +8,11 @@
 
 
 "AlertMessage.CannotOpenDatabase"           = "Error fatal!  No se puede abrir la base de datos.";
+"AlertMessage.DatabaseNotOpen"              = "¡Error fatal! ¡La base de datos NO está abierta!";
 "AlertMessage.DuplicateFormulaName"         = "El nombre de la fórmula que eligió ya existe. Inténtalo de nuevo.";
 "AlertMessage.DuplicateIngredientName"      = "El nombre del ingrediente que eligió ya existe. Inténtalo de nuevo.";
 "AlertMessage.DuplicateRecipeName"          = "El nombre de la receta que elegiste ya existe. Inténtalo de nuevo.";
+"AlertMessage.DuplicateProvisionName"       = "El nombre de la provisión que ha elegido ya existe. Inténtalo de nuevo.";
 "AlertMessage.ImageSaveFailed"              = "No pudimos guardar la imagen que seleccionó.";
 "AlertMessage.InvalidMediaType"             = "No podemos guardar el artículo que seleccionaste. Solo podemos guardar fotos.";
 "AlertMessage.NameCannotBeBlank"            = "El nombre no puede dejarse en blanco";
@@ -21,6 +23,7 @@
 "AlertTitle.EditFormulaFlourIngredient"     = "Editar fórmula ingrediente de HARINA";
 "AlertTitle.EditFormulaIngredient"          = "Editar ingrediente de fórmula";
 "AlertTitle.EditFormulaNameAndYield"        = "Editar nombre de fórmula y rendimiento";
+"AlertTitle.EditProvisionName"              = "Editar nombre de provisión";
 "AlertTitle.EditRecipeName"                 = "Editar nombre de receta";
 "AlertTitle.EditRecipeYield"                = "Editar rendimiento de receta";
 "AlertTitle.EditRecipeYieldOptions"         = "Editar opciones de rendimiento de recetas";
@@ -37,6 +40,7 @@
 "ButtonTitle.Cancel"                        = "Cancelar";
 "ButtonTitle.Delete"                        = "Borrar";
 "ButtonTitle.Done"                          = "Hecho";
+"ButtonTitle.Next"                          = "Próximo";
 "ButtonTitle.No"                            = "¡No!";
 "ButtonTitle.OK"                            = "DE ACUERDO";
 "ButtonTitle.PhotoAlbum"                    = "Album de fotos";
@@ -69,6 +73,8 @@
 "LabelText.Ingredient"                      = "Ingrediente";
 "LabelText.Name"                            = "Nombre";
 "LabelText.PercentOfTotal"                  = "Porcentaje del Total";
+"LabelText.ProvisioningFormulaFormat"       = "Cantidad: %d   Peso del artículo: %d";
+"LabelText.ProvisioningNonFormulaFormat"    = "Cantidad: %@   Opciones: %@";
 "LabelText.Quantity"                        = "Cantidad";
 "LabelText.Weight"                          = "Peso";
 "LabelText.Yield"                           = "Rendimiento";
@@ -91,6 +97,10 @@
 "Title.Ingredients"                         = "Ingredientes";
 "Title.PoolishEditor"                       = "Editor Polaco";
 "Title.PoolishFormula"                      = "Fórmula Poolish";
+"Title.Provisioning"                        = "Aprovisionamiento";
+"Title.ProvisioningSelectItems"             = "Seleccionar Articulos";
+"Title.ProvisioningSetQuantities"           = "Establecer Cantidades";
+"Title.ProvisioningSummary"                 = "Resumen";
 "Title.RecipeEditor"                        = "Editor de Recetas";
 "Title.RecipeImage"                         = "Imagen de Receta";
 "Title.RecipeList"                          = "Recetas";

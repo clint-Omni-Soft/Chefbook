@@ -21,6 +21,7 @@ class RecipeEditorViewController: UIViewController,
                                   UITableViewDelegate
 
 {
+    
     // MARK: Public Variables
     var     indexOfItemBeingEdited:     Int!                        // Set by caller
 
@@ -90,7 +91,7 @@ class RecipeEditorViewController: UIViewController,
         logTrace()
         super.viewDidLoad()
 
-        title = NSLocalizedString( "Title.RecipeEditor", comment: "Recipe Editor" )
+        self.navigationItem.title = NSLocalizedString( "Title.RecipeEditor", comment: "Recipe Editor" )
         
         preferredContentSize = CGSize( width: 320, height: 460 )
         myTableView.separatorStyle = .none
@@ -148,6 +149,11 @@ class RecipeEditorViewController: UIViewController,
     func chefbookCentral( chefbookCentral: ChefbookCentral,
                           didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
+    }
+    
+    
+    func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
+        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
     }
     
     

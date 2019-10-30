@@ -8,8 +8,10 @@
 
 
 "AlertMessage.CannotOpenDatabase"           = "Erreur fatale!  Impossible d'ouvrir la base de données.";
+"AlertMessage.DatabaseNotOpen"              = "Erreur fatale!  La base de données n'est PAS ouverte!";
 "AlertMessage.DuplicateFormulaName"         = "Le nom de formule que vous avez choisi existe déjà. Veuillez réessayer.";
 "AlertMessage.DuplicateIngredientName"      = "Le nom de l'ingrédient que vous avez choisi existe déjà. Veuillez réessayer.";
+"AlertMessage.DuplicateProvisionName"       = "Le nom de provision que vous avez choisi existe déjà. Veuillez réessayer.";
 "AlertMessage.DuplicateRecipeName"          = "Le nom de recette que vous avez choisi existe déjà. Veuillez réessayer.";
 "AlertMessage.ImageSaveFailed"              = "Nous n'avons pas pu enregistrer l'image que vous avez sélectionnée.";
 "AlertMessage.InvalidMediaType"             = "Nous ne pouvons pas enregistrer l'article que vous avez sélectionné. Nous pouvons seulement enregistrer des photos.";
@@ -21,6 +23,7 @@
 "AlertTitle.EditFormulaFlourIngredient"     = "Modifier l'ingrédient FARINE formule";
 "AlertTitle.EditFormulaIngredient"          = "Modifier l'ingrédient de la formule";
 "AlertTitle.EditFormulaNameAndYield"        = "Modifier le nom de la formule et le rendement";
+"AlertTitle.EditProvisionName"              = "Editer le nom de la provision";
 "AlertTitle.EditRecipeName"                 = "Editer le nom de la recette";
 "AlertTitle.EditRecipeYield"                = "Modifier le rendement de la recette";
 "AlertTitle.EditRecipeYieldOptions"         = "Modifier les options de rendement de la recette";
@@ -37,6 +40,7 @@
 "ButtonTitle.Camera"                        = "Caméra";
 "ButtonTitle.Delete"                        = "Effacer";
 "ButtonTitle.Done"                          = "Terminé";
+"ButtonTitle.Next"                          = "Prochain";
 "ButtonTitle.No"                            = "Non!";
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.PhotoAlbum"                    = "Album Photo";
@@ -70,6 +74,8 @@
 "LabelText.Ingredient"                      = "Ingrédient";
 "LabelText.Name"                            = "Nom";
 "LabelText.PercentOfTotal"                  = "Pourcentage du Total";
+"LabelText.ProvisioningFormulaFormat"       = "Quantité: %d   Poids de l'article: %d";
+"LabelText.ProvisioningNonFormulaFormat"    = "Quantité: %@   Options: %@";
 "LabelText.Quantity"                        = "Quantité";
 "LabelText.Weight"                          = "Poids";
 "LabelText.Yield"                           = "Rendement";
@@ -92,6 +98,10 @@
 "Title.Ingredients"                         = "Ingrédients";
 "Title.PoolishEditor"                       = "Éditeur Polonais";
 "Title.PoolishFormula"                      = "Formule Poolish";
+"Title.Provisioning"                        = "Provisioning";
+"Title.ProvisioningSelectItems"             = "Sélectionner des Articles";
+"Title.ProvisioningSetQuantities"           = "Définir les Quantités";
+"Title.ProvisioningSummary"                 = "Sommaire";
 "Title.RecipeEditor"                        = "Éditeur de Recettes";
 "Title.RecipeImage"                         = "Image de Recette";
 "Title.RecipeList"                          = "Recettes";
