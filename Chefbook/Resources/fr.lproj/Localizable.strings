@@ -49,6 +49,7 @@
 "ButtonTitle.Save"                          = "Sauvegarder";
 "ButtonTitle.Sour"                          = "Acide";
 "ButtonTitle.Standard"                      = "La Norme";
+"ButtonTitle.Summary"                       = "Sommaire";
 "ButtonTitle.ZoomIn"                        = "Agrandir";
 "ButtonTitle.Yes"                           = "Oui";
 

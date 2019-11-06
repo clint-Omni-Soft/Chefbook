@@ -10,9 +10,11 @@ import UIKit
 
 class ProvisioningSummaryViewController: UIViewController {
 
-    // Public Variables
+    // MARK: Public Variables
     
     var myProvision : Provision!        // Set by our parent
+    var myRecipe    : Recipe!
+    var useRecipe   : Bool = false
 
     
     @IBOutlet weak var myTableView: UITableView!
@@ -40,7 +42,13 @@ class ProvisioningSummaryViewController: UIViewController {
 
         self.navigationItem.title = NSLocalizedString( "Title.ProvisioningSummary", comment: "Summary" )
         
-        loadIngredientArray()
+        if useRecipe {
+            loadIngredientArrayFromRecipe()
+        }
+        else {
+            loadIngredientArrayFromProvision()
+        }
+
     }
     
 
@@ -53,7 +61,7 @@ class ProvisioningSummaryViewController: UIViewController {
     
     // MARK: Utility Methods
     
-    private func loadIngredientArray() {
+    private func loadIngredientArrayFromProvision() {
         logTrace()
 
         let     elementArray  = myProvision.elements?.allObjects as? [ProvisionElement]
@@ -80,10 +88,12 @@ class ProvisioningSummaryViewController: UIViewController {
             var     ingredientWeight = Int64( 0 )
 
             for element in elementArray ?? [] {
+                
                 let breadIngredients = element.recipe?.breadIngredients?.allObjects as! [BreadIngredient]
                 let flourIngredients = element.recipe?.flourIngredients?.allObjects as! [BreadIngredient]
                 
                 for ingredient in breadIngredients {
+                    
                     if ingredientName == ingredient.name {
                         ingredientWeight += ingredient.weight * Int64( element.quantity )
                     }
@@ -91,6 +101,7 @@ class ProvisioningSummaryViewController: UIViewController {
                 }
                 
                 for ingredient in flourIngredients {
+                    
                     if ingredientName == ingredient.name {
                         ingredientWeight += ingredient.weight * Int64( element.quantity )
                     }
@@ -112,8 +123,58 @@ class ProvisioningSummaryViewController: UIViewController {
     }
 
     
-}
+    private func loadIngredientArrayFromRecipe() {
+        logTrace()
+        var     ingredientSet = Set<String>()
+        
+        
+        // First we load up our ingredient names into a Set ... which ensures that we only have unique names
+        let breadIngredients = myRecipe.breadIngredients?.allObjects as! [BreadIngredient]
+        let flourIngredients = myRecipe.flourIngredients?.allObjects as! [BreadIngredient]
+        
+        for ingredient in breadIngredients {
+            ingredientSet.insert( ingredient.name! )
+        }
+        
+        for ingredient in flourIngredients {
+            ingredientSet.insert( ingredient.name! )
+        }
+        
+        // Next we iterate through the Set values and compute the total weight for each ingredient
+        for ingredientName in ingredientSet {
+            
+            var     ingredientWeight = Int64( 0 )
+            
+            for ingredient in breadIngredients {
+                
+                if ingredientName == ingredient.name {
+                    ingredientWeight += ingredient.weight * Int64( 1 )
+                }
+                
+            }
+            
+            for ingredient in flourIngredients {
+                
+                if ingredientName == ingredient.name {
+                    ingredientWeight += ingredient.weight * Int64( 1 )
+                }
+                
+            }
+            
+            // Then add it to our array as a (name, weight) tuple
+            ingredientArray.append( ( name: ingredientName, weight: ingredientWeight ) )
+        }
+        
+        // The last thing we do is sort it so it looks nice
+        ingredientArray = ingredientArray.sorted( by:
+            { (tuple1, tuple2) -> Bool in
+                tuple1.name < tuple2.name
+        } )
+        
+    }
 
+    
+}
 
 
 
@@ -127,6 +188,7 @@ extension ProvisioningSummaryViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let     cell            = tableView.dequeueReusableCell( withIdentifier: cellID ) ?? UITableViewCell()
         let     ingredientLabel = cell.viewWithTag( CellTags.ingredient ) as! UILabel
         let     weightLabel     = cell.viewWithTag( CellTags.weight     ) as! UILabel

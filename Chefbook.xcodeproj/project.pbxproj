@@ -19,6 +19,7 @@
 		F42601082367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42601072367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift */; };
 		F43678E0234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43678DE234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift */; };
 		F43678E4234E582500ABF982 /* Poolish+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43678E2234E582500ABF982 /* Poolish+CoreDataProperties.swift */; };
+		F4553C5F2370FE7B00B8B0BD /* FormulaImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4553C5E2370FE7B00B8B0BD /* FormulaImageTableViewCell.swift */; };
 		F458573122ECDCAE00506C8E /* RecipeImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */; };
 		F458573322ECE2BB00506C8E /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458573222ECE2BB00506C8E /* ImageViewController.swift */; };
 		F45D728222F4E35500B8BC58 /* RecipeYieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45D728122F4E35500B8BC58 /* RecipeYieldTableViewCell.swift */; };
@@ -90,6 +91,7 @@
 		F42601072367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningQuanityTableViewCell.swift; sourceTree = "<group>"; };
 		F43678DE234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreFerment+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F43678E2234E582500ABF982 /* Poolish+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Poolish+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4553C5E2370FE7B00B8B0BD /* FormulaImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormulaImageTableViewCell.swift; sourceTree = "<group>"; };
 		F458573022ECDCAE00506C8E /* RecipeImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeImageTableViewCell.swift; sourceTree = "<group>"; };
 		F458573222ECE2BB00506C8E /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F45D728122F4E35500B8BC58 /* RecipeYieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeYieldTableViewCell.swift; sourceTree = "<group>"; };
@@ -159,7 +161,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F4170422231F082300DFFC45 /* Formula Editor */ = {
+		F4170422231F082300DFFC45 /* Bread Formula Editor */ = {
 			isa = PBXGroup;
 			children = (
 				F417041C231EDAFF00DFFC45 /* FormulaEditorViewController.swift */,
@@ -167,12 +169,13 @@
 				F49C27A223319A5E008E8C8D /* HeaderViews */,
 				F4D15FA32354E48F00D0668E /* Poolish Editor */,
 			);
-			path = "Formula Editor";
+			path = "Bread Formula Editor";
 			sourceTree = "<group>";
 		};
 		F4170423231F083600DFFC45 /* Formula Editor Cells */ = {
 			isa = PBXGroup;
 			children = (
+				F4553C5E2370FE7B00B8B0BD /* FormulaImageTableViewCell.swift */,
 				F417042A231F189F00DFFC45 /* FormulaIngredientTableViewCell.swift */,
 				F4170426231F089800DFFC45 /* FormulaNameTableViewCell.swift */,
 				F481C520234BA1D80003D9E3 /* FormulaPreFermentTableViewCell.swift */,
@@ -193,8 +196,8 @@
 			isa = PBXGroup;
 			children = (
 				F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */,
-				F4170422231F082300DFFC45 /* Formula Editor */,
-				F4AD56C622F21B8900EFC842 /* Recipe Editor */,
+				F4AD56C622F21B8900EFC842 /* Standard Recipe Editor */,
+				F4170422231F082300DFFC45 /* Bread Formula Editor */,
 			);
 			path = "Recipe Tab";
 			sourceTree = "<group>";
@@ -268,14 +271,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F4AD56C622F21B8900EFC842 /* Recipe Editor */ = {
+		F4AD56C622F21B8900EFC842 /* Standard Recipe Editor */ = {
 			isa = PBXGroup;
 			children = (
 				F4C5C0F022EBC5ED00B3CBA4 /* RecipeEditorViewController.swift */,
 				F4AD56C922F23EB700EFC842 /* Cells */,
 				F4AD56CA22F24B4700EFC842 /* ChildViewControllers */,
 			);
-			path = "Recipe Editor";
+			path = "Standard Recipe Editor";
 			sourceTree = "<group>";
 		};
 		F4AD56C922F23EB700EFC842 /* Cells */ = {
@@ -370,9 +373,9 @@
 		F4C5C0BA22EB5ADE00B3CBA4 /* ChefbookCentral */ = {
 			isa = PBXGroup;
 			children = (
-				F4C5C0CB22EB80B200B3CBA4 /* CoreData Entities */,
-				F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */,
 				F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */,
+				F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */,
+				F4C5C0CB22EB80B200B3CBA4 /* CoreData Entities */,
 				F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */,
 			);
 			path = ChefbookCentral;
@@ -494,6 +497,7 @@
 				F46418192368A0630048B071 /* Provision.swift in Sources */,
 				F42601082367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift in Sources */,
 				F43678E0234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift in Sources */,
+				F4553C5F2370FE7B00B8B0BD /* FormulaImageTableViewCell.swift in Sources */,
 				F458573122ECDCAE00506C8E /* RecipeImageTableViewCell.swift in Sources */,
 				F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */,
 				F45D728822F4E81500B8BC58 /* RecipeYieldOptionsTableViewCell.swift in Sources */,

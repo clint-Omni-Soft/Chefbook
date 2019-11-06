@@ -61,6 +61,12 @@ class ProvisioningSelectItemsViewController: UIViewController
         
     }
     
+    
+    override func didReceiveMemoryWarning() {
+        logTrace( "Warning!" )
+        super.didReceiveMemoryWarning()
+    }
+    
 
     
     // MARK: Target / Action Methods
@@ -75,7 +81,6 @@ class ProvisioningSelectItemsViewController: UIViewController
     // MARK: Utility Methods
 
     private func launchProvisionQuantityEditor() {
-        
         logTrace()
         
         if let quantityEditorVC : ProvisioningQuantityViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_PROVISION_QUANITY_EDITOR ) as? ProvisioningQuantityViewController {
@@ -87,22 +92,7 @@ class ProvisioningSelectItemsViewController: UIViewController
             backItem.title = NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
             navigationItem.backBarButtonItem = backItem
             
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                
-                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
-                
-                detailNavigationViewController?.viewControllers = [quantityEditorVC]
-                
-                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
-//                    NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
-                })
-                
-            }
-            else {
-                navigationController?.pushViewController( quantityEditorVC, animated: true )
-            }
-            
+            navigationController?.pushViewController( quantityEditorVC, animated: true )
         }
         else {
             logTrace( "ERROR: Could NOT load ProvisioningSelectItemsViewController!" )
@@ -114,6 +104,7 @@ class ProvisioningSelectItemsViewController: UIViewController
     
     private func loadBarButtonItems() {
         logTrace()
+        
         let     nextBarButtonItem  = UIBarButtonItem.init( title : NSLocalizedString( "ButtonTitle.Next", comment: "Next" ),
                                                            style : .plain,
                                                            target: self,
@@ -147,7 +138,7 @@ extension ProvisioningSelectItemsViewController : UITableViewDataSource {
         let     checkmarkImageView = cell.viewWithTag(CellTags.checkmark) as! UIImageView
         let     recipe: Recipe     = ChefbookCentral.sharedInstance.recipeArray[indexPath.row]
         
-        titleLabel.text  = recipe.name
+        titleLabel .text = recipe.name
         detailLabel.text = recipe.isFormulaType ? String( format: NSLocalizedString( "LabelText.ProvisioningFormulaFormat",    comment: "Quantity: %d   Item Weight: %d" ), recipe.formulaYieldQuantity, recipe.formulaYieldWeight) :
                                                   String( format: NSLocalizedString( "LabelText.ProvisioningNonFormulaFormat", comment: "Quantity: %@   Options: %@"     ), recipe.yield ?? "Unknown", recipe.yieldOptions ?? "Unknown")
         checkmarkImageView.isHidden = !provisionContains( recipe : recipe )
@@ -222,6 +213,7 @@ extension ProvisioningSelectItemsViewController : UITableViewDelegate {
         
         return requestedElement
     }
+    
     
 }
 

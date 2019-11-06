@@ -57,6 +57,7 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
+        logTrace()
         super.awakeFromNib()
     }
     
@@ -72,7 +73,7 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
     func initializeWithRecipeAt( recipeIndex : Int,
                                  indexPath   : IndexPath,
                                  delegate    : FormulaPreFermentTableViewCellDelegate ) {
-        //        logTrace()
+//        logTrace()
         self.delegate = delegate
         myIndexPath   = indexPath
         
@@ -85,6 +86,7 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
         let     recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
         
         if let preFerment = recipe.preFerment {
+            
             nameTextField  .text = preFerment.name
             weightTextField.text = String( format : "%d", preFerment.weight )
             
@@ -92,6 +94,7 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
             preFermentType = Int( preFerment.type )
         }
         else if let poolish = recipe.poolish {
+            
             nameTextField       .text = NSLocalizedString( "CellTitle.Poolish", comment: "Poolish" )
             percentageTextField .text = String( format : "%d", poolish.percentOfTotal )
             weightTextField     .text = String( format : "%d", poolish.weight         )
@@ -178,9 +181,6 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
         }
         
     }
-    
-    
-
     
     
 }

@@ -70,7 +70,8 @@ class PoolishEditorViewController: UIViewController
     override func viewDidLoad() {
         logTrace()
         super.viewDidLoad()
-        preferredContentSize = CGSize( width: 300.0, height: 440.0 )
+        
+        preferredContentSize = CGSize( width: 320.0, height: 440.0 )
         
         editorTitle             .text = NSLocalizedString( "Title.PoolishEditor",        comment: "Poolish Editor"   )
         weightLabel             .text = String( format: " %@ g", NSLocalizedString( "LabelText.Weight", comment: "Weight" ) )
@@ -173,6 +174,7 @@ class PoolishEditorViewController: UIViewController
         var     percentage : Int16 = 0
 
         switch indexPath.section {
+            
         case 0:
             if indexPath.row != 0 {
                 ingredient = flourIngredients[indexPath.row - 1] as BreadIngredient
@@ -361,7 +363,7 @@ extension PoolishEditorViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView                     : UITableView,
-                   numberOfRowsInSection section : Int ) -> Int {
+                     numberOfRowsInSection section : Int ) -> Int {
         var     numberOfRows = 0
         
         
@@ -376,7 +378,7 @@ extension PoolishEditorViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView              : UITableView,
-                   cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
+                     cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
         
         let     cell = tableView.dequeueReusableCell( withIdentifier: cellIdentifier ) as! PoolishTableViewCell
         
@@ -387,13 +389,7 @@ extension PoolishEditorViewController : UITableViewDataSource {
         
     }
     
-}
-
-
-
-// MARK: UITableViewDelegate Methods
-
-extension PoolishEditorViewController : UITableViewDelegate {
     
 }
+
 

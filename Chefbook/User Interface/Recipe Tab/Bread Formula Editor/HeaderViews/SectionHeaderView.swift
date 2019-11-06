@@ -19,6 +19,7 @@ protocol SectionHeaderViewDelegate : class {
 
 
 class SectionHeaderView: UITableViewHeaderFooterView {
+    
     // MARK: Public Variables
     
     static let reuseIdentifier : String = String( describing: self )
@@ -87,6 +88,4 @@ class SectionHeaderView: UITableViewHeaderFooterView {
     }
     
 
-    
-    
 }

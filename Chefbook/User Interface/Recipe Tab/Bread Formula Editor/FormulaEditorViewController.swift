@@ -9,9 +9,7 @@
 import UIKit
 
 
-class FormulaEditorViewController: UIViewController,
-                                   UIImagePickerControllerDelegate,
-                                   UINavigationControllerDelegate  // Required for UIImagePickerControllerDelegate
+class FormulaEditorViewController: UIViewController
 {
     
     // MARK: Public Variables
@@ -25,6 +23,7 @@ class FormulaEditorViewController: UIViewController,
     // MARK: Private Variables
 
     private struct CellIdentifiers {
+        static let image         = "FormulaImageTableViewCell"
         static let ingredients   = "FormulaIngredientTableViewCell"
         static let name          = "FormulaNameTableViewCell"
         static let preFerment    = "FormulaPreFermentTableViewCell"
@@ -35,12 +34,14 @@ class FormulaEditorViewController: UIViewController,
     private struct CellIndexes {
         static let name         = 0
         static let yield        = 1
-        static let ingredients  = 2
+        static let image        = 2
+        static let ingredients  = 3
     }
     
     private struct StoryboardIds {
-        static let imageViewer   = "ImageViewController"
-        static let poolishEditor = "PoolishEditorViewController"
+        static let imageViewer         = "ImageViewController"
+        static let poolishEditor       = "PoolishEditorViewController"
+        static let provisioningSummary = "ProvisioningSummaryViewController"
     }
     
     private enum StateMachine {
@@ -50,7 +51,9 @@ class FormulaEditorViewController: UIViewController,
     }
     
     private var     currentState                 = StateMachine.name
+    private var     imageCell                    : FormulaImageTableViewCell!     // Set in FormulaImageTableViewCellDelegate Method
     private var     indexPathOfCellBeingEdited   = IndexPath(item: 0, section: 0)
+    private var     loadingImageView             = false
     private var     newIngredientForSection      = ForumlaTableSections.none
     private var     originalViewOffset : CGFloat = 0.0
     private var     waitingForNotification       = false
@@ -83,7 +86,7 @@ class FormulaEditorViewController: UIViewController,
         
         ChefbookCentral.sharedInstance.delegate = self
 
-        configureBarButtonItem()
+        loadBarButtonItems()
         myTableView.reloadData()
         
         NotificationCenter.default.addObserver( self,
@@ -141,7 +144,7 @@ class FormulaEditorViewController: UIViewController,
         logTrace()
         waitingForNotification = false
         
-        configureBarButtonItem()
+        loadBarButtonItems()
 
         myTableView.reloadData()
     }
@@ -149,7 +152,6 @@ class FormulaEditorViewController: UIViewController,
     
     @objc func recipesUpdated( notification: NSNotification ) {
         let     chefbookCentral = ChefbookCentral.sharedInstance
-        
         
         if waitingForNotification {
             logTrace( "ignorning ... waitingForNotification" )
@@ -175,18 +177,39 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
+    @IBAction @objc func provisionBarButtonItemTouched( barButtonItem: UIBarButtonItem ) {
+        logTrace()
+        launchProvisioningSummaryViewController()
+    }
+    
+    
     
     // MARK: Utility Methods
     
-    private func configureBarButtonItem() {
+    private func deleteImage() {
         
-        let     launchedFromMasterView = UIDevice.current.userInterfaceIdiom == .pad
-        let     title                  = launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   )
-        
-        navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: title,
-                                                                                                   style: .plain,
-                                                                                                   target: self,
-                                                                                                   action: #selector( cancelBarButtonTouched ) ) )
+        let     chefbookCentral = ChefbookCentral.sharedInstance
+        let     recipe          = chefbookCentral.recipeArray[recipeIndex]
+
+        if let name = recipe.imageName {
+            
+            if !chefbookCentral.deleteImageWith( name: name ) {
+                
+                logVerbose( "ERROR: Unable to delete image[ %@ ]!", name )
+                presentAlert( title  : NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                              message: NSLocalizedString( "AlertMessage.UnableToDeleteImage", comment: "We were unable to delete the image you created." ) )
+            }
+            else {
+                recipe.imageName = ""
+                
+                chefbookCentral.saveUpdatedRecipe( recipe: recipe )
+            }
+
+        }
+        else {
+            logTrace( "ERROR: Could NOT unwrap recipe.imageName!" )
+        }
+
     }
     
     
@@ -196,9 +219,12 @@ class FormulaEditorViewController: UIViewController,
         if UIDevice.current.userInterfaceIdiom == .pad {
             let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
             
-            // Move the visible viewController off the screen
+            // Move the visible viewController off the screen by shrinking it to zero
             detailNavigationViewController?.visibleViewController?.view.frame = CGRect( x: 0, y: 0, width: 0, height: 0 )
-            navigationItem.leftBarButtonItem = nil
+            
+            navigationItem.leftBarButtonItem  = nil
+            navigationItem.rightBarButtonItem = nil
+            navigationItem.title              = ""
         }
         else {
             navigationController?.popViewController( animated: true )
@@ -313,99 +339,69 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
-    private func loadFormulaIngredientCellFor( indexPath: IndexPath ) -> UITableViewCell {
+    private func launchImageViewController() {
         
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.ingredients ) else {
+        let     chefbookCentral = ChefbookCentral.sharedInstance
+        let     recipe          = chefbookCentral.recipeArray[recipeIndex]
+        
+        if let name = recipe.imageName {
             
-            logVerbose("We FAILED to dequeueReusableCell")
-            return UITableViewCell.init()
-        }
-        
-//        logVerbose( "section[ %d ] row[ %d ]", indexPath.section, indexPath.row )
-        let     formulaIngredientCell = cell as! FormulaIngredientTableViewCell
-        
-        if indexPath.section == ForumlaTableSections.nameAndYield {
-            
-            formulaIngredientCell.setupAsHeader()
+            logVerbose( "imageName[ %@ ]", name )
+            if let imageViewController: ImageViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.imageViewer ) as? ImageViewController {
+                imageViewController.imageName = name
+                
+                navigationController?.pushViewController( imageViewController, animated: true )
+            }
+            else {
+                logTrace( "ERROR: Could NOT load ImageViewController!" )
+            }
+
         }
         else {
-            let     recipe             = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
-            let     dataSource         = indexPath.section == ForumlaTableSections.flour ? recipe.flourIngredients : recipe.breadIngredients
-            let     lastIngredientRow  = dataSource?.count ?? 0
-            let     isNewIngredientRow = newIngredientForSection == indexPath.section && lastIngredientRow == indexPath.row
-            
-            formulaIngredientCell.initializeWithRecipeAt( recipeIndex         : recipeIndex,
-                                                          ingredientIndexPath : indexPath,
-                                                          isNew               : isNewIngredientRow,
-                                                          delegate            : self )
+            logTrace( "ERROR: Could NOT unwrap recipe.imageName!" )
         }
-        
-        return cell
-    }
-    
-    
-    private func loadFormulaNameCell() -> UITableViewCell {
-        
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.name ) else {
-            
-            logVerbose("We FAILED to dequeueReusableCell")
-            return UITableViewCell.init()
-        }
-        
-//        logTrace()
-        let     formulaNameCell = cell as! FormulaNameTableViewCell
-        let     recipeName      = ( ( recipeIndex == NEW_RECIPE ) ? "" : ChefbookCentral.sharedInstance.recipeArray[recipeIndex].name! )
-        
-        formulaNameCell.initializeWith( formulaName : recipeName,
-                                        delegate    : self )
-        return cell
-    }
-    
-    
-    private func loadFormulaPreFermentCellFor(indexPath : IndexPath) -> UITableViewCell {
-        
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.preFerment ) else {
-            
-            logVerbose("We FAILED to dequeueReusableCell")
-            return UITableViewCell.init()
-        }
-        
-//        logTrace()
-        let     formulaPreFermentCell = cell as! FormulaPreFermentTableViewCell
-        
-        formulaPreFermentCell.initializeWithRecipeAt( recipeIndex : recipeIndex,
-                                                      indexPath   : indexPath,
-                                                      delegate    : self )
-        return cell
-    }
-    
-    
-    private func loadFormulaYieldCell() -> UITableViewCell {
-        
-        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else {
-            
-            logVerbose("We FAILED to dequeueReusableCell")
-            return UITableViewCell.init()
-        }
-        
-//        logTrace()
-        let     formulaYieldCell = cell as! FormulaYieldTableViewCell
-        var     loafWeight       = 0
-        var     numberOfLoaves   = 0
 
-        if recipeIndex != NEW_RECIPE {
+    }
+    
+    
+    private func launchProvisioningSummaryViewController() {
+        
+        logTrace()
+        
+        if let summaryVC : ProvisioningSummaryViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.provisioningSummary ) as? ProvisioningSummaryViewController {
             
-            let recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
-
-            numberOfLoaves = Int( recipe.formulaYieldQuantity )
-            loafWeight     = Int( recipe.formulaYieldWeight   )
+            summaryVC.myRecipe  = ChefbookCentral.sharedInstance.recipeArray[self.recipeIndex]
+            summaryVC.useRecipe = true
+            
+            let backItem = UIBarButtonItem()
+            
+            backItem.title = NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
+            navigationItem.backBarButtonItem = backItem
+            
+            navigationController?.pushViewController( summaryVC, animated: true )
+        }
+        else {
+            logTrace( "ERROR: Could NOT load ProvisioningSelectItemsViewController!" )
         }
         
-        formulaYieldCell.initializeWith( quantity : numberOfLoaves,
-                                         weight   : loafWeight,
-                                         delegate : self)
+    }
+    
+    
+    
+    private func loadBarButtonItems() {
+        logTrace()
+        let     launchedFromMasterView = UIDevice.current.userInterfaceIdiom == .pad
+        let     title                  = launchedFromMasterView ? NSLocalizedString( "ButtonTitle.Done", comment: "Done" ) : NSLocalizedString( "ButtonTitle.Back",   comment: "Back"   )
         
-        return cell
+        navigationItem.leftBarButtonItem  = ( waitingForNotification ? nil : UIBarButtonItem.init( title: title,
+                                                                                                   style: .plain,
+                                                                                                   target: self,
+                                                                                                   action: #selector( cancelBarButtonTouched ) ) )
+        
+        navigationItem.rightBarButtonItem = ( waitingForNotification ? nil : UIBarButtonItem.init( title: NSLocalizedString( "ButtonTitle.Summary", comment: "Summary" ),
+                                                                                                   style: .plain,
+                                                                                                   target: self,
+                                                                                                   action: #selector( provisionBarButtonItemTouched ) ) )
     }
     
     
@@ -419,7 +415,7 @@ class FormulaEditorViewController: UIViewController,
             poolishEditorViewController.recipe = recipe
 
             poolishEditorViewController.modalPresentationStyle = .formSheet
-            poolishEditorViewController.preferredContentSize   = CGSize( width: 300.0, height: 440.0 )
+            poolishEditorViewController.preferredContentSize   = CGSize( width: 320.0, height: 440.0 )
             
             poolishEditorViewController.popoverPresentationController?.delegate                 = self
             poolishEditorViewController.popoverPresentationController?.permittedArrowDirections = .any
@@ -557,50 +553,6 @@ class FormulaEditorViewController: UIViewController,
     }
     
     
-   private func processNameInput( name : String ) {
-    
-        logTrace()
-        let     myName = name.trimmingCharacters( in: .whitespacesAndNewlines )
-        
-        if !myName.isEmpty {
-            
-            if self.isFormulaUnique( name: myName ) {
-                
-                let     chefbookCentral = ChefbookCentral.sharedInstance
- 
-                if self.recipeIndex == NEW_RECIPE {
-                    
-                    currentState = StateMachine.yield
-                    
-                    chefbookCentral.addFormulaRecipe( name          : myName,
-                                                      yieldQuantity : 0,
-                                                      yieldWeight   : 0 )
-                }
-                else {
-                    let     recipe = chefbookCentral.recipeArray[recipeIndex]
-
-                    recipe.name = myName
-                    
-                    chefbookCentral.saveUpdatedRecipe( recipe: recipe )
-                }
-                
-            }
-            else {
-                logTrace( "ERROR:  Duplicate formula name!" )
-                presentAlert( title   : NSLocalizedString( "AlertTitle.Error",                  comment: "Error!" ),
-                              message : NSLocalizedString( "AlertMessage.DuplicateFormulaName", comment: "The recipe name you choose already exists.  Please try again." ) )
-            }
-            
-        }
-        else {
-            logTrace( "ERROR:  Name field cannot be left blank!" )
-            presentAlert( title   : NSLocalizedString( "AlertTitle.Error",               comment: "Error!" ),
-                          message : NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank." ) )
-        }
-        
-    }
-    
-    
     private func processInputsForPreFerment( name       : String,
                                              percentage : String,
                                              weight     : String ) {
@@ -624,6 +576,50 @@ class FormulaEditorViewController: UIViewController,
     }
 
 
+    private func processNameInput( name : String ) {
+        
+        logTrace()
+        let     myName = name.trimmingCharacters( in: .whitespacesAndNewlines )
+        
+        if !myName.isEmpty {
+            
+            if self.isFormulaUnique( name: myName ) {
+                
+                let     chefbookCentral = ChefbookCentral.sharedInstance
+                
+                if self.recipeIndex == NEW_RECIPE {
+                    
+                    currentState = StateMachine.yield
+                    
+                    chefbookCentral.addFormulaRecipe( name          : myName,
+                                                      yieldQuantity : 0,
+                                                      yieldWeight   : 0 )
+                }
+                else {
+                    let     recipe = chefbookCentral.recipeArray[recipeIndex]
+                    
+                    recipe.name = myName
+                    
+                    chefbookCentral.saveUpdatedRecipe( recipe: recipe )
+                }
+                
+            }
+            else {
+                logTrace( "ERROR:  Duplicate formula name!" )
+                presentAlert( title   : NSLocalizedString( "AlertTitle.Error",                  comment: "Error!" ),
+                              message : NSLocalizedString( "AlertMessage.DuplicateFormulaName", comment: "The recipe name you choose already exists.  Please try again." ) )
+            }
+            
+        }
+        else {
+            logTrace( "ERROR:  Name field cannot be left blank!" )
+            presentAlert( title   : NSLocalizedString( "AlertTitle.Error",               comment: "Error!" ),
+                          message : NSLocalizedString( "AlertMessage.NameCannotBeBlank", comment: "Name field cannot be left blank." ) )
+        }
+        
+    }
+    
+    
     private func processYieldInputs( yieldQuantity : String,
                                      yieldWeight   : String ) {
         logTrace()
@@ -722,15 +718,147 @@ extension FormulaEditorViewController : ChefbookCentralDelegate {
         logVerbose( "recovering recipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
         recipeIndex = chefbookCentral.selectedRecipeIndex
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-            self.myTableView.reloadData()
-        })
+        if loadingImageView {
+            
+            loadingImageView = false
+            launchImageViewController()
+        }
+        else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                self.myTableView.reloadData()
+            })
+            
+        }
         
     }
     
     
 }
 
+
+
+// MARK: FormulaIngredientTableViewCellDelegate Methods
+
+extension FormulaEditorViewController : FormulaImageTableViewCellDelegate {
+    
+    func formulaImageTableViewCell( formulaImageTableViewCell: FormulaImageTableViewCell,
+                                    cameraButtonTouched: Bool) {
+        logTrace()
+        imageCell = formulaImageTableViewCell
+        
+        let     recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+        
+        if recipe.imageName?.isEmpty ?? true {
+            promptForImageSource()
+        }
+        else {
+            promptForImageDispostion()
+        }
+        
+    }
+    
+
+    private func openImagePickerFor( sourceType: UIImagePickerController.SourceType ) {
+        
+        logVerbose( "[ %@ ]", ( ( .camera == sourceType ) ? "Camera" : "Photo Album" ) )
+        let     imagePickerVC = UIImagePickerController.init()
+        
+        imagePickerVC.allowsEditing = false
+        imagePickerVC.delegate      = self
+        imagePickerVC.sourceType    = sourceType
+        
+        imagePickerVC.modalPresentationStyle = ( ( .camera == sourceType ) ? .overFullScreen : .popover )
+        
+        present( imagePickerVC, animated: true, completion: nil )
+        
+        imagePickerVC.popoverPresentationController?.permittedArrowDirections = .any
+        imagePickerVC.popoverPresentationController?.sourceRect               = myTableView.frame
+        imagePickerVC.popoverPresentationController?.sourceView               = myTableView
+    }
+    
+    
+    private func promptForImageDispostion() {
+        logTrace()
+        let     recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+        let     alert  = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ImageDisposition", comment: "What would you like to do with this image?" ),
+                                                 message: nil,
+                                                 preferredStyle: .alert)
+        
+        let     deleteAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Delete", comment: "Delete" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Delete Action" )
+            
+            self.deleteImage()
+            
+            self.imageCell.initializeWith( imageName: recipe.imageName! )
+        }
+        
+        let     replaceAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Replace", comment: "Replace" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Replace Action" )
+            
+            self.deleteImage()
+            
+            self.imageCell.initializeWith( imageName: recipe.imageName! )
+            
+            self.promptForImageSource()
+        }
+        
+        let     zoomAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.ZoomIn", comment: "Zoom In" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Zoom In Action" )
+            
+            self.launchImageViewController()
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        
+        alert.addAction( deleteAction  )
+        alert.addAction( replaceAction )
+        alert.addAction( zoomAction    )
+        alert.addAction( cancelAction  )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+    private func promptForImageSource()
+    {
+        logTrace()
+        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.SelectMediaSource", comment: "Select Media Source for Image" ),
+                                                message: nil,
+                                                preferredStyle: .alert)
+        
+        let     albumAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.PhotoAlbum", comment: "Photo Album" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Photo Album Action" )
+            
+            self.openImagePickerFor( sourceType: .photoLibrary )
+        }
+        
+        let     cameraAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Camera", comment: "Camera" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Camera Action" )
+            
+            self.openImagePickerFor( sourceType: .camera )
+        }
+        
+        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
+        
+        if UIImagePickerController.isSourceTypeAvailable( .camera ) {
+            alert.addAction( cameraAction )
+        }
+        
+        alert.addAction( albumAction  )
+        alert.addAction( cancelAction )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
+}
+    
 
 
 // MARK: FormulaIngredientTableViewCellDelegate Methods
@@ -847,16 +975,128 @@ extension FormulaEditorViewController : SectionHeaderViewDelegate {
 
 
 
+// MARK: UIImagePickerControllerDelegate Methods
+
+extension FormulaEditorViewController : UIImagePickerControllerDelegate,
+                                        UINavigationControllerDelegate      // Required for UIImagePickerControllerDelegate
+{
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController ) {
+        logTrace()
+        if nil != presentedViewController {
+            dismiss( animated: true, completion: nil )
+        }
+        
+    }
+    
+    
+    func imagePickerController(_ picker                             : UIImagePickerController,
+                                 didFinishPickingMediaWithInfo info : [UIImagePickerController.InfoKey : Any] ) {
+        logTrace()
+        if nil != presentedViewController {
+            dismiss( animated: true, completion: nil )
+        }
+        
+        DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.01 ) ) {
+            
+            if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String
+            {
+                if "public.image" == mediaType {
+                    var     imageToSave: UIImage? = nil
+                    
+                    if let originalImage: UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                        imageToSave = originalImage
+                    }
+                    else if let editedImage: UIImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+                        imageToSave = editedImage
+                    }
+                    
+                    if let myImageToSave = imageToSave {
+                        
+                        if .camera == picker.sourceType {
+                            UIImageWriteToSavedPhotosAlbum( myImageToSave, self, #selector( FormulaEditorViewController.image(_ :didFinishSavingWithError:contextInfo: ) ), nil )
+                        }
+                        
+                        let     imageName = ChefbookCentral.sharedInstance.saveImage( image: myImageToSave )
+                        
+                        if imageName.isEmpty {
+                            logTrace( "ERROR:  Image save FAILED!" )
+                            self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                               message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
+                        }
+                        else {
+                            logVerbose( "Saved image as [ %@ ]", imageName )
+                            
+                            self.imageCell.initializeWith( imageName: imageName )
+                            
+                            let     chefbookCentral = ChefbookCentral.sharedInstance
+                            let     recipe          = chefbookCentral.recipeArray[self.recipeIndex]
+                            
+                            recipe.imageName = imageName
+                            
+                            chefbookCentral.saveUpdatedRecipe( recipe: recipe )
+                        }
+                        
+                    }
+                    else {
+                        logTrace( "ERROR:  Unable to unwrap imageToSave!" )
+                    }
+                    
+                }
+                else {
+                    logVerbose( "ERROR:  Invalid media type[ %@ ]", mediaType )
+                    self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                       message: NSLocalizedString( "AlertMessage.InvalidMediaType", comment: "We can't save the item you selected.  We can only save photos." ) )
+                }
+                
+            }
+            else {
+                logTrace( "ERROR:  Unable to convert info[UIImagePickerControllerMediaType] to String" )
+            }
+            
+        }
+        
+    }
+    
+    
+    // MARK: UIImageWrite Completion Methods
+    
+    @objc func image(_ image                          : UIImage,
+                       didFinishSavingWithError error : NSError?,
+                       contextInfo                    : UnsafeRawPointer )
+    {
+        guard error == nil else {
+            
+            if let myError = error {
+                logVerbose( "ERROR:  Save to photo album failed!  Error[ %@ ]", myError.localizedDescription )
+            }
+            else {
+                logTrace( "ERROR:  Save to photo album failed!  Error[ Unknown ]" )
+            }
+            
+            return
+        }
+        
+        logTrace( "Image successfully saved to photo album" )
+    }
+    
+    
+}
+
+
+
 // MARK: UIPopoverPresentationControllerDelegate Methods
 
 extension FormulaEditorViewController : UIPopoverPresentationControllerDelegate {
     
-    func adaptivePresentationStyle(for controller : UIPresentationController) -> UIModalPresentationStyle {
+    func adaptivePresentationStyle( for controller : UIPresentationController ) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
     
 
 }
+
+
 
 // MARK: UITableViewDataSource Methods
 
@@ -879,7 +1119,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView                     : UITableView,
-                   numberOfRowsInSection section : Int ) -> Int {
+                     numberOfRowsInSection section : Int ) -> Int {
         
         let chefbookCentral = ChefbookCentral.sharedInstance
         var numberOfRows    = 0
@@ -887,11 +1127,12 @@ extension FormulaEditorViewController : UITableViewDataSource {
         if !waitingForNotification {
             
             switch section {
+                
             case ForumlaTableSections.nameAndYield:
                 switch currentState {
                 case .name:     numberOfRows = 1
                 case .yield:    numberOfRows = 2
-                default:        numberOfRows = 3    // 3rd row is the % Name Weight header for the following sections
+                default:        numberOfRows = 4    // 3rd row - image ... 4th row - % Name Weight header for the following sections
                 }
                 
             case ForumlaTableSections.flour:
@@ -925,7 +1166,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView              : UITableView,
-                   cellForRowAt indexPath : IndexPath) -> UITableViewCell {
+                     cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
 //        logVerbose( "row[ %d ]", indexPath.row)
         var     cell : UITableViewCell!
         
@@ -934,9 +1175,10 @@ extension FormulaEditorViewController : UITableViewDataSource {
         case ForumlaTableSections.nameAndYield:
             
             switch indexPath.row {
-            case 0:     cell = loadFormulaNameCell()
-            case 1:     cell = loadFormulaYieldCell()
-            default:    cell = loadFormulaIngredientCellFor( indexPath: indexPath )     // Creates the % Name Weight header for the following sections
+            case CellIndexes.name:      cell = loadFormulaNameCell()
+            case CellIndexes.yield:     cell = loadFormulaYieldCell()
+            case CellIndexes.image:     cell = loadImageViewCell()
+            default:                    cell = loadFormulaIngredientCellFor( indexPath: indexPath )     // Creates the % Name Weight header for the following sections
             }
             
         case ForumlaTableSections.flour:
@@ -954,7 +1196,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView              : UITableView,
-                   canEditRowAt indexPath : IndexPath) -> Bool {
+                     canEditRowAt indexPath : IndexPath) -> Bool {
         let canEdit = indexPath.section != ForumlaTableSections.nameAndYield
         
         return canEdit
@@ -962,8 +1204,8 @@ extension FormulaEditorViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView           : UITableView,
-                   commit editingStyle : UITableViewCell.EditingStyle,
-                   forRowAt indexPath  : IndexPath) {
+                     commit editingStyle : UITableViewCell.EditingStyle,
+                     forRowAt indexPath  : IndexPath) {
         
         if editingStyle == .delete {
             logVerbose( "delete ingredient at row [ %d ]", indexPath.row )
@@ -974,6 +1216,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
                 chefbookCentral.selectedRecipeIndex = self.recipeIndex
                 
                 switch indexPath.section {
+                    
                 case ForumlaTableSections.flour:
                     chefbookCentral.deleteFormulaRecipeFlourIngredientAt( index: indexPath.row )
                     
@@ -999,6 +1242,127 @@ extension FormulaEditorViewController : UITableViewDataSource {
     }
     
     
+    // MARK: Utility Methods
+
+    private func loadFormulaIngredientCellFor( indexPath: IndexPath ) -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.ingredients ) else {
+            
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+//        logVerbose( "section[ %d ] row[ %d ]", indexPath.section, indexPath.row )
+        let     formulaIngredientCell = cell as! FormulaIngredientTableViewCell
+        
+        if indexPath.section == ForumlaTableSections.nameAndYield {
+            
+            formulaIngredientCell.setupAsHeader()
+        }
+        else {
+            let     recipe             = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+            let     dataSource         = indexPath.section == ForumlaTableSections.flour ? recipe.flourIngredients : recipe.breadIngredients
+            let     lastIngredientRow  = dataSource?.count ?? 0
+            let     isNewIngredientRow = newIngredientForSection == indexPath.section && lastIngredientRow == indexPath.row
+            
+            formulaIngredientCell.initializeWithRecipeAt( recipeIndex         : recipeIndex,
+                                                          ingredientIndexPath : indexPath,
+                                                          isNew               : isNewIngredientRow,
+                                                          delegate            : self )
+        }
+        
+        return cell
+    }
+    
+    
+    private func loadFormulaNameCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.name ) else {
+            
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+//        logTrace()
+        let     formulaNameCell = cell as! FormulaNameTableViewCell
+        let     recipeName      = ( ( recipeIndex == NEW_RECIPE ) ? "" : ChefbookCentral.sharedInstance.recipeArray[recipeIndex].name! )
+        
+        formulaNameCell.initializeWith( formulaName : recipeName,
+                                        delegate    : self )
+        return cell
+    }
+    
+    
+    private func loadFormulaPreFermentCellFor(indexPath : IndexPath) -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.preFerment ) else {
+            
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+//        logTrace()
+        let     formulaPreFermentCell = cell as! FormulaPreFermentTableViewCell
+        
+        formulaPreFermentCell.initializeWithRecipeAt( recipeIndex : recipeIndex,
+                                                      indexPath   : indexPath,
+                                                      delegate    : self )
+        return cell
+    }
+    
+    
+    private func loadFormulaYieldCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else {
+            
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+//        logTrace()
+        let     formulaYieldCell = cell as! FormulaYieldTableViewCell
+        var     loafWeight       = 0
+        var     numberOfLoaves   = 0
+        
+        if recipeIndex != NEW_RECIPE {
+            
+            let recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+            
+            numberOfLoaves = Int( recipe.formulaYieldQuantity )
+            loafWeight     = Int( recipe.formulaYieldWeight   )
+        }
+        
+        formulaYieldCell.initializeWith( quantity : numberOfLoaves,
+                                         weight   : loafWeight,
+                                         delegate : self)
+        
+        return cell
+    }
+    
+    
+    private func loadImageViewCell() -> UITableViewCell {
+        
+        guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.image ) else {
+            
+            logVerbose("We FAILED to dequeueReusableCell")
+            return UITableViewCell.init()
+        }
+        
+        let     imageCell = cell as! FormulaImageTableViewCell
+        let     recipe    = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
+        var     imageName = ""
+        
+        if let name = recipe.imageName {
+            logVerbose( "imageName[ %@ ]", name )
+            imageName = name
+        }
+        
+        imageCell.delegate = self
+        imageCell.initializeWith( imageName: imageName )
+
+        return cell
+    }
+    
     
 }
 
@@ -1009,7 +1373,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
 extension FormulaEditorViewController : UITableViewDelegate {
     
     func tableView(_ tableView                : UITableView,
-                   didSelectRowAt indexPath : IndexPath ) {
+                     didSelectRowAt indexPath : IndexPath ) {
         
 //        tableView.deselectRow( at: indexPath, animated: false )
         if indexPath.section == ForumlaTableSections.preFerment && ChefbookCentral.sharedInstance.recipeArray[self.recipeIndex].poolish != nil {
@@ -1024,7 +1388,7 @@ extension FormulaEditorViewController : UITableViewDelegate {
     
     
     func tableView(_ tableView                        : UITableView,
-                   heightForHeaderInSection section : Int ) -> CGFloat {
+                     heightForHeaderInSection section : Int ) -> CGFloat {
         
         let     height = section == ForumlaTableSections.nameAndYield ? 0.0 : 44.0 as CGFloat
         
@@ -1032,18 +1396,30 @@ extension FormulaEditorViewController : UITableViewDelegate {
     }
     
     
+    func tableView(_ tableView                : UITableView,
+                     heightForRowAt indexPath : IndexPath ) -> CGFloat {
+        
+        let     heightForRow : CGFloat = ( ( indexPath.section == ForumlaTableSections.nameAndYield ) && ( indexPath.row == CellIndexes.image ) ) ? 244.0 : 44.0
+        
+        return heightForRow
+    }
+    
+
     func tableView(_ tableView                      : UITableView,
-                   viewForHeaderInSection section : Int ) -> UIView? {
+                     viewForHeaderInSection section : Int ) -> UIView? {
         
         let     sectionHeaderView = tableView.dequeueReusableHeaderFooterView( withIdentifier: SectionHeaderView.reuseIdentifier ) as? SectionHeaderView
         var     hideAddButton     = false
         var     title             = ""
         
         switch section {
+            
         case ForumlaTableSections.flour:
             title = String( format: "100     %@", NSLocalizedString( "SectionTitle.Flour", comment: "Flour" ) )
+            
         case ForumlaTableSections.ingredients:
             title = String( format: "        %@", NSLocalizedString( "SectionTitle.Ingredients", comment: "Ingredients" ) )
+            
         default: // ForumlaTableSections.preFerment
             title = String( format: "        %@", NSLocalizedString( "SectionTitle.PreFerment", comment: "PreFerment" ) )
             
@@ -1056,6 +1432,7 @@ extension FormulaEditorViewController : UITableViewDelegate {
                                      with           : self )
         return sectionHeaderView
     }
+    
     
 }
 

@@ -48,6 +48,7 @@ class ProvisioningQuanityTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
+        logTrace()
         super.awakeFromNib()
     }
 

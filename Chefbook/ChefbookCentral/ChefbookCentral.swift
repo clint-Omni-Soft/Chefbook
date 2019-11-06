@@ -257,8 +257,8 @@ class ChefbookCentral: NSObject {
     
     
     func addProvisionElementTo( provision : Provision,
-                                recipe   : Recipe,
-                                quantity : Int ) {
+                                recipe    : Recipe,
+                                quantity  : Int ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )

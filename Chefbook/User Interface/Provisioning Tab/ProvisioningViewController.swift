@@ -12,6 +12,7 @@ import UIKit
 
 class ProvisioningViewController: UIViewController
 {
+    // MARK: Public Variables
     
     @IBOutlet weak var myTableView: UITableView!
 
@@ -31,17 +32,16 @@ class ProvisioningViewController: UIViewController
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         logTrace()
+        super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString( "Title.Provisioning", comment: "Provisioning" )
     }
     
 
     override func viewWillAppear(_ animated: Bool ) {
-        
-        super.viewWillAppear( animated )
         logTrace()
+        super.viewWillAppear( animated )
         
         let     chefbookCentral = ChefbookCentral.sharedInstance
         
@@ -59,6 +59,7 @@ class ProvisioningViewController: UIViewController
     
     
     override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
         logTrace( "WARNING!" )
     }
 
@@ -219,6 +220,7 @@ extension ProvisioningViewController : ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
+        
         indexOfItemBeingEdited = chefbookCentral.selectedProvisionIndex
         myTableView.reloadData()
     }
@@ -226,6 +228,7 @@ extension ProvisioningViewController : ChefbookCentralDelegate {
     
     func chefbookCentralDidReloadRecipeArray(chefbookCentral: ChefbookCentral) {
         logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
+
         chefbookCentral.fetchProvisions()
     }
 
@@ -241,6 +244,7 @@ extension ProvisioningViewController : ProvisioningTableViewCellDelegate {
                                     editedName               : String,
                                     forRowAt index           : Int ) {
         logVerbose( "[ %d ][ %@ ]", index, editedName )
+        
         let chefbookCentral = ChefbookCentral.sharedInstance
         
         if addRequested {
@@ -298,12 +302,6 @@ extension ProvisioningViewController : UITableViewDataSource {
         if editingStyle == .delete {
             
             logVerbose( "delete provision at row [ %d ]", indexPath.row )
-//            if UIDevice.current.userInterfaceIdiom == .pad {
-//
-//                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
-//
-//                detailNavigationViewController?.viewControllers = []
-//            }
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                 ChefbookCentral.sharedInstance.deleteProvisionAtIndex( index: indexPath.row )
@@ -341,22 +339,7 @@ extension ProvisioningViewController : UITableViewDelegate {
             backItem.title = NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
             navigationItem.backBarButtonItem = backItem 
 
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                
-                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
-                
-                detailNavigationViewController?.viewControllers = [selectItemsVC]
-                
-                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
-//                    NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
-                })
-                
-            }
-            else {
-                navigationController?.pushViewController( selectItemsVC, animated: true )
-            }
-            
+            navigationController?.pushViewController( selectItemsVC, animated: true )
         }
         else {
             logTrace( "ERROR: Could NOT load ProvisioningSelectItemsViewController!" )

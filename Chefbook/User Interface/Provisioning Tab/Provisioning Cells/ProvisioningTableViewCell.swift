@@ -21,11 +21,17 @@ protocol ProvisioningTableViewCellDelegate: class {
 
 class ProvisioningTableViewCell: UITableViewCell {
 
+    // MARK: Public Variables
+
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var invisibleNameButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
     
     weak var delegate : ProvisioningTableViewCellDelegate!
+    
+    
+    
+    // MARK: Private Variables
     
     private var inEditMode    = false
     private var provisionName = ""
@@ -36,6 +42,7 @@ class ProvisioningTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
+        logTrace()
         super.awakeFromNib()
     }
 
@@ -123,5 +130,6 @@ class ProvisioningTableViewCell: UITableViewCell {
         }
         
     }
+    
     
 }

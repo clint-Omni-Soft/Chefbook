@@ -95,7 +95,7 @@ class RecipeListViewController: UIViewController
     
     @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem ) {
         logTrace()
-        promptForRecipeType()
+        promptForRecipeType( barButtonItem : barButtonItem )
     }
 
     
@@ -199,7 +199,7 @@ class RecipeListViewController: UIViewController
     }
     
     
-    private func promptForRecipeType() {
+    private func promptForRecipeType( barButtonItem: UIBarButtonItem ) {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ),
                                                 message: nil,
@@ -224,6 +224,14 @@ class RecipeListViewController: UIViewController
         alert.addAction( standardAction )
         alert.addAction( formulaAction  )
         alert.addAction( cancelAction   )
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            
+            if let popoverController = alert.popoverPresentationController {
+                popoverController.barButtonItem = barButtonItem
+            }
+
+        }
         
         present( alert, animated: true, completion: nil )
     }

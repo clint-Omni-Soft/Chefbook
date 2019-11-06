@@ -12,6 +12,7 @@ import UIKit
 
 class ProvisioningQuantityViewController: UIViewController
 {
+    // MARK: Public Variables
     
     var myProvision : Provision!        // Set by our parent
     
@@ -93,7 +94,7 @@ class ProvisioningQuantityViewController: UIViewController
 
     // MARK: Target / Action Methods
     
-    @IBAction @objc func nextBarButtonItemTouched( barButtonItem: UIBarButtonItem ) {
+    @IBAction @objc func summaryBarButtonItemTouched( barButtonItem: UIBarButtonItem ) {
         logTrace()
         launchProvisioningSummaryViewController()
     }
@@ -120,22 +121,7 @@ class ProvisioningQuantityViewController: UIViewController
             backItem.title = NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
             navigationItem.backBarButtonItem = backItem
             
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                
-                let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
-                
-                detailNavigationViewController?.viewControllers = [summaryVC]
-                
-                DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
-                    //                    NotificationCenter.default.post( name: NSNotification.Name( rawValue: NOTIFICATION_RECIPE_SELECTED ), object: self )
-                })
-                
-            }
-            else {
-                navigationController?.pushViewController( summaryVC, animated: true )
-            }
-            
+            navigationController?.pushViewController( summaryVC, animated: true )
         }
         else {
             logTrace( "ERROR: Could NOT load ProvisioningSelectItemsViewController!" )
@@ -144,15 +130,14 @@ class ProvisioningQuantityViewController: UIViewController
     }
     
     
-    
     private func loadBarButtonItems() {
         logTrace()
-        let     nextBarButtonItem  = UIBarButtonItem.init( title : NSLocalizedString( "ButtonTitle.Next", comment: "Next" ),
-                                                           style : .plain,
-                                                           target: self,
-                                                           action: #selector( nextBarButtonItemTouched ) )
+        let     summaryBarButtonItem  = UIBarButtonItem.init( title : NSLocalizedString( "ButtonTitle.Summary", comment: "Summary" ),
+                                                              style : .plain,
+                                                              target: self,
+                                                              action: #selector( summaryBarButtonItemTouched ) )
         
-        navigationItem.rightBarButtonItem = nextBarButtonItem
+        navigationItem.rightBarButtonItem = summaryBarButtonItem
     }
     
     
@@ -177,7 +162,7 @@ class ProvisioningQuantityViewController: UIViewController
         let     frame  = myTableView.frame
         var     origin = frame.origin
         
-        //        logVerbose( "[ %d ][ %d ] willShow[ %@ ] topOfKeyboard[ %f ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( keyboardWillShow ), topOfKeyboard )
+//        logVerbose( "[ %d ][ %d ] willShow[ %@ ] topOfKeyboard[ %f ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( keyboardWillShow ), topOfKeyboard )
         if !keyboardWillShow {
             origin.y = ( originalViewOffset == 0.0 ) ? origin.y : originalViewOffset
         }

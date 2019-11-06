@@ -52,6 +52,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
+        logTrace()
         super.awakeFromNib()
     }
 
@@ -279,5 +280,6 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         
         return name
     }
+    
     
 }

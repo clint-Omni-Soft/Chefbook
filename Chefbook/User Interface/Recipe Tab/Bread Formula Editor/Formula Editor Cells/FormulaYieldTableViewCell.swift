@@ -20,6 +20,8 @@ protocol FormulaYieldTableViewCellDelegate: class {
 
 class FormulaYieldTableViewCell: UITableViewCell {
 
+    // Public Variables
+    
     @IBOutlet weak var editButton               : UIButton!
     @IBOutlet weak var invisibleQuantityButton  : UIButton!
     @IBOutlet weak var invisibleWeightButton    : UIButton!
@@ -29,6 +31,7 @@ class FormulaYieldTableViewCell: UITableViewCell {
     
     weak var delegate : FormulaYieldTableViewCellDelegate!
     
+    // Private Variables
     private var inEditMode       = false
     private var quantityHasFocus = true
     private var yieldQuantity    = ""
@@ -39,6 +42,7 @@ class FormulaYieldTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
+        logTrace()
         super.awakeFromNib()
     }
 
@@ -145,7 +149,10 @@ class FormulaYieldTableViewCell: UITableViewCell {
             else {
                 weightTextField.becomeFirstResponder()
             }
+            
         }
+        
     }
+    
     
 }
