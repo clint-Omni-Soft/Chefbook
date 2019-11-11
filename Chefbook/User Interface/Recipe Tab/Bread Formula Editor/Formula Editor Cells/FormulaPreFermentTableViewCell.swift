@@ -51,13 +51,14 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
     private var myIndexPath        : IndexPath!
     private var fieldWithFocus     = FieldNames.name
     private var preFermentType     = PreFermentTypes.biga
+    private var waitingForKeyboard = false
 
     
     
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
-        logTrace()
+//        logTrace()
         super.awakeFromNib()
     }
     
@@ -76,13 +77,13 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
 //        logTrace()
         self.delegate = delegate
         myIndexPath   = indexPath
+        inEditMode    = false
         
         backgroundColor = .white
         
         acceptButton.setImage( UIImage( named: "checkmark" ), for: .normal )
         acceptButton.setTitle( "", for: .normal )
         
-        var     isNew  = false
         let     recipe = ChefbookCentral.sharedInstance.recipeArray[recipeIndex]
         
         if let preFerment = recipe.preFerment {
@@ -90,8 +91,17 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
             nameTextField  .text = preFerment.name
             weightTextField.text = String( format : "%d", preFerment.weight )
             
-            isNew = preFerment.weight == 0
             preFermentType = Int( preFerment.type )
+            
+            if preFerment.weight == 0 && !waitingForKeyboard {
+                waitingForKeyboard = true
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                    self.invisibleWeightButtonTouched( self )
+                })
+                
+            }
+            
         }
         else if let poolish = recipe.poolish {
             
@@ -102,7 +112,7 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
             preFermentType = PreFermentTypes.poolish
         }
         
-        configureControls( isNew : isNew )
+        configureControls()
     }
     
     
@@ -113,7 +123,7 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
 //        logTrace()
         inEditMode = !inEditMode
         
-        configureControls( isNew : false )
+        configureControls()
         
         if !inEditMode {
             weightTextField.resignFirstResponder()
@@ -129,13 +139,15 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
     
     
     @IBAction func invisibleWeightButtonTouched(_ sender: Any) {
+//        logTrace()
         inEditMode = !inEditMode
         
-        configureControls( isNew : false )
+        configureControls()
 
         delegate.formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : self,
                                                  indexPath                      : myIndexPath,
                                                  didStartEditing                : true )
+        waitingForKeyboard = false
         weightTextField.becomeFirstResponder()
     }
     
@@ -143,8 +155,9 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
     
     // MARK: Utility Methods
     
-    private func configureControls( isNew : Bool ) {
-        
+    private func configureControls() {
+//        logVerbose( "inEditMode[ %@ ]", stringFor( inEditMode ) )
+
         nameTextField.borderStyle = .none
         nameTextField.isEnabled   = false
         nameTextField.textColor   = .black
@@ -170,14 +183,6 @@ class FormulaPreFermentTableViewCell: UITableViewCell {
             weightTextField.borderStyle = inEditMode ? .roundedRect : .none
             weightTextField.isEnabled   = inEditMode
             weightTextField.textColor   = inEditMode ? .black : .blue
-            
-            if isNew {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                    self.invisibleWeightButtonTouched( self )
-                })
-                
-            }
-            
         }
         
     }

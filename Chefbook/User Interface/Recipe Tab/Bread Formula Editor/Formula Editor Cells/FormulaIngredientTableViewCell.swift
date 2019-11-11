@@ -52,7 +52,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
-        logTrace()
+//        logTrace()
         super.awakeFromNib()
     }
 
@@ -68,6 +68,11 @@ class FormulaIngredientTableViewCell: UITableViewCell {
     func setupAsHeader() {
 //        logTrace()
         backgroundColor = .lightGray
+        ingredientTextField.backgroundColor = .lightGray
+        percentageTextField.backgroundColor = .lightGray
+
+        ingredientTextField.textColor = .black
+        percentageTextField.textColor = .black
 
         ingredientTextField.text = NSLocalizedString( "LabelText.Ingredient", comment: "Ingredient" )
         percentageTextField.text = "%"
@@ -91,6 +96,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         self.isNew    = isNew
         myIndexPath   = ingredientIndexPath
         isFlour       = ( myIndexPath.section == ForumlaTableSections.flour )
+        inEditMode    = false
         
         backgroundColor = isFlour ? .yellow : .white
         
@@ -196,6 +202,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
         percentageTextField.textColor   = inEditMode ? .black : .blue
 
         ingredientTextField.backgroundColor = .white
+        percentageTextField.backgroundColor = .white
         
         if myIndexPath.section == ForumlaTableSections.flour {
             

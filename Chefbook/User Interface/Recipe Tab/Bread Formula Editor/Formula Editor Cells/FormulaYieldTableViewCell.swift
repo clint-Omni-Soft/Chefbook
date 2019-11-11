@@ -42,7 +42,7 @@ class FormulaYieldTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
-        logTrace()
+//        logTrace()
         super.awakeFromNib()
     }
 

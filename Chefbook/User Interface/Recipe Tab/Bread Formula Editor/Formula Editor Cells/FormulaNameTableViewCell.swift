@@ -32,7 +32,7 @@ class FormulaNameTableViewCell: UITableViewCell {
     // MARK: UITableViewCell Lifecycle Methods
     
     override func awakeFromNib() {
-        logTrace()
+//        logTrace()
         super.awakeFromNib()
     }
 

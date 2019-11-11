@@ -50,14 +50,15 @@ class FormulaEditorViewController: UIViewController
         case ingredients
     }
     
-    private var     currentState                 = StateMachine.name
-    private var     imageCell                    : FormulaImageTableViewCell!     // Set in FormulaImageTableViewCellDelegate Method
-    private var     indexPathOfCellBeingEdited   = IndexPath(item: 0, section: 0)
-    private var     loadingImageView             = false
-    private var     newIngredientForSection      = ForumlaTableSections.none
-    private var     originalViewOffset : CGFloat = 0.0
-    private var     waitingForNotification       = false
-    private var     weightOfFlour                = 0
+    private var     currentState                    = StateMachine.name
+    private var     imageCell                       : FormulaImageTableViewCell!     // Set in FormulaImageTableViewCellDelegate Method
+    private var     indexPathOfCellBeingEdited      = IndexPath(item: 0, section: 0)
+    private var     loadingImageView                = false
+    private var     newIngredientForSection         = ForumlaTableSections.none
+    private var     originalViewOffset : CGFloat    = 0.0
+    private var     waitingForDidHideNotification   = false
+    private var     waitingForNotification          = false
+    private var     weightOfFlour                   = 0
 
     
     
@@ -94,8 +95,8 @@ class FormulaEditorViewController: UIViewController
                                                 name     : UIResponder.keyboardWillHideNotification,
                                                 object   : nil )
         NotificationCenter.default.addObserver( self,
-                                                selector : #selector( self.keyboardWillShowNotification( notification: ) ),
-                                                name     : UIResponder.keyboardWillShowNotification,
+                                                selector : #selector( self.keyboardDidShowNotification( notification: ) ),
+                                                name     : UIResponder.keyboardDidShowNotification,
                                                 object   : nil )
         NotificationCenter.default.addObserver( self,
                                                 selector : #selector( self.recipeSelected( notification: ) ),
@@ -128,15 +129,20 @@ class FormulaEditorViewController: UIViewController
     
     @objc func keyboardWillHideNotification( notification: NSNotification ) {
         logTrace()
-        scrollCellBeingEdited( keyboardWillShow : false,
-                               topOfKeyboard    : topOfKeyboardFromNotification( notification: notification ) )
+        scrollCellBeingEdited( keyboardDidShow : false,
+                               topOfKeyboard   : topOfKeyboardFromNotification( notification: notification ) )
+        waitingForDidHideNotification = false
     }
     
     
-    @objc func keyboardWillShowNotification( notification: NSNotification ) {
-        logTrace()
-        scrollCellBeingEdited( keyboardWillShow : true,
-                               topOfKeyboard    : topOfKeyboardFromNotification( notification: notification ) )
+    @objc func keyboardDidShowNotification( notification: NSNotification ) {
+        logVerbose( "waitingForDidHideNotification[ %@ ]", stringFor( waitingForDidHideNotification ) )
+        if !waitingForDidHideNotification {
+            scrollCellBeingEdited( keyboardDidShow : true,
+                                   topOfKeyboard   : topOfKeyboardFromNotification( notification: notification ) )
+            waitingForDidHideNotification = true
+        }
+
     }
     
     
@@ -185,6 +191,18 @@ class FormulaEditorViewController: UIViewController
     
     
     // MARK: Utility Methods
+    
+    private func ensureCellBeingEditedIsVisible() {
+        
+        let  cellIsVisible = myTableView.indexPathsForVisibleRows?.contains( indexPathOfCellBeingEdited ) ?? false
+        
+//        logVerbose( "[ %d ][ %d ] cellIsVisible[ %@ ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( cellIsVisible ) )
+        
+        if !cellIsVisible {
+            myTableView.scrollToRow(at: indexPathOfCellBeingEdited, at: .middle, animated: true )
+        }
+        
+    }
     
     private func deleteImage() {
         
@@ -641,8 +659,8 @@ class FormulaEditorViewController: UIViewController
     }
     
     
-    private func scrollCellBeingEdited( keyboardWillShow : Bool,     // false == willHide
-                                        topOfKeyboard    : CGFloat ) {
+    private func scrollCellBeingEdited( keyboardDidShow : Bool,     // false == willHide
+                                        topOfKeyboard   : CGFloat ) {
         
         if indexPathOfCellBeingEdited.section == 0 {
             return
@@ -652,7 +670,7 @@ class FormulaEditorViewController: UIViewController
         var     origin = frame.origin
 
 //        logVerbose( "[ %d ][ %d ] willShow[ %@ ] topOfKeyboard[ %f ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( keyboardWillShow ), topOfKeyboard )
-        if !keyboardWillShow {
+        if !keyboardDidShow {
             origin.y = ( originalViewOffset == 0.0 ) ? origin.y : originalViewOffset
         }
         else {
@@ -671,7 +689,7 @@ class FormulaEditorViewController: UIViewController
             
         }
         
-//        logVerbose( "originalViewOffset[ %f ]", originalViewOffset )
+//        logVerbose( "keyboardDidShow[ %@ ]  originalViewOffset[ %f ]", stringFor( keyboardDidShow ), originalViewOffset )
         myTableView.frame = CGRect( origin: origin, size: frame.size )
     }
 
@@ -713,9 +731,7 @@ extension FormulaEditorViewController : ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral : ChefbookCentral ) {
-        logVerbose( "loaded [ %d ] recipes ... recipeIndex[ %d ]", chefbookCentral.recipeArray.count, recipeIndex )
-        
-        logVerbose( "recovering recipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
+//        logVerbose( "loaded [ %d ] recipes ... current recipeIndex[ %d ] ... recovering [ %d ] from chefbookCentral", chefbookCentral.recipeArray.count, recipeIndex, chefbookCentral.selectedRecipeIndex )
         recipeIndex = chefbookCentral.selectedRecipeIndex
         
         if loadingImageView {
@@ -884,6 +900,7 @@ extension FormulaEditorViewController : FormulaIngredientTableViewCellDelegate {
     {
         logVerbose( "[ %d ][ %d ]", ingredientIndexPath.section, ingredientIndexPath.row )
         indexPathOfCellBeingEdited = ingredientIndexPath
+        ensureCellBeingEditedIsVisible()
     }
     
     
@@ -926,8 +943,8 @@ extension FormulaEditorViewController : FormulaPreFermentTableViewCellDelegate {
                                          indexPath                      : IndexPath,
                                          didStartEditing                : Bool ) {
         
-        logVerbose( "[ %d ][ %d ]", indexPath.section, indexPath.row )
         indexPathOfCellBeingEdited = indexPath
+        ensureCellBeingEditedIsVisible()
     }
     
     
@@ -1197,7 +1214,17 @@ extension FormulaEditorViewController : UITableViewDataSource {
     
     func tableView(_ tableView              : UITableView,
                      canEditRowAt indexPath : IndexPath) -> Bool {
-        let canEdit = indexPath.section != ForumlaTableSections.nameAndYield
+        var canEdit = true
+        
+        if indexPath.section == newIngredientForSection &&
+           indexPath.row + 1 == tableView.numberOfRows( inSection: newIngredientForSection ) {
+            
+//            logVerbose( "do NOT allow the user to delete a NEW row at [ %d ][ %d ]", indexPath.section, indexPath.row )
+            canEdit = false
+        }
+        else {
+            canEdit = indexPath.section != ForumlaTableSections.nameAndYield
+        }
         
         return canEdit
     }
@@ -1208,7 +1235,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
                      forRowAt indexPath  : IndexPath) {
         
         if editingStyle == .delete {
-            logVerbose( "delete ingredient at row [ %d ]", indexPath.row )
+            logVerbose( "delete ingredient at [ %d ][ %d ]", indexPath.section, indexPath.row )
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                 let  chefbookCentral = ChefbookCentral.sharedInstance
@@ -1353,7 +1380,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
         var     imageName = ""
         
         if let name = recipe.imageName {
-            logVerbose( "imageName[ %@ ]", name )
+//            logVerbose( "imageName[ %@ ]", name )
             imageName = name
         }
         
