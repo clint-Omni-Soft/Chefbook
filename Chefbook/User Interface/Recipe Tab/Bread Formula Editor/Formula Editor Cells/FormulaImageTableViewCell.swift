@@ -52,13 +52,13 @@ class FormulaImageTableViewCell: UITableViewCell {
     
     // MARK: Public Initializer
     
-    func initializeWith( imageName: String ) {
+    func initializeWith(_ imageName: String ) {
 //        logVerbose( "imageName[ %@ ]", imageName )
         
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
         
-        formulaImageView.image = ( imageName.isEmpty ? nil : ChefbookCentral.sharedInstance.imageWith( name: imageName ) )
+        formulaImageView.image = ( imageName.isEmpty ? nil : ChefbookCentral.sharedInstance.imageWith( imageName ) )
     }
     
 }

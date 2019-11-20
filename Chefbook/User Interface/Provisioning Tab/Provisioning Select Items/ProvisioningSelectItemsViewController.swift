@@ -139,15 +139,16 @@ extension ProvisioningSelectItemsViewController : UITableViewDataSource {
         let     recipe: Recipe     = ChefbookCentral.sharedInstance.recipeArray[indexPath.row]
         
         titleLabel .text = recipe.name
-        detailLabel.text = recipe.isFormulaType ? String( format: NSLocalizedString( "LabelText.ProvisioningFormulaFormat",    comment: "Quantity: %d   Item Weight: %d" ), recipe.formulaYieldQuantity, recipe.formulaYieldWeight) :
-                                                  String( format: NSLocalizedString( "LabelText.ProvisioningNonFormulaFormat", comment: "Quantity: %@   Options: %@"     ), recipe.yield ?? "Unknown", recipe.yieldOptions ?? "Unknown")
-        checkmarkImageView.isHidden = !provisionContains( recipe : recipe )
+        
+        detailLabel.text = recipe.isFormulaType ? String( format: NSLocalizedString( "LabelText.ProvisioningFormat", comment: "Quantity: %d   Item Weight: %d" ), recipe.formulaYieldQuantity, recipe.formulaYieldWeight) :
+                                                  String( format: NSLocalizedString( "LabelText.ProvisioningFormat", comment: "Quantity: %d   Item Weight: %d" ), recipe.yield, recipe.yieldWeight )
+        checkmarkImageView.isHidden = !provisionContains( recipe )
         
         return cell
     }
     
     
-    private func provisionContains( recipe : Recipe ) -> Bool {
+    private func provisionContains(_ recipe : Recipe ) -> Bool {
         let     elementArray = myProvision.elements?.allObjects as! [ProvisionElement]
         var     foundIt      = false
 
@@ -183,7 +184,7 @@ extension ProvisioningSelectItemsViewController : UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
         
         if isHidden {
-            let     element = elementForRecipe( guid : recipe.guid ?? "" )
+            let     element = elementForRecipe( recipe.guid ?? "" )
             
             chefbookCentral.deleteProvisionElementFrom(provision: myProvision, with: element.guid ?? "Unknown" )
         }
@@ -196,7 +197,7 @@ extension ProvisioningSelectItemsViewController : UITableViewDelegate {
     }
     
     
-    private func elementForRecipe( guid : String ) -> ProvisionElement {
+    private func elementForRecipe(_ guid : String ) -> ProvisionElement {
         
         let     elementArray     = myProvision.elements?.allObjects as! [ProvisionElement]
         var     requestedElement : ProvisionElement!

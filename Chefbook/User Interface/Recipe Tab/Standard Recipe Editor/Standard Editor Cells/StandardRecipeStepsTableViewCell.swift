@@ -9,7 +9,7 @@
 import UIKit
 
 
-class RecipeStepsTableViewCell: UITableViewCell {
+class StandardRecipeStepsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
@@ -19,7 +19,7 @@ class RecipeStepsTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        logTrace()
+//        logTrace()
     }
     
     
@@ -32,10 +32,24 @@ class RecipeStepsTableViewCell: UITableViewCell {
     
     // MARK: Public Initializer
     
+    func setupAsHeader() {
+        backgroundColor = .lightGray
+
+        stepsLabel.isHidden = true
+        titleLabel.isHidden = false
+        
+        titleLabel.text = NSLocalizedString( "CellTitle.Steps", comment: "Steps" )
+    }
+    
+    
     func initializeWith( stepsList: String ) {
-        logTrace()
-        titleLabel?.text = NSLocalizedString( "CellTitle.Steps", comment: "Steps" )
-        stepsLabel?.text = stepsList
+//        logTrace()
+        backgroundColor = .white
+        
+        stepsLabel.isHidden = false
+        titleLabel.isHidden = true
+        
+        stepsLabel?.text = stepsList.isEmpty ? "?" : stepsList
     }
     
 

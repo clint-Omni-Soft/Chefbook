@@ -72,8 +72,8 @@ class ProvisioningQuanityTableViewCell: UITableViewCell {
         acceptButton.setTitle( "", for: .normal )
 
         titleLabel .text =  element.recipe?.name ?? "Unknown"
-        detailLabel.text = (element.recipe?.isFormulaType)! ? String( format: NSLocalizedString( "LabelText.ProvisioningFormulaFormat",    comment: "Quantity: %d   Item Weight: %d" ), element.recipe?.formulaYieldQuantity ?? 1, element.recipe?.formulaYieldWeight ?? 10 ) :
-                                                              String( format: NSLocalizedString( "LabelText.ProvisioningNonFormulaFormat", comment: "Quantity: %@   Options: %@"     ), element.recipe?.yield ?? "Unknown",   element.recipe?.yieldOptions ?? "Unknown")
+        detailLabel.text = (element.recipe?.isFormulaType)! ? String( format: NSLocalizedString( "LabelText.ProvisioningFormat", comment: "Quantity: %d   Item Weight: %d" ), element.recipe?.formulaYieldQuantity ?? 1, element.recipe?.formulaYieldWeight ?? 10 ) :
+                                                              String( format: NSLocalizedString( "LabelText.ProvisioningFormat", comment: "Quantity: %d   Item Weight: %d" ), element.recipe?.yield ?? 1,                element.recipe?.yieldWeight ?? 1 )
         quantityTextField.text        = String( format: "%d", element.quantity )
         quantityTextField.borderStyle = .none
 

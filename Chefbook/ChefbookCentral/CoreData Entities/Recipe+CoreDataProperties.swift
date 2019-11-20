@@ -2,7 +2,7 @@
 //  Recipe+CoreDataProperties.swift
 //  Chefbook
 //
-//  Created by Clint Shank on 10/29/19.
+//  Created by Clint Shank on 11/18/19.
 //  Copyright © 2019 Omni-Soft, Inc. All rights reserved.
 //
 //
@@ -21,18 +21,18 @@ extension Recipe {
     @NSManaged public var formulaYieldWeight: Int64
     @NSManaged public var guid: String?
     @NSManaged public var imageName: String?
-    @NSManaged public var ingredients: String?
     @NSManaged public var isFormulaType: Bool
     @NSManaged public var lastModified: NSDate?
     @NSManaged public var name: String?
     @NSManaged public var steps: String?
-    @NSManaged public var yield: String?
-    @NSManaged public var yieldOptions: String?
+    @NSManaged public var yield: Int16
+    @NSManaged public var yieldWeight: Int64
     @NSManaged public var breadIngredients: NSSet?
     @NSManaged public var flourIngredients: NSSet?
     @NSManaged public var poolish: Poolish?
     @NSManaged public var preFerment: PreFerment?
     @NSManaged public var provisionElement: NSSet?
+    @NSManaged public var standardIngredients: NSSet?
 
 }
 
@@ -84,5 +84,22 @@ extension Recipe {
 
     @objc(removeProvisionElement:)
     @NSManaged public func removeFromProvisionElement(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for standardIngredients
+extension Recipe {
+
+    @objc(addStandardIngredientsObject:)
+    @NSManaged public func addToStandardIngredients(_ value: StandardIngredient)
+
+    @objc(removeStandardIngredientsObject:)
+    @NSManaged public func removeFromStandardIngredients(_ value: StandardIngredient)
+
+    @objc(addStandardIngredients:)
+    @NSManaged public func addToStandardIngredients(_ values: NSSet)
+
+    @objc(removeStandardIngredients:)
+    @NSManaged public func removeFromStandardIngredients(_ values: NSSet)
 
 }

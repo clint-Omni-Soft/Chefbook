@@ -111,17 +111,17 @@ class ProvisioningViewController: UIViewController
                         return
                     }
                     
-                    if self.unique( provisionName: textStringName ) {
+                    if self.unique( textStringName ) {
                         let chefbookCentral = ChefbookCentral.sharedInstance
                         
                         if self.addRequested {
-                            chefbookCentral.addProvisionWith(name: textStringName )
+                            chefbookCentral.addProvisionWith( textStringName )
                         }
                         else {
                             let provision = chefbookCentral.provisionArray[self.indexOfItemBeingEdited]
                             
                             provision.name = textStringName
-                            chefbookCentral.saveUpdatedProvision(provision: provision)
+                            chefbookCentral.saveUpdatedProvision( provision )
                         }
                         
                     }
@@ -164,7 +164,7 @@ class ProvisioningViewController: UIViewController
 }
     
     
-    private func unique( provisionName: String ) -> Bool {
+    private func unique(_ provisionName: String ) -> Bool {
         
         let     chefbookCentral   = ChefbookCentral.sharedInstance
         var     numberOfInstances = 0
@@ -204,7 +204,8 @@ class ProvisioningViewController: UIViewController
 
 extension ProvisioningViewController : ChefbookCentralDelegate {
 
-    func chefbookCentral(chefbookCentral: ChefbookCentral, didOpenDatabase: Bool) {
+    func chefbookCentral( chefbookCentral : ChefbookCentral,
+                          didOpenDatabase : Bool ) {
         
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         
@@ -219,14 +220,14 @@ extension ProvisioningViewController : ChefbookCentralDelegate {
     }
     
     
-    func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
+    func chefbookCentralDidReloadProvisionArray( chefbookCentral: ChefbookCentral ) {
         
         indexOfItemBeingEdited = chefbookCentral.selectedProvisionIndex
         myTableView.reloadData()
     }
     
     
-    func chefbookCentralDidReloadRecipeArray(chefbookCentral: ChefbookCentral) {
+    func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
         logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
 
         chefbookCentral.fetchProvisions()
@@ -240,22 +241,22 @@ extension ProvisioningViewController : ChefbookCentralDelegate {
 
 extension ProvisioningViewController : ProvisioningTableViewCellDelegate {
     
-    func provisioningTableViewCell( provisioningTableViewCell: ProvisioningTableViewCell,
-                                    editedName               : String,
-                                    forRowAt index           : Int ) {
+    func provisioningTableViewCell( provisioningTableViewCell : ProvisioningTableViewCell,
+                                    editedName                : String,
+                                    forRowAt index            : Int ) {
         logVerbose( "[ %d ][ %@ ]", index, editedName )
         
         let chefbookCentral = ChefbookCentral.sharedInstance
         
         if addRequested {
             addRequested = false
-            chefbookCentral.addProvisionWith( name: editedName )
+            chefbookCentral.addProvisionWith( editedName )
         }
         else {
             let provision = chefbookCentral.provisionArray[index]
             
             provision.name = editedName
-            chefbookCentral.saveUpdatedProvision(provision: provision)
+            chefbookCentral.saveUpdatedProvision( provision )
         }
         
     }
@@ -277,9 +278,10 @@ extension ProvisioningViewController : UITableViewDataSource {
     }
     
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                     cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID ) as! ProvisioningTableViewCell
+        let cell      = tableView.dequeueReusableCell( withIdentifier: cellID ) as! ProvisioningTableViewCell
         let provision = ChefbookCentral.sharedInstance.provisionArray[indexPath.row]
         
         cell.initializeWith( provisionName : provision.name!,
@@ -290,21 +292,21 @@ extension ProvisioningViewController : UITableViewDataSource {
     
     
     func tableView(_ tableView              : UITableView,
-                   canEditRowAt indexPath : IndexPath ) -> Bool {
+                     canEditRowAt indexPath : IndexPath ) -> Bool {
         return true
     }
     
     
     func tableView(_ tableView           : UITableView,
-                   commit editingStyle : UITableViewCell.EditingStyle,
-                   forRowAt indexPath  : IndexPath ) {
+                     commit editingStyle : UITableViewCell.EditingStyle,
+                     forRowAt indexPath  : IndexPath ) {
         
         if editingStyle == .delete {
             
             logVerbose( "delete provision at row [ %d ]", indexPath.row )
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
-                ChefbookCentral.sharedInstance.deleteProvisionAtIndex( index: indexPath.row )
+                ChefbookCentral.sharedInstance.deleteProvisionAtIndex( indexPath.row )
             })
             
         }
@@ -320,12 +322,16 @@ extension ProvisioningViewController : UITableViewDataSource {
 
 extension ProvisioningViewController : UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView                : UITableView,
+                     didSelectRowAt indexPath : IndexPath) {
         logTrace()
         indexOfItemBeingEdited = indexPath.row
         launchProvisionEditorFor(index: indexPath.row )
     }
     
+    
+    
+    // MARK: Utility Methods
 
     private func launchProvisionEditorFor( index: Int ) {
         logVerbose( "[ %d ]", index )

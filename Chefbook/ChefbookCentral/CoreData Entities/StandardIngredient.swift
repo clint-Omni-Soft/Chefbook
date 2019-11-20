@@ -1,5 +1,5 @@
 //
-//  Recipe+CoreDataClass.swift
+//  StandardIngredient.swift
 //  Chefbook
 //
 //  Created by Clint Shank on 11/13/19.
@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Recipe)
-public class Recipe: NSManagedObject {
+@objc(StandardIngredient)
+public class StandardIngredient: NSManagedObject {
 
 }

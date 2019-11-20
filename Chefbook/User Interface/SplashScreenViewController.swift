@@ -21,7 +21,7 @@ class SplashScreenViewController: UIViewController {
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
-        logTrace()
+//        logTrace()
         super.viewDidLoad()
         
         navigationItem.title = NSLocalizedString( "LabelText.About", comment: "About" )

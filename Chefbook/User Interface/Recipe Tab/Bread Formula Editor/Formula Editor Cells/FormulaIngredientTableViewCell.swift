@@ -112,7 +112,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
                 weightLabel        .text = ""
             }
             else {
-                ingredientTextField.text = ingredientNameFor( recipe : recipe )
+                ingredientTextField.text = nextNewIngredientNameFor( recipe )
                 percentageTextField.text = ( self.myIndexPath.row == 0 ? "50" : "" )
                 weightLabel        .text = ""
             }
@@ -123,7 +123,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
             
         }
         else {
-            let ingredient = ingredientFrom( recipe : recipe )
+            let ingredient = ingredientFrom( recipe )
             
             ingredientTextField.text = ingredient.name
             percentageTextField.text = String( format : "%d", ingredient.percentOfFlour )
@@ -238,7 +238,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
     }
     
     
-    private func ingredientFrom( recipe : Recipe ) -> BreadIngredient {
+    private func ingredientFrom(_ recipe : Recipe ) -> BreadIngredient {
         
         var     selectedIngredient : BreadIngredient!
         let     dataSource         = ( isFlour ? recipe.flourIngredients : recipe.breadIngredients )
@@ -260,7 +260,7 @@ class FormulaIngredientTableViewCell: UITableViewCell {
     }
     
     
-    private func ingredientNameFor( recipe : Recipe ) -> String {
+    private func nextNewIngredientNameFor(_ recipe : Recipe ) -> String {
         let     ingredientArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
         var     name            = "??"
         var     waterPresent    = false

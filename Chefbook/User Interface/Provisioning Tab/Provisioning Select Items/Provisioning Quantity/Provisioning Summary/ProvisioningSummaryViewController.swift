@@ -70,14 +70,19 @@ class ProvisioningSummaryViewController: UIViewController {
         
         // First we load up our ingredient names into a Set ... which ensures that we only have unique names
         for element in elementArray ?? [] {
-            let breadIngredients = element.recipe?.breadIngredients?.allObjects as! [BreadIngredient]
-            let flourIngredients = element.recipe?.flourIngredients?.allObjects as! [BreadIngredient]
+            let breadIngredients    = element.recipe?.breadIngredients?   .allObjects as! [BreadIngredient]
+            let flourIngredients    = element.recipe?.flourIngredients?   .allObjects as! [BreadIngredient]
+            let standardIngredients = element.recipe?.standardIngredients?.allObjects as! [StandardIngredient]
 
             for ingredient in breadIngredients {
                 ingredientSet.insert( ingredient.name! )
             }
 
             for ingredient in flourIngredients {
+                ingredientSet.insert( ingredient.name! )
+            }
+            
+            for ingredient in standardIngredients {
                 ingredientSet.insert( ingredient.name! )
             }
 
@@ -89,9 +94,10 @@ class ProvisioningSummaryViewController: UIViewController {
 
             for element in elementArray ?? [] {
                 
-                let breadIngredients = element.recipe?.breadIngredients?.allObjects as! [BreadIngredient]
-                let flourIngredients = element.recipe?.flourIngredients?.allObjects as! [BreadIngredient]
-                
+                let breadIngredients    = element.recipe?.breadIngredients?   .allObjects as! [BreadIngredient]
+                let flourIngredients    = element.recipe?.flourIngredients?   .allObjects as! [BreadIngredient]
+                let standardIngredients = element.recipe?.standardIngredients?.allObjects as! [StandardIngredient]
+
                 for ingredient in breadIngredients {
                     
                     if ingredientName == ingredient.name {
@@ -104,6 +110,14 @@ class ProvisioningSummaryViewController: UIViewController {
                     
                     if ingredientName == ingredient.name {
                         ingredientWeight += ingredient.weight * Int64( element.quantity )
+                    }
+                    
+                }
+                
+                for ingredient in standardIngredients {
+                    
+                    if ingredientName == ingredient.name {
+                        ingredientWeight += Int64( 1 )
                     }
                     
                 }
@@ -129,14 +143,19 @@ class ProvisioningSummaryViewController: UIViewController {
         
         
         // First we load up our ingredient names into a Set ... which ensures that we only have unique names
-        let breadIngredients = myRecipe.breadIngredients?.allObjects as! [BreadIngredient]
-        let flourIngredients = myRecipe.flourIngredients?.allObjects as! [BreadIngredient]
-        
+        let     breadIngredients    = myRecipe.breadIngredients?   .allObjects as! [BreadIngredient]
+        let     flourIngredients    = myRecipe.flourIngredients?   .allObjects as! [BreadIngredient]
+        let     standardIngredients = myRecipe.standardIngredients?.allObjects as! [StandardIngredient]
+
         for ingredient in breadIngredients {
             ingredientSet.insert( ingredient.name! )
         }
         
         for ingredient in flourIngredients {
+            ingredientSet.insert( ingredient.name! )
+        }
+        
+        for ingredient in standardIngredients {
             ingredientSet.insert( ingredient.name! )
         }
         
@@ -157,6 +176,14 @@ class ProvisioningSummaryViewController: UIViewController {
                 
                 if ingredientName == ingredient.name {
                     ingredientWeight += ingredient.weight * Int64( 1 )
+                }
+                
+            }
+            
+            for ingredient in standardIngredients {
+                
+                if ingredientName == ingredient.name {
+                    ingredientWeight += Int64( 1 )
                 }
                 
             }
@@ -198,7 +225,7 @@ extension ProvisioningSummaryViewController: UITableViewDataSource {
         if ingredient.weight > 1000 {
             weightText = String( format: "%.2f kg", Float( ingredient.weight ) / 1000 )
         }
-        else {
+        else if ingredient.weight != 1 {
             weightText = String( format: "%d g", ingredient.weight )
         }
         

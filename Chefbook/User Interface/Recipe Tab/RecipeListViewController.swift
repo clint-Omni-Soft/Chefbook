@@ -17,10 +17,7 @@ class RecipeListViewController: UIViewController
     private let     CELL_TAG_LABEL_NAME             = 11
     private let     CELL_TAG_IMAGE_VIEW             = 12
     private let     STORYBOARD_ID_FORMULA_EDITOR    = "FormulaEditorViewController"
-    private let     STORYBOARD_ID_RECIPE_EDITOR     = "RecipeEditorViewController"
-    
-    private var     recipeEditor       : RecipeEditorViewController!
-    private var     recipeEditorLoaded = false
+    private let     STORYBOARD_ID_RECIPE_EDITOR     = "StandardRecipeEditorViewController"
     
     
     
@@ -82,11 +79,6 @@ class RecipeListViewController: UIViewController
         // This approach allows a change in one to immediately be reflected in the other.
         
         myTableView.reloadData()
-        
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            loadExampleRecipeOnFirstTimeIn()
-        }
-
     }
     
     
@@ -102,7 +94,7 @@ class RecipeListViewController: UIViewController
     
     // MARK: Utility Methods
     
-    private func launchFormulaEditorFor( index: Int ) {
+    private func launchFormulaEditorFor(_ index: Int ) {
         
         logVerbose( "[ %d ]", index )
         if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_FORMULA_EDITOR ) as? FormulaEditorViewController {
@@ -132,12 +124,12 @@ class RecipeListViewController: UIViewController
     }
     
     
-    private func launchRecipeEditorFor( index: Int ) {
+    private func launchRecipeEditorFor(_ index: Int ) {
         logVerbose( "[ %d ]", index )
         
-        if let recipeEditorVC: RecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? RecipeEditorViewController {
+        if let recipeEditorVC: StandardRecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? StandardRecipeEditorViewController {
             
-            recipeEditorVC.indexOfItemBeingEdited = index
+            recipeEditorVC.recipeIndex = index
             
             if UIDevice.current.userInterfaceIdiom == .pad {
                 
@@ -172,33 +164,6 @@ class RecipeListViewController: UIViewController
     }
     
     
-    private func loadExampleRecipeOnFirstTimeIn() {
-        
-        let userDefaults = UserDefaults.standard
-        let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
-        
-        logVerbose( "dirtyFlag[ %@ ]", stringFor( dirtyFlag ) )
-        
-        if !dirtyFlag {
-            
-            userDefaults.set( true, forKey: "Dirty" )
-            let chefbookCentral = ChefbookCentral.sharedInstance
-            
-            if chefbookCentral.recipeArray.count == 0 {
-                chefbookCentral.addRecipe( name         : "Standard Recipe Example",
-                                           imageName    : "",
-                                           ingredients  : "1 lb. Bacon\n4 oz grated Parmesan",
-                                           isFormulaType: false,
-                                           steps        : "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan",
-                                           yield        : "12 strips",
-                                           yieldOptions : "1x" )
-            }
-
-        }
-
-    }
-    
-    
     private func promptForRecipeType( barButtonItem: UIBarButtonItem ) {
         logTrace()
         let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ),
@@ -209,14 +174,14 @@ class RecipeListViewController: UIViewController
         { ( alertAction ) in
             logTrace( "Standard Action" )
             
-            self.launchRecipeEditorFor( index: NEW_RECIPE )
+            self.launchRecipeEditorFor( NEW_RECIPE )
         }
         
         let     formulaAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.BreadFormula", comment: "Bread Formula" ), style: .default )
         { ( alertAction ) in
             logTrace( "Formula Action" )
             
-            self.launchFormulaEditorFor( index: NEW_RECIPE )
+            self.launchFormulaEditorFor( NEW_RECIPE )
         }
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
@@ -263,10 +228,6 @@ extension RecipeListViewController: ChefbookCentralDelegate {
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
         logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
 
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            loadExampleRecipeOnFirstTimeIn()
-        }
-        
         myTableView.reloadData()
     }
     
@@ -293,7 +254,7 @@ extension RecipeListViewController: UITableViewDataSource {
         
         let     numberOfRows = ChefbookCentral.sharedInstance.recipeArray.count
         
-        logVerbose( "[ %d ]", numberOfRows )
+//        logVerbose( "[ %d ]", numberOfRows )
         return numberOfRows
     }
     
@@ -313,7 +274,7 @@ extension RecipeListViewController: UITableViewDataSource {
         if let imageName = recipe.imageName {
             
             if !imageName.isEmpty {
-                imageView.image = ChefbookCentral.sharedInstance.imageWith( name: imageName )
+                imageView.image = ChefbookCentral.sharedInstance.imageWith( imageName )
             }
             
         }
@@ -343,7 +304,7 @@ extension RecipeListViewController: UITableViewDataSource {
             }
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
-                ChefbookCentral.sharedInstance.deleteRecipeAtIndex( index: indexPath.row )
+                ChefbookCentral.sharedInstance.deleteRecipeAtIndex( indexPath.row )
             })
 
         }
@@ -366,10 +327,10 @@ extension RecipeListViewController: UITableViewDelegate
         tableView.deselectRow( at: indexPath, animated: false )
         
         if ChefbookCentral.sharedInstance.recipeArray[indexPath.row].isFormulaType {
-            launchFormulaEditorFor( index: indexPath.row )
+            launchFormulaEditorFor( indexPath.row )
         }
         else {
-            launchRecipeEditorFor( index: indexPath.row )
+            launchRecipeEditorFor( indexPath.row )
         }
 
     }

@@ -66,6 +66,7 @@
 "IngredientType.Yeast"                      = "Yeast";
 
 "LabelText.About"                           = "About";
+"LabelText.Amount"                          = "Amount";
 "LabelText.ContactUs"                       = "All rights reserved.  Contact us at";
 "LableText.HowToUse01"                      = "RECIPE LIST\n\nAdd a Recipe - Touching the plus sign (+) button will take you to the Recipe Editor where you can add/modify information about that recipe.  Tapping any of the recipes in the list will load it into the Recipe Editor\n\n\n";
 "LableText.HowToUse02"                      = "RECIPE EDITOR\n\nProvides the ability to (a) assign it a name, (b) associate an image with the recipe and zoom in on it, (c) specify the yield, (d) provide an ingredients list, ";
@@ -74,8 +75,7 @@
 "LabelText.Ingredient"                      = "Ingredient";
 "LabelText.Name"                            = "Name";
 "LabelText.PercentOfTotal"                  = "Percent of Total";
-"LabelText.ProvisioningFormulaFormat"       = "Quantity: %d   Item Weight: %d";
-"LabelText.ProvisioningNonFormulaFormat"    = "Quantity: %@   Options: %@";
+"LabelText.ProvisioningFormat"              = "Quantity: %d   Item Weight: %d";
 "LabelText.Quantity"                        = "Quantity";
 "LabelText.Weight"                          = "Weight";
 "LabelText.Yield"                           = "Yield";

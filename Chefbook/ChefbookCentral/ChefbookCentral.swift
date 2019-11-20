@@ -44,6 +44,7 @@ class ChefbookCentral: NSObject {
     private let ENTITY_NAME_PROVISION           = "Provision"
     private let ENTITY_NAME_PROVISION_ELEMENT   = "ProvisionElement"
     private let ENTITY_NAME_RECIPE              = "Recipe"
+    private let ENTITY_NAME_STANDARD_INGREDIENT = "StandardIngredient"
 
     private var managedObjectContext  : NSManagedObjectContext!
     private var selectedProvisionGuid = ""
@@ -82,13 +83,15 @@ class ChefbookCentral: NSObject {
                     self.loadCoreData()
                 }
 
+                self.loadExampleRecipesOnFirstTimeIn()
             }
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ), execute:  {
+                
                 logVerbose( "didOpenDatabase[ %@ ]", stringFor( self.didOpenDatabase ) )
                 self.delegate?.chefbookCentral( chefbookCentral: self,
                                                 didOpenDatabase: self.didOpenDatabase )
-            }
+            } )
             
         } )
 
@@ -114,12 +117,12 @@ class ChefbookCentral: NSObject {
             let     breadIngredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_BREAD_INGREDIENT, into: self.managedObjectContext ) as! BreadIngredient
             
             breadIngredient.index           = Int16( index )
-            breadIngredient.ingredientType  = isFlour ? BreadIngredientTypes.flour : self.typeForIngredientWith( name : name )
+            breadIngredient.ingredientType  = isFlour ? BreadIngredientTypes.flour : self.typeForIngredientNamed( name )
             breadIngredient.name            = name
             breadIngredient.percentOfFlour  = Int16( percentage )
             breadIngredient.weight          = 0
             
-            self.removePoolishFrom( recipe: recipe )
+            self.removePoolishFrom( recipe )
 
             if breadIngredient.ingredientType == BreadIngredientTypes.flour {
                 recipe.addToFlourIngredients( breadIngredient )
@@ -131,24 +134,23 @@ class ChefbookCentral: NSObject {
                 recipe.addToBreadIngredients( breadIngredient )
             }
             
-            self.updateIngredientsIn(           recipe : recipe )
-            self.adjustIngredientsForPoolishIn( recipe : recipe )
+            self.updateBreadFormulaIngredientsIn( recipe )
+            self.adjustIngredientsForPoolishIn(   recipe )
 
-            self.saveUpdatedRecipe( recipe : recipe )
+            self.saveUpdated( recipe )
         }
         
     }
     
-    func addFormulaRecipe( name          : String,
-                           yieldQuantity : Int,
-                           yieldWeight   : Int ) {
+    
+    func addFormulaRecipe(_ name : String ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        logVerbose( "[ %@ ][ %d ][ %d ]", name, yieldQuantity, yieldWeight )
+        logVerbose( "[ %@ ][ %d ][ %d ]", name )
         
         persistentContainer.viewContext.perform {
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
@@ -157,8 +159,8 @@ class ChefbookCentral: NSObject {
             recipe.isFormulaType        = true
             recipe.lastModified         = NSDate.init()
             recipe.name                 = name
-            recipe.formulaYieldQuantity = Int16( yieldQuantity )
-            recipe.formulaYieldWeight   = Int64( yieldWeight   )
+            recipe.formulaYieldQuantity = Int16( 0 )
+            recipe.formulaYieldWeight   = Int64( 0 )
             
             self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
             
@@ -195,7 +197,7 @@ class ChefbookCentral: NSObject {
             
             self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
             
-            self.adjustIngredientsForPoolishIn( recipe: recipe )
+            self.adjustIngredientsForPoolishIn( recipe )
             
             self.saveContext()
             self.refetchRecipesAndNotifyDelegate()
@@ -232,7 +234,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addProvisionWith( name  : String ) {
+    func addProvisionWith(_ name : String ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -283,33 +285,52 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addRecipe( name            : String,
-                    imageName       : String,
-                    ingredients     : String,
-                    isFormulaType   : Bool,
-                    steps           : String,
-                    yield           : String,
-                    yieldOptions    : String ) {
+    func addStandardIngredientTo( recipe : Recipe,
+                                  index  : Int,
+                                  name   : String,
+                                  amount : String ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        logVerbose( "[ %@ ][ %@ ][ %@ ]", name, ingredients, steps )
+        logVerbose( "[ %@ ][ %@ ]", name, amount )
+        
+        persistentContainer.viewContext.perform {
+            let     ingredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_STANDARD_INGREDIENT, into: self.managedObjectContext ) as! StandardIngredient
+            
+            ingredient.index  = Int16( index )
+            ingredient.name   = name
+            ingredient.amount = amount
+            
+            recipe.addToStandardIngredients( ingredient )
+            
+            self.selectedRecipeGuid = recipe.guid!
+            
+            self.saveContext()
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    func addStandardRecipe(_ name : String ) {
+        
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logVerbose( "[ %@ ]", name )
         
         persistentContainer.viewContext.perform {
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
             
             recipe.guid             = UUID().uuidString
-            recipe.imageName        = imageName
-            recipe.ingredients      = ingredients
-            recipe.isFormulaType    = isFormulaType
+            recipe.isFormulaType    = false
             recipe.lastModified     = NSDate.init()
             recipe.name             = name
-            recipe.steps            = steps
-            recipe.yield            = yield
-            recipe.yieldOptions     = yieldOptions
             
             self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
             
@@ -370,7 +391,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func deleteFormulaRecipeBreadIngredientAt( index : Int ) {
+    func deleteFormulaRecipeBreadIngredientAt(_ index : Int ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -390,7 +411,7 @@ class ChefbookCentral: NSObject {
                     ingredient1.index < ingredient2.index
                 })
 
-            self.removePoolishFrom( recipe: recipe )
+            self.removePoolishFrom( recipe )
             
             recipe.removeFromBreadIngredients( sortedBreadIngredientsArray[index] )
             sortedBreadIngredientsArray.remove( at: index )
@@ -404,16 +425,16 @@ class ChefbookCentral: NSObject {
                 recipe.addToBreadIngredients(sortedBreadIngredientsArray[i] )
             }
             
-            self.updateIngredientsIn(           recipe : recipe )
-            self.adjustIngredientsForPoolishIn( recipe : recipe )
+            self.updateBreadFormulaIngredientsIn( recipe )
+            self.adjustIngredientsForPoolishIn(   recipe )
             
-            self.saveUpdatedRecipe( recipe: recipe )
+            self.saveUpdated( recipe )
         }
 
     }
     
     
-    func deleteFormulaRecipeFlourIngredientAt( index : Int ) {
+    func deleteFormulaRecipeFlourIngredientAt(_ index : Int ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -433,7 +454,7 @@ class ChefbookCentral: NSObject {
                 ingredient1.index < ingredient2.index
             })
             
-            self.removePoolishFrom( recipe: recipe )
+            self.removePoolishFrom( recipe )
             
             recipe.removeFromFlourIngredients( sortedFlourIngredientsArray[index] )
             sortedFlourIngredientsArray.remove( at: index )
@@ -447,10 +468,10 @@ class ChefbookCentral: NSObject {
                 recipe.addToFlourIngredients( sortedFlourIngredientsArray[i] )
             }
             
-            self.updateIngredientsIn(           recipe : recipe )
-            self.adjustIngredientsForPoolishIn( recipe : recipe )
+            self.updateBreadFormulaIngredientsIn( recipe )
+            self.adjustIngredientsForPoolishIn(   recipe )
             
-            self.saveUpdatedRecipe(   recipe: recipe )
+            self.saveUpdated( recipe )
         }
         
     }
@@ -468,10 +489,10 @@ class ChefbookCentral: NSObject {
         persistentContainer.viewContext.perform {
             let     recipe = self.recipeArray[self.selectedRecipeIndex]
             
-            self.removePoolishFrom( recipe : recipe )
+            self.removePoolishFrom( recipe )
             recipe.poolish = nil
 
-            self.saveUpdatedRecipe( recipe: recipe )
+            self.saveUpdated( recipe )
         }
         
     }
@@ -491,13 +512,13 @@ class ChefbookCentral: NSObject {
             
             recipe.preFerment = nil
             
-            self.saveUpdatedRecipe( recipe: recipe )
+            self.saveUpdated( recipe )
         }
         
     }
     
     
-    func deleteProvisionAtIndex( index: Int ) {
+    func deleteProvisionAtIndex(_ index: Int ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -519,7 +540,6 @@ class ChefbookCentral: NSObject {
     
     func deleteProvisionElementFrom( provision : Provision,
                                      with guid : String ) {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -538,13 +558,13 @@ class ChefbookCentral: NSObject {
                 
             }
             
-            self.saveUpdatedProvision( provision: provision )
+            self.saveUpdatedProvision( provision )
         }
         
     }
     
     
-    func deleteRecipeAtIndex( index: Int ) {
+    func deleteRecipeAtIndex(_ index: Int ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -561,6 +581,58 @@ class ChefbookCentral: NSObject {
             self.refetchRecipesAndNotifyDelegate()
         }
         
+    }
+    
+    
+    func deleteStandardIngredientFrom( recipe     : Recipe,
+                                       with index : Int ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        
+        persistentContainer.viewContext.perform {
+            var     standardIngredients = self.sortedStandardIngredientsFrom( recipe )
+            var     indexOfDeletedItem  = 0
+            var     newIndex : Int16    = 0
+
+            // First we iterate through the array and remove the requested item
+            for ingredient in standardIngredients {
+                
+                if ingredient.index == index {
+                    recipe.removeFromStandardIngredients( ingredient )
+                    break
+                }
+                
+                indexOfDeletedItem += 1
+            }
+            
+            standardIngredients.remove( at: indexOfDeletedItem )
+            
+            // Then we renumber their indexes to ensure they are sequential
+            for ingredient in standardIngredients {
+                
+                ingredient.index = newIndex
+                newIndex += 1
+            }
+            
+            self.saveUpdated( recipe )
+        }
+        
+    }
+    
+    
+    private func sortedStandardIngredientsFrom(_ recipe : Recipe ) -> [StandardIngredient] {
+        let     standardIngredients = recipe.standardIngredients?.allObjects as! [StandardIngredient]
+        let     sortedIngredientArray = standardIngredients.sorted( by:
+            { (ingredient1, ingredient2) -> Bool in
+                
+                ingredient1.name! < ingredient2.name!     // We can do this because the name is a required field that must be unique
+        } )
+        
+        return sortedIngredientArray
     }
     
     
@@ -596,7 +668,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func saveUpdatedProvision( provision: Provision ) {
+    func saveUpdatedProvision(_ provision: Provision ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -615,7 +687,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func saveUpdatedRecipe( recipe: Recipe ) {
+    func saveUpdated(_ recipe: Recipe ) {
         
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -634,7 +706,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func updateIngredientsIn( recipe: Recipe ) {
+    func updateBreadFormulaIngredientsIn(_ recipe: Recipe ) {
         
         logTrace()
         let     breadIngredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
@@ -672,7 +744,7 @@ class ChefbookCentral: NSObject {
 
     // MARK: Image Convenience Methods (Public)
     
-    func deleteImageWith( name: String ) -> Bool {
+    func deleteImageWith(_ name: String ) -> Bool {
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
         
@@ -698,7 +770,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func imageWith( name: String ) -> UIImage {
+    func imageWith(_ name: String ) -> UIImage {
         
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
@@ -731,7 +803,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func saveImage( image: UIImage ) -> String {
+    func saveImage(_ image: UIImage ) -> String {
         
 //        logTrace()
         let         directoryPath = pictureDirectoryPath()
@@ -767,7 +839,7 @@ class ChefbookCentral: NSObject {
 
     // MARK: Utility Methods
     
-    private func adjustIngredientsForPoolishIn( recipe : Recipe ) {
+    private func adjustIngredientsForPoolishIn(_ recipe : Recipe ) {
         
         if recipe.poolish == nil {
             logTrace( "No poolish in this recipe ... do nothing" )
@@ -938,6 +1010,50 @@ class ChefbookCentral: NSObject {
     }
     
     
+    private func loadExampleRecipesOnFirstTimeIn() {
+        
+        let userDefaults = UserDefaults.standard
+        let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
+        
+        logVerbose( "dirtyFlag[ %@ ]", stringFor( dirtyFlag ) )
+        
+        if !dirtyFlag {
+            
+            userDefaults.set( true, forKey: "Dirty" )
+            
+            if recipeArray.count > 0 {
+                return
+            }
+            
+            self.persistentContainer.viewContext.perform {
+                let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
+                
+                recipe.guid          = UUID().uuidString
+                recipe.isFormulaType = false
+                recipe.lastModified  = NSDate.init()
+                recipe.name          = "Crispy Bacon"
+                recipe.steps         = "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan"
+                recipe.yield         = Int16( 12 )
+                recipe.yieldWeight   = Int64( 25 )
+                
+                self.selectedRecipeGuid = recipe.guid!          // We know this will always be set
+                
+                let     ingredient = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_STANDARD_INGREDIENT, into: self.managedObjectContext ) as! StandardIngredient
+                
+                ingredient.index  = 0
+                ingredient.name   = "Smoked Bacon"
+                ingredient.amount = "1 lb."
+                
+                recipe.addToStandardIngredients( ingredient )
+                
+                self.saveContext()
+            }
+            
+        }
+        
+    }
+    
+    
     private func pictureDirectoryPath() -> String {
         
         let         fileManager = FileManager.default
@@ -999,7 +1115,7 @@ class ChefbookCentral: NSObject {
     }
     
 
-    private func removePoolishFrom( recipe : Recipe ) {
+    private func removePoolishFrom(_ recipe : Recipe ) {
         if recipe.poolish == nil {
             logTrace( "No poolish in this recipe ... do nothing" )
             return
@@ -1037,7 +1153,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    private func typeForIngredientWith( name : String ) -> Int16 {
+    private func typeForIngredientNamed(_ name : String ) -> Int16 {
         var     ingredientType = BreadIngredientTypes.other
         let     myName         = name.uppercased().trimmingCharacters(in: .whitespaces )
         

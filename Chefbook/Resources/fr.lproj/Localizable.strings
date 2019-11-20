@@ -66,6 +66,7 @@
 "IngredientType.Yeast"                      = "Levure";
 
 "LabelText.About"                           = "Sur";
+"LabelText.Amount"                          = "Montant";
 "LabelText.ContactUs"                       = "Tous les droits sont réservés. Contactez-nous à";
 "LabelText.Flour"                           = "farine";
 "LableText.HowToUse01"                      = "LISTE DES RECETTES\n\nAjouter une recette - Toucher le signe plus (+) bouton vous amène à l'éditeur de recettes où vous pouvez ajouter / modifier des informations sur cette recette.  Appuyez sur n’importe laquelle des recettes de la liste pour la charger dans l’éditeur de recettes.\n\n\n";
@@ -75,8 +76,7 @@
 "LabelText.Ingredient"                      = "Ingrédient";
 "LabelText.Name"                            = "Nom";
 "LabelText.PercentOfTotal"                  = "Pourcentage du Total";
-"LabelText.ProvisioningFormulaFormat"       = "Quantité: %d   Poids de l'article: %d";
-"LabelText.ProvisioningNonFormulaFormat"    = "Quantité: %@   Options: %@";
+"LabelText.ProvisioningFormat"              = "Quantité: %d   Poids de l'article: %d";
 "LabelText.Quantity"                        = "Quantité";
 "LabelText.Weight"                          = "Poids";
 "LabelText.Yield"                           = "Rendement";

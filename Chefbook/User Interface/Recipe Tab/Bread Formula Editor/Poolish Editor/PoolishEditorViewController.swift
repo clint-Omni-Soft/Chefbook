@@ -165,8 +165,8 @@ class PoolishEditorViewController: UIViewController
     }
     
     
-    private func configure( cell         : PoolishTableViewCell,
-                            at indexPath : IndexPath ) {
+    private func configure(_ cell         : PoolishTableViewCell,
+                             at indexPath : IndexPath ) {
         
         let     ingredient : BreadIngredient!
         var     name       = "Unknown"
@@ -307,7 +307,7 @@ class PoolishEditorViewController: UIViewController
             poolish.percentOfYeast = yeast
             poolish.weight         = Int64( ( Float( recipe.formulaYieldWeight ) * Float( recipe.formulaYieldQuantity ) ) * ( Float( total ) / 100.0 ) )
 
-            chefbookCentral.saveUpdatedRecipe( recipe: recipe )
+            chefbookCentral.saveUpdated( recipe )
         }
         else {
             chefbookCentral.addPoolishToFormulaRecipe( recipe         : recipe,
@@ -382,8 +382,7 @@ extension PoolishEditorViewController : UITableViewDataSource {
         
         let     cell = tableView.dequeueReusableCell( withIdentifier: cellIdentifier ) as! PoolishTableViewCell
         
-        configure( cell : cell,
-                   at   : indexPath )
+        configure( cell, at : indexPath )
         
         return cell
         

@@ -35,7 +35,7 @@ class ImageViewController: UIViewController,
         logTrace()
         super.viewWillAppear( animated )
         
-        imageView.image = ChefbookCentral.sharedInstance.imageWith( name: imageName )
+        imageView.image = ChefbookCentral.sharedInstance.imageWith( imageName )
     }
     
     

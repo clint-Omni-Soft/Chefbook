@@ -40,25 +40,32 @@
         <attribute name="formulaYieldWeight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="ingredients" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isFormulaType" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="steps" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="yield" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="yieldOptions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="yield" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="yieldWeight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="breadIngredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BreadIngredient" inverseName="recipe" inverseEntity="BreadIngredient" syncable="YES"/>
         <relationship name="flourIngredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BreadIngredient" inverseName="recipeParent" inverseEntity="BreadIngredient" syncable="YES"/>
         <relationship name="poolish" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Poolish" inverseName="recipe" inverseEntity="Poolish" syncable="YES"/>
         <relationship name="preFerment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PreFerment" inverseName="recipe" inverseEntity="PreFerment" syncable="YES"/>
         <relationship name="provisionElement" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProvisionElement" inverseName="recipe" inverseEntity="ProvisionElement" syncable="YES"/>
+        <relationship name="standardIngredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="StandardIngredient" inverseName="recipe" inverseEntity="StandardIngredient" syncable="YES"/>
+    </entity>
+    <entity name="StandardIngredient" representedClassName="StandardIngredient" syncable="YES">
+        <attribute name="amount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="index" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="recipe" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Recipe" inverseName="standardIngredients" inverseEntity="Recipe" syncable="YES"/>
     </entity>
     <elements>
         <element name="BreadIngredient" positionX="-2.2890625" positionY="-17.4375" width="128" height="150"/>
-        <element name="Poolish" positionX="175.74609375" positionY="12.36328125" width="128" height="135"/>
-        <element name="PreFerment" positionX="-3.4140625" positionY="151.515625" width="128" height="120"/>
+        <element name="Poolish" positionX="154.12109375" positionY="13.2265625" width="128" height="135"/>
+        <element name="PreFerment" positionX="-0.11328125" positionY="158.46875" width="128" height="120"/>
         <element name="Provision" positionX="-709.8984375" positionY="72.53125" width="128" height="90"/>
-        <element name="ProvisionElement" positionX="-499.8203125" positionY="87.89453125" width="128" height="105"/>
+        <element name="ProvisionElement" positionX="-500.78515625" positionY="72.6796875" width="128" height="105"/>
         <element name="Recipe" positionX="-275.53125" positionY="-107.2421875" width="128" height="285"/>
+        <element name="StandardIngredient" positionX="-45.65234375" positionY="310.5859375" width="128" height="105"/>
     </elements>
 </model>

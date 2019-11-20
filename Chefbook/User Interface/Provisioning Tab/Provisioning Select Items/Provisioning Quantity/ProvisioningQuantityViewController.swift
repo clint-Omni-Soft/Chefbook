@@ -60,7 +60,7 @@ class ProvisioningQuantityViewController: UIViewController
         super.viewWillDisappear( animated )
         
         if provisionModified {
-            ChefbookCentral.sharedInstance.saveUpdatedProvision(provision: myProvision )
+            ChefbookCentral.sharedInstance.saveUpdatedProvision( myProvision )
         }
         
         provisionModified = false
@@ -80,14 +80,14 @@ class ProvisioningQuantityViewController: UIViewController
     @objc func keyboardWillHideNotification( notification: NSNotification ) {
         logTrace()
         scrollCellBeingEdited( keyboardWillShow : false,
-                               topOfKeyboard    : topOfKeyboardFromNotification( notification: notification ) )
+                               topOfKeyboard    : topOfKeyboardFromNotification( notification ) )
     }
     
     
     @objc func keyboardWillShowNotification( notification: NSNotification ) {
         logTrace()
         scrollCellBeingEdited( keyboardWillShow : true,
-                               topOfKeyboard    : topOfKeyboardFromNotification( notification: notification ) )
+                               topOfKeyboard    : topOfKeyboardFromNotification( notification ) )
     }
     
     
@@ -108,7 +108,7 @@ class ProvisioningQuantityViewController: UIViewController
         logTrace()
         
         if provisionModified {
-            ChefbookCentral.sharedInstance.saveUpdatedProvision(provision: myProvision )
+            ChefbookCentral.sharedInstance.saveUpdatedProvision( myProvision )
             provisionModified = false
         }
 
@@ -187,7 +187,7 @@ class ProvisioningQuantityViewController: UIViewController
     }
     
     
-    private func topOfKeyboardFromNotification( notification : NSNotification ) -> CGFloat {
+    private func topOfKeyboardFromNotification(_ notification : NSNotification ) -> CGFloat {
         
         var     topOfKeyboard : CGFloat = 1000.0
         

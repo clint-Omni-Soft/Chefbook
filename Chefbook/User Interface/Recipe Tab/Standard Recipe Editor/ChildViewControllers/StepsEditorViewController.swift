@@ -30,7 +30,7 @@ class StepsEditorViewController: UIViewController {
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
-        logTrace()
+//        logTrace()
         super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString( "Title.Steps", comment: "Steps" )
@@ -38,16 +38,18 @@ class StepsEditorViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        logTrace()
+//        logTrace()
         super.viewWillAppear( animated )
         
         myTextView.text = steps
+        myTextView.becomeFirstResponder()
     }
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        logTrace()
+//        logTrace()
         super.viewWillAppear( animated )
+        myTextView.resignFirstResponder()
         
         if myTextView.text != steps {
             

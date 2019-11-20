@@ -1,5 +1,5 @@
 //
-//  RecipeImageTableViewCell.swift
+//  StandardRecipeImageTableViewCell.swift
 //  Chefbook
 //
 //  Created by Clint Shank on 7/27/19.
@@ -8,18 +8,18 @@
 
 import UIKit
 
-protocol RecipeImageTableViewCellDelegate: class {
+protocol StandardRecipeImageTableViewCellDelegate: class {
     
-    func recipeImageTableViewCell( recipeImageTableViewCell: RecipeImageTableViewCell,
-                                   cameraButtonTouched: Bool )
+    func standardRecipeImageTableViewCell( standardRecipeImageTableViewCell : StandardRecipeImageTableViewCell,
+                                           cameraButtonTouched              : Bool )
 }
 
 
 
-class RecipeImageTableViewCell: UITableViewCell {
+class StandardRecipeImageTableViewCell: UITableViewCell {
     
-    // MARK: Public Variables ... these are guaranteed to be set by our creator
-    weak var delegate: RecipeImageTableViewCellDelegate?
+    // MARK: Public Variables ... guaranteed to be set by our creator
+    weak var delegate: StandardRecipeImageTableViewCellDelegate?
     
     @IBOutlet weak var cameraButton     : UIButton!
     @IBOutlet weak var recipeImageView  : UIImageView!
@@ -30,7 +30,7 @@ class RecipeImageTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        logTrace()
+//        logTrace()
    }
     
 
@@ -45,19 +45,19 @@ class RecipeImageTableViewCell: UITableViewCell {
     
     @IBAction func cameraButtonTouched(_ sender: UIButton) {
         logTrace()
-        delegate?.recipeImageTableViewCell( recipeImageTableViewCell: self,
-                                            cameraButtonTouched: true )
+        delegate?.standardRecipeImageTableViewCell( standardRecipeImageTableViewCell : self,
+                                                    cameraButtonTouched              : true )
     }
     
     
     // MARK: Public Initializer
     
-    func initializeWith( imageName: String ) {
-        logTrace()
+    func initializeWith(_ imageName: String ) {
+        logVerbose( "[ %@ ]", imageName )
         cameraButton.setImage( ( imageName.isEmpty ? UIImage.init( named: "camera" ) : nil ), for: .normal )
         cameraButton.backgroundColor = ( imageName.isEmpty ? .white : .clear )
-        
-        recipeImageView.image = ( imageName.isEmpty ? nil : ChefbookCentral.sharedInstance.imageWith( name: imageName ) )
+
+        recipeImageView.image = ( imageName.isEmpty ? nil : ChefbookCentral.sharedInstance.imageWith( imageName ) )
     }
     
 }

@@ -11,8 +11,7 @@ import UIKit
 
 
 
-class TabBarViewController: UITabBarController
-{
+class TabBarViewController: UITabBarController {
     
     // MARK: UIViewController Lifecycle Methods
     
@@ -39,38 +38,6 @@ class TabBarViewController: UITabBarController
         super.didReceiveMemoryWarning()
     }
     
-    
-    
-    // MARK: Utility Methods
-
-    private func loadExampleRecipeOnFirstTimeIn() {
-        
-        let userDefaults = UserDefaults.standard
-        let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
-        
-        logVerbose( "dirtyFlag[ %@ ]", stringFor( dirtyFlag ) )
-        
-        if !dirtyFlag {
-            
-            userDefaults.set( true, forKey: "Dirty" )
-            let chefbookCentral = ChefbookCentral.sharedInstance
-            
-            if chefbookCentral.recipeArray.count == 0 {
-                
-                chefbookCentral.addRecipe( name: "Example Recipe",
-                                           imageName: "",
-                                           ingredients: "1 lb. Bacon\n4 oz grated Parmesan",
-                                           isFormulaType: false,
-                                           steps: "Fry until crispy\nDrain on paper towels\nSprinkle with Parmesan",
-                                           yield: "12 strips",
-                                           yieldOptions: "1x" )
-            }
-            
-        }
-        
-    }
-    
-
 }
 
 
@@ -99,18 +66,13 @@ extension TabBarViewController : ChefbookCentralDelegate {
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
         
         logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
-        
     }
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
         
         logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
-        
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            loadExampleRecipeOnFirstTimeIn()
-        }
-        
+        chefbookCentral.fetchProvisions()
     }
     
 
