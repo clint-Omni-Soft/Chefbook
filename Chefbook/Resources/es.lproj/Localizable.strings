@@ -7,8 +7,8 @@
 */
 
 
-"AlertMessage.CannotOpenDatabase"           = "Error fatal!  No se puede abrir la base de datos.";
-"AlertMessage.DatabaseNotOpen"              = "¡Error fatal! ¡La base de datos NO está abierta!";
+"AlertMessage.CannotOpenDatabase"           = "Error fatal!  No se puede abrir la base de datos.  Elimina y vuelve a instalar la aplicación.";
+"AlertMessage.DatabaseNotOpen"              = "¡Error fatal! ¡La base de datos NO está abierta!  Elimina y vuelve a instalar la aplicación.";
 "AlertMessage.DuplicateFormulaName"         = "El nombre de la fórmula que eligió ya existe. Inténtalo de nuevo.";
 "AlertMessage.DuplicateIngredientName"      = "El nombre del ingrediente que eligió ya existe. Inténtalo de nuevo.";
 "AlertMessage.DuplicateRecipeName"          = "El nombre de la receta que elegiste ya existe. Inténtalo de nuevo.";

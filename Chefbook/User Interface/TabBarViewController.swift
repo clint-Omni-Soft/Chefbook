@@ -57,7 +57,7 @@ extension TabBarViewController : ChefbookCentralDelegate {
         }
         else {
             presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                          message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database." ) )
+                          message: NSLocalizedString( "AlertMessage.CannotOpenDatabase", comment: "Fatal Error!  Cannot open database.  Please delete and re-install the app." ) )
         }
         
     }

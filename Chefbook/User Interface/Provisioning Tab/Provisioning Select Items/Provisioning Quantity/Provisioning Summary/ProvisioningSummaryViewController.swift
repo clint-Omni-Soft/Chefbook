@@ -28,9 +28,10 @@ class ProvisioningSummaryViewController: UIViewController {
     private struct CellTags {
         static let ingredient = 10
         static let weight     = 11
+        static let amount     = 12
     }
     
-    private var     ingredientArray : [(name: String, weight: Int64)] = []
+    private var     ingredientArray : [(name: String, weight: Int64, amount: String)] = []
 
     
     
@@ -90,6 +91,8 @@ class ProvisioningSummaryViewController: UIViewController {
         
         // Next we iterate through the Set values and compute the total weight for each ingredient
         for ingredientName in ingredientSet {
+            
+            var     amountString     = ""
             var     ingredientWeight = Int64( 0 )
 
             for element in elementArray ?? [] {
@@ -117,7 +120,12 @@ class ProvisioningSummaryViewController: UIViewController {
                 for ingredient in standardIngredients {
                     
                     if ingredientName == ingredient.name {
-                        ingredientWeight += Int64( 1 )
+                        
+                        if !amountString.isEmpty {
+                            amountString += ", "
+                        }
+                        
+                        amountString += ingredient.amount ?? "<??>"
                     }
                     
                 }
@@ -125,7 +133,7 @@ class ProvisioningSummaryViewController: UIViewController {
             }
             
             // Then add it to our array as a (name, weight) tuple
-            ingredientArray.append( ( name: ingredientName, weight: ingredientWeight ) )
+            ingredientArray.append( ( name: ingredientName, weight: ingredientWeight, amount: amountString ) )
         }
         
         // The last thing we do is sort it so it looks nice
@@ -162,6 +170,7 @@ class ProvisioningSummaryViewController: UIViewController {
         // Next we iterate through the Set values and compute the total weight for each ingredient
         for ingredientName in ingredientSet {
             
+            var     amountString     = ""
             var     ingredientWeight = Int64( 0 )
             
             for ingredient in breadIngredients {
@@ -183,13 +192,18 @@ class ProvisioningSummaryViewController: UIViewController {
             for ingredient in standardIngredients {
                 
                 if ingredientName == ingredient.name {
-                    ingredientWeight += Int64( 1 )
+                    
+                    if !amountString.isEmpty {
+                        amountString += ", "
+                    }
+                    
+                    amountString += ingredient.amount ?? "<???>"
                 }
                 
             }
             
             // Then add it to our array as a (name, weight) tuple
-            ingredientArray.append( ( name: ingredientName, weight: ingredientWeight ) )
+            ingredientArray.append( ( name: ingredientName, weight: ingredientWeight, amount: amountString ) )
         }
         
         // The last thing we do is sort it so it looks nice
@@ -217,6 +231,7 @@ extension ProvisioningSummaryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let     cell            = tableView.dequeueReusableCell( withIdentifier: cellID ) ?? UITableViewCell()
+        let     amountLabel     = cell.viewWithTag( CellTags.amount     ) as! UILabel
         let     ingredientLabel = cell.viewWithTag( CellTags.ingredient ) as! UILabel
         let     weightLabel     = cell.viewWithTag( CellTags.weight     ) as! UILabel
         let     ingredient      = ingredientArray[indexPath.row]
@@ -225,15 +240,41 @@ extension ProvisioningSummaryViewController: UITableViewDataSource {
         if ingredient.weight > 1000 {
             weightText = String( format: "%.2f kg", Float( ingredient.weight ) / 1000 )
         }
-        else if ingredient.weight != 1 {
+        else {
             weightText = String( format: "%d g", ingredient.weight )
         }
         
         ingredientLabel.text = ingredient.name
         weightLabel    .text = weightText
+        amountLabel    .text = ingredient.amount
+        
+        amountLabel.isHidden = ingredient.amount.isEmpty
+        weightLabel.isHidden = ingredient.weight == 0
         
         return cell
     }
     
     
 }
+
+
+
+extension ProvisioningSummaryViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView                : UITableView,
+                     heightForRowAt indexPath : IndexPath) -> CGFloat {
+        
+        let     ingredient   = ingredientArray[indexPath.row]
+        var     heightOfCell : CGFloat = 44.0
+        let     widthOfCell  = myTableView.frame.size.width - 32.0
+
+        if !ingredient.amount.isEmpty {
+            heightOfCell += ingredient.amount.heightWithConstrainedWidth( width: widthOfCell, font: .systemFont( ofSize: 14.0 ) )
+        }
+        
+        return heightOfCell
+    }
+    
+    
+}
+

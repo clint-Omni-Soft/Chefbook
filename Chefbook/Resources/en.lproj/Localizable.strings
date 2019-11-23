@@ -7,8 +7,8 @@
 */
 
 
-"AlertMessage.CannotOpenDatabase"           = "Fatal Error!  Cannot open database.";
-"AlertMessage.DatabaseNotOpen"              = "Fatal Error!  Database is NOT open!";
+"AlertMessage.CannotOpenDatabase"           = "Fatal Error!  Cannot open database.  Please delete and re-install the app.";
+"AlertMessage.DatabaseNotOpen"              = "Fatal Error!  Database is NOT open!  Please delete and re-install the app.";
 "AlertMessage.DuplicateFormulaName"         = "The formula name you chose already exists.  Please try again.";
 "AlertMessage.DuplicateIngredientName"      = "The ingredient name you have chosen already exists.  Please try again.";
 "AlertMessage.DuplicateProvisionName"       = "The provision name you have chosen already exists.  Please try again.";

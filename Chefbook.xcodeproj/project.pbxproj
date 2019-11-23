@@ -55,7 +55,7 @@
 		F4C5C0DC22EB978100B3CBA4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0DE22EB978100B3CBA4 /* Main_iPad.storyboard */; };
 		F4C5C0E822EB992600B3CBA4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0E622EB992600B3CBA4 /* Localizable.strings */; };
 		F4C5C0EC22EBA5B100B3CBA4 /* appIcon 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0EB22EBA5B100B3CBA4 /* appIcon 1024.png */; };
-		F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */; };
+		F4C5C0EE22EBB7DB00B3CBA4 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */; };
 		F4C5C0EF22EBBF0700B3CBA4 /* ChefbookDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */; };
 		F4D035AE237CD2730014027C /* StandardIngredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D035AA237CD2730014027C /* StandardIngredient.swift */; };
 		F4D035B0237CD2730014027C /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D035AC237CD2730014027C /* Recipe.swift */; };
@@ -141,7 +141,7 @@
 		F4C5C0E922EB994A00B3CBA4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4C5C0EA22EB997600B3CBA4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4C5C0EB22EBA5B100B3CBA4 /* appIcon 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appIcon 1024.png"; path = "AppIcon/appIcon 1024.png"; sourceTree = "<group>"; };
-		F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		F4D035AA237CD2730014027C /* StandardIngredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIngredient.swift; sourceTree = "<group>"; };
 		F4D035AC237CD2730014027C /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		F4D15FA52354E56700D0668E /* PoolishTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolishTableViewCell.swift; sourceTree = "<group>"; };
@@ -363,7 +363,7 @@
 				F42600FF2367641000B0708E /* Settings Tab */,
 				F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */,
 				F482010623075769005C90E4 /* TabBarViewController.swift */,
-				F4C5C0ED22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift */,
+				F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -529,7 +529,7 @@
 				F45A19F82383286A005A92C7 /* StandardRecipeImageTableViewCell.swift in Sources */,
 				F45A19F62383286A005A92C7 /* StandardRecipeYieldTableViewCell.swift in Sources */,
 				F46418202368AE180048B071 /* ProvisioningViewController.swift in Sources */,
-				F4C5C0EE22EBB7DB00B3CBA4 /* UIViewControllerExtensions.swift in Sources */,
+				F4C5C0EE22EBB7DB00B3CBA4 /* UIKitExtensions.swift in Sources */,
 				F482010723075769005C90E4 /* TabBarViewController.swift in Sources */,
 				F464181E2368ABC40048B071 /* ProvisionElement+CoreDataProperties.swift in Sources */,
 				F4010633230B0AEF00DA636A /* SplashScreenViewController.swift in Sources */,
