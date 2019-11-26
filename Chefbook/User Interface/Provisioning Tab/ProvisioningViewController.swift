@@ -20,9 +20,11 @@ class ProvisioningViewController: UIViewController
     
     // MARK: Private Variables
     
-    private let STORYBOARD_ID_PROVISION_SELECT_ITEMS = "ProvisioningSelectItemsViewController"
-
     private let cellID = "ProvisioningTableViewCell"
+
+    private struct StoryboardIds {
+        static let selectItems = "ProvisioningSelectItemsViewController"
+    }
 
     private var addRequested            = false
     private var indexOfItemBeingEdited  = NEW_PROVISION
@@ -336,7 +338,7 @@ extension ProvisioningViewController : UITableViewDelegate {
     private func launchProvisionEditorFor( index: Int ) {
         logVerbose( "[ %d ]", index )
         
-        if let selectItemsVC : ProvisioningSelectItemsViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_PROVISION_SELECT_ITEMS ) as? ProvisioningSelectItemsViewController {
+        if let selectItemsVC : ProvisioningSelectItemsViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.selectItems ) as? ProvisioningSelectItemsViewController {
             
             selectItemsVC.indexOfProvision = index
             

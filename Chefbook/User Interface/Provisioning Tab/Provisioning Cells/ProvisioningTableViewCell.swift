@@ -91,8 +91,10 @@ class ProvisioningTableViewCell: UITableViewCell {
         
         configureControls()
         
-        if !inEditMode {
-            provisionName = nameTextField.text ?? ""
+        let     editedName = nameTextField.text ?? ""
+        
+        if !inEditMode && unique( editedName ) {
+            provisionName = editedName
             
             delegate.provisioningTableViewCell( provisioningTableViewCell : self,
                                                 editedName                : provisionName,
@@ -129,6 +131,40 @@ class ProvisioningTableViewCell: UITableViewCell {
             nameTextField.resignFirstResponder()
         }
         
+    }
+    
+    
+    private func unique(_ provisionName: String ) -> Bool {
+        
+        let     chefbookCentral   = ChefbookCentral.sharedInstance
+        var     numberOfInstances = 0
+        
+        for provision in chefbookCentral.provisionArray {
+            
+            if ( provisionName.uppercased() == provision.name?.uppercased() ) {
+                
+                if rowIndex == NEW_PROVISION {
+                    logTrace( "Found a duplicate! [New]." )
+                    numberOfInstances += 1
+                    break
+                }
+                else {
+                    let     provisionBeingEdited = chefbookCentral.provisionArray[rowIndex]
+                    
+                    if provision.guid != provisionBeingEdited.guid
+                    {
+                        logTrace( "Found a duplicate! [Existing]." )
+                        numberOfInstances += 1
+                        break
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        return ( numberOfInstances == 0 )
     }
     
     

@@ -13,11 +13,17 @@ class RecipeListViewController: UIViewController
     
     @IBOutlet weak var myTableView: UITableView!
     
-    private let     CELL_ID                         = "RecipeListViewControllerCell"
-    private let     CELL_TAG_LABEL_NAME             = 11
-    private let     CELL_TAG_IMAGE_VIEW             = 12
-    private let     STORYBOARD_ID_FORMULA_EDITOR    = "FormulaEditorViewController"
-    private let     STORYBOARD_ID_RECIPE_EDITOR     = "StandardRecipeEditorViewController"
+    private let cellID = "RecipeListViewControllerCell"
+    
+    private struct CellTags {
+        static let imageView = 12
+        static let name      = 11
+    }
+    
+    private struct StoryboardIds {
+        static let formulaEditor         = "FormulaEditorViewController"
+        static let standardRecipeEditor  = "StandardRecipeEditorViewController"
+    }
     
     
     
@@ -97,7 +103,7 @@ class RecipeListViewController: UIViewController
     private func launchFormulaEditorFor(_ index: Int ) {
         
         logVerbose( "[ %d ]", index )
-        if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_FORMULA_EDITOR ) as? FormulaEditorViewController {
+        if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.formulaEditor ) as? FormulaEditorViewController {
             
             formulaEditorVC.recipeIndex = index
             
@@ -127,7 +133,7 @@ class RecipeListViewController: UIViewController
     private func launchRecipeEditorFor(_ index: Int ) {
         logVerbose( "[ %d ]", index )
         
-        if let recipeEditorVC: StandardRecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: STORYBOARD_ID_RECIPE_EDITOR ) as? StandardRecipeEditorViewController {
+        if let recipeEditorVC: StandardRecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.standardRecipeEditor ) as? StandardRecipeEditorViewController {
             
             recipeEditorVC.recipeIndex = index
             
@@ -262,9 +268,9 @@ extension RecipeListViewController: UITableViewDataSource {
     func tableView(_ tableView              : UITableView,
                      cellForRowAt indexPath : IndexPath) -> UITableViewCell {
         
-        let         cell                     = tableView.dequeueReusableCell(withIdentifier: CELL_ID, for: indexPath )
-        let         imageView:   UIImageView = cell.viewWithTag( CELL_TAG_IMAGE_VIEW   ) as! UIImageView
-        let         nameLabel:   UILabel     = cell.viewWithTag( CELL_TAG_LABEL_NAME   ) as! UILabel
+        let         cell                     = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath )
+        let         imageView:   UIImageView = cell.viewWithTag( CellTags.imageView ) as! UIImageView
+        let         nameLabel:   UILabel     = cell.viewWithTag( CellTags.name      ) as! UILabel
         let         recipe:      Recipe      = ChefbookCentral.sharedInstance.recipeArray[indexPath.row]
 
         

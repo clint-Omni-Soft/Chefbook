@@ -26,9 +26,8 @@ class ProvisioningSummaryViewController: UIViewController {
     private let cellID = "ProvisioningSummaryViewCell"
     
     private struct CellTags {
+        static let amount     = 11
         static let ingredient = 10
-        static let weight     = 11
-        static let amount     = 12
     }
     
     private var     ingredientArray : [(name: String, weight: Int64, amount: String)] = []
@@ -125,7 +124,11 @@ class ProvisioningSummaryViewController: UIViewController {
                             amountString += ", "
                         }
                         
-                        amountString += ingredient.amount ?? "<??>"
+                        if element.quantity != 1 {
+                            amountString += String( format: "%d x ", element.quantity )
+                        }
+
+                        amountString += ingredient.amount ?? "[??]"
                     }
                     
                 }
@@ -233,25 +236,24 @@ extension ProvisioningSummaryViewController: UITableViewDataSource {
         let     cell            = tableView.dequeueReusableCell( withIdentifier: cellID ) ?? UITableViewCell()
         let     amountLabel     = cell.viewWithTag( CellTags.amount     ) as! UILabel
         let     ingredientLabel = cell.viewWithTag( CellTags.ingredient ) as! UILabel
-        let     weightLabel     = cell.viewWithTag( CellTags.weight     ) as! UILabel
         let     ingredient      = ingredientArray[indexPath.row]
-        var     weightText      = ""
         
-        if ingredient.weight > 1000 {
-            weightText = String( format: "%.2f kg", Float( ingredient.weight ) / 1000 )
-        }
-        else {
-            weightText = String( format: "%d g", ingredient.weight )
-        }
-        
+        amountLabel    .text = amountTextFromIngredientAt( indexPath.row )
         ingredientLabel.text = ingredient.name
-        weightLabel    .text = weightText
-        amountLabel    .text = ingredient.amount
-        
-        amountLabel.isHidden = ingredient.amount.isEmpty
-        weightLabel.isHidden = ingredient.weight == 0
         
         return cell
+    }
+    
+    
+    private func amountTextFromIngredientAt(_ index : Int ) -> String {
+        let     ingredient = ingredientArray[index]
+        var     amountText = ingredient.amount
+        
+        if amountText.isEmpty {
+            amountText = ( ingredient.weight > 1000 ) ? String( format: "%.2f kg", Float( ingredient.weight ) / 1000 ) : String( format: "%d g", ingredient.weight )
+        }
+
+        return amountText
     }
     
     
@@ -262,16 +264,14 @@ extension ProvisioningSummaryViewController: UITableViewDataSource {
 extension ProvisioningSummaryViewController: UITableViewDelegate {
     
     func tableView(_ tableView                : UITableView,
-                     heightForRowAt indexPath : IndexPath) -> CGFloat {
+                     heightForRowAt indexPath : IndexPath ) -> CGFloat {
         
-        let     ingredient   = ingredientArray[indexPath.row]
+        let     amountText   = amountTextFromIngredientAt( indexPath.row )
         var     heightOfCell : CGFloat = 44.0
         let     widthOfCell  = myTableView.frame.size.width - 32.0
 
-        if !ingredient.amount.isEmpty {
-            heightOfCell += ingredient.amount.heightWithConstrainedWidth( width: widthOfCell, font: .systemFont( ofSize: 14.0 ) )
-        }
-        
+        heightOfCell += amountText.heightWithConstrainedWidth( width : widthOfCell,
+                                                               font  : .systemFont( ofSize: 14.0 ) )
         return heightOfCell
     }
     
