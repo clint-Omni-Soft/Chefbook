@@ -80,11 +80,9 @@ class ProvisioningViewController: UIViewController
     
     private func loadBarButtonItems() {
         logTrace()
-        let     addBarButtonItem  = UIBarButtonItem.init( barButtonSystemItem : .add,
-                                                          target              : self,
-                                                          action              : #selector( addBarButtonItemTouched ) )
-        
-        navigationItem.rightBarButtonItem = addBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem : .add,
+                                                                  target              : self,
+                                                                  action              : #selector( addBarButtonItemTouched ) )
     }
     
     
@@ -102,7 +100,6 @@ class ProvisioningViewController: UIViewController
             let     nameTextField = alert.textFields![0] as UITextField
             
             if var textStringName = nameTextField.text {
-                
                 textStringName = textStringName.trimmingCharacters( in: .whitespacesAndNewlines )
                 
                 if !textStringName.isEmpty {
@@ -157,7 +154,7 @@ class ProvisioningViewController: UIViewController
                 }
                 
                 textField.autocapitalizationType = .words
-        }
+            }
         
         alert.addAction( saveAction   )
         alert.addAction( cancelAction )
@@ -208,7 +205,6 @@ extension ProvisioningViewController : ChefbookCentralDelegate {
 
     func chefbookCentral( chefbookCentral : ChefbookCentral,
                           didOpenDatabase : Bool ) {
-        
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         
         if didOpenDatabase {
@@ -273,16 +269,11 @@ extension ProvisioningViewController : ProvisioningTableViewCellDelegate {
 extension ProvisioningViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        let     numberOfRows = ChefbookCentral.sharedInstance.provisionArray.count
-        
-        return numberOfRows
+        return ChefbookCentral.sharedInstance.provisionArray.count
     }
     
     
-    func tableView(_ tableView: UITableView,
-                     cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell      = tableView.dequeueReusableCell( withIdentifier: cellID ) as! ProvisioningTableViewCell
         let provision = ChefbookCentral.sharedInstance.provisionArray[indexPath.row]
         
@@ -304,7 +295,6 @@ extension ProvisioningViewController : UITableViewDataSource {
                      forRowAt indexPath  : IndexPath ) {
         
         if editingStyle == .delete {
-            
             logVerbose( "delete provision at row [ %d ]", indexPath.row )
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
@@ -339,7 +329,6 @@ extension ProvisioningViewController : UITableViewDelegate {
         logVerbose( "[ %d ]", index )
         
         if let selectItemsVC : ProvisioningSelectItemsViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.selectItems ) as? ProvisioningSelectItemsViewController {
-            
             selectItemsVC.indexOfProvision = index
             
             let backItem = UIBarButtonItem()
