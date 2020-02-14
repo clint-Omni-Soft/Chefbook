@@ -358,11 +358,11 @@
 		F4C5C0B922EB5ABE00B3CBA4 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				F482010623075769005C90E4 /* TabBarViewController.swift */,
 				F42600FE2367632300B0708E /* Recipe Tab */,
 				F42601002367648C00B0708E /* Provisioning Tab */,
 				F42600FF2367641000B0708E /* Settings Tab */,
 				F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */,
-				F482010623075769005C90E4 /* TabBarViewController.swift */,
 				F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */,
 			);
 			path = "User Interface";

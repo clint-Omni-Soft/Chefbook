@@ -68,6 +68,7 @@
 "LabelText.About"                           = "Acerca de";
 "LabelText.Amount"                          = "Cantidad";
 "LabelText.ContactUs"                       = "Todos los derechos reservados. Contactanos en";
+"LabelText.EnterName"                       = "Ingrese su Nombre";
 "LableText.HowToUse01"                      = "LISTA DE RECETAS\n\nAgregar una receta: al tocar el botón de signo más (+), accederá al Editor de recetas, donde podrá agregar / modificar información sobre esa receta.  Al tocar cualquiera de las recetas de la lista, se cargará en el Editor de recetas.\n\n\n";
 "LableText.HowToUse02"                      = "EDITOR DE RECETAS\n\nProporciona la capacidad de (a) asignarle un nombre, (b) asociar una imagen con la receta y acercarlo, (c) especificar el rendimiento, (d) proporcionar una lista de ingredientes, ";
 "LableText.HowToUse03"                      = "y (e) describa los pasos para producir el producto final. Simplemente toque cualquiera de los enlaces azules para agregar / modificar cualquiera de los textos.\n\nNOTA: Si el Editor de recetas está oculto (es decir, está ZOOM en la imagen), no puede seleccionar una receta diferente hasta que descarte la vista superpuesta.\n\n\n";

@@ -37,6 +37,7 @@ class ChefbookCentral: NSObject {
     
     // MARK: Private Variables
     private let DATABASE_NAME                   = "RecipeDB.sqlite"
+    private let DATABASE_MODEL                  = "ChefbookDataModel"
     
     private let ENTITY_NAME_BREAD_INGREDIENT    = "BreadIngredient"
     private let ENTITY_NAME_POOLISH             = "Poolish"
@@ -66,7 +67,7 @@ class ChefbookCentral: NSObject {
         logTrace()
         didOpenDatabase     = false
         recipeArray         = Array.init()
-        persistentContainer = NSPersistentContainer( name: "ChefbookDataModel" )
+        persistentContainer = NSPersistentContainer( name: DATABASE_MODEL )
         
         persistentContainer.loadPersistentStores( completionHandler:
         { ( storeDescription, error ) in
@@ -968,7 +969,7 @@ class ChefbookCentral: NSObject {
     
     private func loadCoreData() {
         
-        guard let modelURL = Bundle.main.url( forResource: "ChefbookDataModel", withExtension: "momd" ) else {
+        guard let modelURL = Bundle.main.url( forResource: DATABASE_MODEL, withExtension: "momd" ) else {
             logTrace( "Error!  Could NOT load model from bundle!" )
             return
         }

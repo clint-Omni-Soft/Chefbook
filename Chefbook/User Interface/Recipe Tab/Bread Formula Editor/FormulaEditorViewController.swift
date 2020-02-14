@@ -204,6 +204,7 @@ class FormulaEditorViewController: UIViewController
         
     }
     
+    
     private func deleteImage() {
         
         let     chefbookCentral = ChefbookCentral.sharedInstance
@@ -571,8 +572,7 @@ class FormulaEditorViewController: UIViewController
                 let     chefbookCentral = ChefbookCentral.sharedInstance
                 
                 if self.recipeIndex == NEW_RECIPE {
-                    
-                    currentState = StateMachine.yield
+                    currentState = .yield
                     
                     chefbookCentral.addFormulaRecipe( myName )
                 }
@@ -580,7 +580,6 @@ class FormulaEditorViewController: UIViewController
                     let     recipe = chefbookCentral.recipeArray[recipeIndex]
                     
                     recipe.name = myName
-                    
                     chefbookCentral.saveUpdated( recipe )
                 }
                 

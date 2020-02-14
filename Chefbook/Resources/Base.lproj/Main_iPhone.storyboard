@@ -1592,7 +1592,7 @@
         <scene sceneID="gcA-nz-bfZ">
             <objects>
                 <navigationController id="CX5-1r-0cn" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Provisioning" image="shoppingCart" id="D9c-Lj-9QI"/>
+                    <tabBarItem key="tabBarItem" title="Provisioning" image="shoppingCart" selectedImage="shoppingCart" id="D9c-Lj-9QI"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="pSa-Me-BZa">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2056,7 +2056,7 @@
         <scene sceneID="fwP-o7-5Cw">
             <objects>
                 <navigationController id="HMy-0G-Abs" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" image="settings" id="Mep-Jn-7Ax"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="settings" selectedImage="settings" id="Mep-Jn-7Ax"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="n2Y-UH-Ha9">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

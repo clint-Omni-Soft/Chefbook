@@ -58,8 +58,9 @@ class FormulaNameTableViewCell: UITableViewCell {
         editButton.setImage( UIImage( named: "checkmark" ), for: .normal )
         editButton.setTitle( "", for: .normal )
         
-        nameTextField.placeholder = inEditMode ? "Enter Name" : ""
+        nameTextField.placeholder = inEditMode ? NSLocalizedString( "LabelText.EnterName", comment: "Enter Name" ) : ""
         nameTextField.text        = recipeName
+        
 
         configureControls()
    }
