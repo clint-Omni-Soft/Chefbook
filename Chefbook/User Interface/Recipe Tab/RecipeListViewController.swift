@@ -102,7 +102,7 @@ class RecipeListViewController: UIViewController
     
     private func launchFormulaEditorFor(_ index: Int ) {
         
-        logVerbose( "[ %d ]", index )
+        logVerbose( "[ %@ ]", String( index ) )
         if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.formulaEditor ) as? FormulaEditorViewController {
             
             formulaEditorVC.recipeIndex = index
@@ -131,8 +131,8 @@ class RecipeListViewController: UIViewController
     
     
     private func launchRecipeEditorFor(_ index: Int ) {
-        logVerbose( "[ %d ]", index )
-        
+        logVerbose( "[ %@ ]", String( index ) )
+
         if let recipeEditorVC: StandardRecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.standardRecipeEditor ) as? StandardRecipeEditorViewController {
             
             recipeEditorVC.recipeIndex = index
@@ -232,7 +232,7 @@ extension RecipeListViewController: ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
-        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
+        logVerbose( "loaded [ %@ ] provisions", String( chefbookCentral.provisionArray.count ))
 
         myTableView.reloadData()
     }
@@ -240,7 +240,7 @@ extension RecipeListViewController: ChefbookCentralDelegate {
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
         
-        logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
+        logVerbose( "loaded [ %@ ] recipes", String( chefbookCentral.recipeArray.count ) )
         chefbookCentral.fetchProvisions()
     }
     
@@ -260,7 +260,7 @@ extension RecipeListViewController: UITableViewDataSource {
         
         let     numberOfRows = ChefbookCentral.sharedInstance.recipeArray.count
         
-//        logVerbose( "[ %d ]", numberOfRows )
+//        logVerbose( "[ %@ ]", String( numberOfRows ) )
         return numberOfRows
     }
     
@@ -301,7 +301,7 @@ extension RecipeListViewController: UITableViewDataSource {
         
         if editingStyle == .delete {
             
-            logVerbose( "delete recipe at row [ %d ]", indexPath.row )
+            logVerbose( "delete recipe at row [ %@ ]", String( indexPath.row ) )
             if UIDevice.current.userInterfaceIdiom == .pad {
                 
                 let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
@@ -329,7 +329,7 @@ extension RecipeListViewController: UITableViewDelegate
     func tableView(_ tableView                : UITableView,
                      didSelectRowAt indexPath : IndexPath ) {
         
-        logVerbose( "[ %d ]", indexPath.row )
+        logVerbose( "[ %@ ]", String( indexPath.row ) )
         tableView.deselectRow( at: indexPath, animated: false )
         
         if ChefbookCentral.sharedInstance.recipeArray[indexPath.row].isFormulaType {

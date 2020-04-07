@@ -226,7 +226,7 @@ extension ProvisioningViewController : ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
-        logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
+        logVerbose( "loaded [ %@ ] recipes", String( chefbookCentral.recipeArray.count ) )
 
         chefbookCentral.fetchProvisions()
     }
@@ -242,7 +242,7 @@ extension ProvisioningViewController : ProvisioningTableViewCellDelegate {
     func provisioningTableViewCell( provisioningTableViewCell : ProvisioningTableViewCell,
                                     editedName                : String,
                                     forRowAt index            : Int ) {
-        logVerbose( "[ %d ][ %@ ]", index, editedName )
+        logVerbose( "[ %@ ][ %@ ]", String( index ), editedName )
         
         let chefbookCentral = ChefbookCentral.sharedInstance
         
@@ -295,7 +295,7 @@ extension ProvisioningViewController : UITableViewDataSource {
                      forRowAt indexPath  : IndexPath ) {
         
         if editingStyle == .delete {
-            logVerbose( "delete provision at row [ %d ]", indexPath.row )
+            logVerbose( "delete provision at row [ %@ ]", String( indexPath.row ) )
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                 ChefbookCentral.sharedInstance.deleteProvisionAtIndex( indexPath.row )
@@ -326,7 +326,7 @@ extension ProvisioningViewController : UITableViewDelegate {
     // MARK: Utility Methods
 
     private func launchProvisionEditorFor( index: Int ) {
-        logVerbose( "[ %d ]", index )
+        logVerbose( "[ %@ ]", String( index ) )
         
         if let selectItemsVC : ProvisioningSelectItemsViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.selectItems ) as? ProvisioningSelectItemsViewController {
             selectItemsVC.indexOfProvision = index

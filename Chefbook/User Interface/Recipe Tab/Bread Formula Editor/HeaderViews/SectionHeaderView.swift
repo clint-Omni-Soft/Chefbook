@@ -66,7 +66,7 @@ class SectionHeaderView: UITableViewHeaderFooterView {
     // MARK: Target/Action Methods
     
     @IBAction func addButtonTouched(_ sender: Any ) {
-        logVerbose( "section[ %d ]", section )
+        logVerbose( "section[ %@ ]", String( section ) )
         delegate.sectionHeaderView( sectionHeaderView : self,
                                     didRequestAddFor  : section )
     }

@@ -111,7 +111,7 @@ class ChefbookCentral: NSObject {
             return
         }
         
-        logVerbose( "[ %@ ]  index[ %d ]  isFlour[ %@ ]  percentage[ %d ]", name, index, stringFor( isFlour ), percentage )
+        logVerbose( "[ %@ ]  index[ %@ ]  isFlour[ %@ ]  percentage[ %@ ]", name, String( index ), stringFor( isFlour ), String( percentage ) )
         
         persistentContainer.viewContext.perform {
             let     recipe          = self.recipeArray[self.selectedRecipeIndex]
@@ -151,7 +151,7 @@ class ChefbookCentral: NSObject {
             return
         }
         
-        logVerbose( "[ %@ ][ %d ][ %d ]", name )
+        logVerbose( "[ %@ ]", name )
         
         persistentContainer.viewContext.perform {
             let     recipe = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_RECIPE, into: self.managedObjectContext ) as! Recipe
@@ -268,7 +268,7 @@ class ChefbookCentral: NSObject {
             return
         }
         
-        logVerbose( "[ %d ][ %@ ]", quantity, recipe.name ?? "Unknown" )
+        logVerbose( "[ %@ ][ %@ ]", String( quantity ), recipe.name ?? "Unknown" )
         
         persistentContainer.viewContext.perform {
             let     element = NSEntityDescription.insertNewObject( forEntityName: self.ENTITY_NAME_PROVISION_ELEMENT, into: self.managedObjectContext ) as! ProvisionElement
@@ -399,7 +399,7 @@ class ChefbookCentral: NSObject {
             return
         }
         
-        logVerbose( "[ %d ]", index )
+        logVerbose( "[ %@ ]", String( index ) )
         
         persistentContainer.viewContext.perform {
             let     recipe                = self.recipeArray[self.selectedRecipeIndex]
@@ -442,7 +442,7 @@ class ChefbookCentral: NSObject {
             return
         }
         
-        logVerbose( "[ %d ]", index )
+        logVerbose( "[ %@ ]", String( index ) )
         
         persistentContainer.viewContext.perform {
             let     recipe                = self.recipeArray[self.selectedRecipeIndex]
@@ -527,7 +527,7 @@ class ChefbookCentral: NSObject {
         }
         
         persistentContainer.viewContext.perform {
-            logVerbose( "deleting provision at [ %d ]", index )
+            logVerbose( "deleting provision at [ %@ ]", String( index ) )
             let     provision = self.provisionArray[index]
             
             self.managedObjectContext.delete( provision )
@@ -573,7 +573,7 @@ class ChefbookCentral: NSObject {
         }
         
         persistentContainer.viewContext.perform {
-            logVerbose( "deleting recipe at [ %d ]", index )
+            logVerbose( "deleting recipe at [ %@ ]", String( index ))
             let     recipe = self.recipeArray[index]
             
             self.managedObjectContext.delete( recipe )

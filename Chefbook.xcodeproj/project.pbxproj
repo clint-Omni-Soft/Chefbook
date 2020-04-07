@@ -17,6 +17,7 @@
 		F426010223676B5700B0708E /* ProvisioningSelectItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F426010123676B5700B0708E /* ProvisioningSelectItemsViewController.swift */; };
 		F42601042367AAE000B0708E /* ProvisioningQuantityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42601032367AAE000B0708E /* ProvisioningQuantityViewController.swift */; };
 		F42601082367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42601072367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift */; };
+		F42C827B243BAB120044874D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C827A243BAB120044874D /* Logger.swift */; };
 		F43678E0234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43678DE234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift */; };
 		F43678E4234E582500ABF982 /* Poolish+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43678E2234E582500ABF982 /* Poolish+CoreDataProperties.swift */; };
 		F4422152237F671A007147E4 /* StandardRecipeEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4422151237F671A007147E4 /* StandardRecipeEditorViewController.swift */; };
@@ -42,15 +43,13 @@
 		F481C521234BA1D80003D9E3 /* FormulaPreFermentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F481C520234BA1D80003D9E3 /* FormulaPreFermentTableViewCell.swift */; };
 		F481C534234BFAA70003D9E3 /* Poolish.swift in Sources */ = {isa = PBXBuildFile; fileRef = F481C530234BFAA70003D9E3 /* Poolish.swift */; };
 		F482010723075769005C90E4 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F482010623075769005C90E4 /* TabBarViewController.swift */; };
-		F4AD56C322F200DA00EFC842 /* ZLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; };
 		F4AD56CE22F25AE400EFC842 /* StepsEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD56CD22F25AE400EFC842 /* StepsEditorViewController.swift */; };
 		F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09C22EB536500B3CBA4 /* AppDelegate.swift */; };
 		F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C09E22EB536500B3CBA4 /* RecipeListViewController.swift */; };
 		F4C5C0A222EB536500B3CBA4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A022EB536500B3CBA4 /* Main_iPhone.storyboard */; };
 		F4C5C0A722EB536600B3CBA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */; };
 		F4C5C0AA22EB536600B3CBA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A822EB536600B3CBA4 /* LaunchScreen.storyboard */; };
-		F4C5C0B322EB577000B3CBA4 /* ZLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */; };
+		F4C5C0BC22EB5B3F00B3CBA4 /* LoggerOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0BB22EB5B3F00B3CBA4 /* LoggerOld.swift */; };
 		F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */; };
 		F4C5C0DC22EB978100B3CBA4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0DE22EB978100B3CBA4 /* Main_iPad.storyboard */; };
 		F4C5C0E822EB992600B3CBA4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0E622EB992600B3CBA4 /* Localizable.strings */; };
@@ -64,20 +63,6 @@
 		F4F1B7EC234D370F00025EBC /* PoolishEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F1B7EB234D370F00025EBC /* PoolishEditorViewController.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		F4C5C0B422EB577000B3CBA4 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				F4C5C0B322EB577000B3CBA4 /* ZLogKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		F4010630230B0AEF00DA636A /* HowToUseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +74,7 @@
 		F426010123676B5700B0708E /* ProvisioningSelectItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningSelectItemsViewController.swift; sourceTree = "<group>"; };
 		F42601032367AAE000B0708E /* ProvisioningQuantityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningQuantityViewController.swift; sourceTree = "<group>"; };
 		F42601072367B01B00B0708E /* ProvisioningQuanityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningQuanityTableViewCell.swift; sourceTree = "<group>"; };
+		F42C827A243BAB120044874D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F43678DE234E52CD00ABF982 /* PreFerment+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreFerment+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F43678E2234E582500ABF982 /* Poolish+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Poolish+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4422151237F671A007147E4 /* StandardRecipeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardRecipeEditorViewController.swift; sourceTree = "<group>"; };
@@ -122,9 +108,8 @@
 		F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4C5C0A922EB536600B3CBA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4C5C0AB22EB536600B3CBA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZLogKit.framework; path = "../ZKits/ZKits-Debug/ZLogKit.framework"; sourceTree = "<group>"; };
 		F4C5C0B622EB59C800B3CBA4 /* Chefbook-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F4C5C0BB22EB5B3F00B3CBA4 /* LoggerOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerOld.swift; sourceTree = "<group>"; };
 		F4C5C0BD22EB5F4300B3CBA4 /* Chefbook-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Prefix.pch"; sourceTree = "<group>"; };
 		F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChefbookCentral.swift; sourceTree = "<group>"; };
 		F4C5C0C722EB7DB800B3CBA4 /* Chefbook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chefbook.xcdatamodel; sourceTree = "<group>"; };
@@ -154,7 +139,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4AD56C322F200DA00EFC842 /* ZLogKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +223,16 @@
 			path = "Provisioning Quantity Cells";
 			sourceTree = "<group>";
 		};
+		F42C8279243BAAC60044874D /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F42C827A243BAB120044874D /* Logger.swift */,
+				F4C5C0BB22EB5B3F00B3CBA4 /* LoggerOld.swift */,
+				F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		F45A19EE23832845005A92C7 /* Standard Editor Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,7 +301,6 @@
 			children = (
 				F4C5C09B22EB536500B3CBA4 /* Chefbook */,
 				F4C5C09A22EB536500B3CBA4 /* Products */,
-				F4C5C0B122EB577000B3CBA4 /* ZLogKit.framework */,
 				F4AD56C222F200DA00EFC842 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -358,12 +351,12 @@
 		F4C5C0B922EB5ABE00B3CBA4 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */,
 				F482010623075769005C90E4 /* TabBarViewController.swift */,
 				F42600FE2367632300B0708E /* Recipe Tab */,
 				F42601002367648C00B0708E /* Provisioning Tab */,
 				F42600FF2367641000B0708E /* Settings Tab */,
-				F4010631230B0AEF00DA636A /* SplashScreenViewController.swift */,
-				F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */,
+				F42C8279243BAAC60044874D /* Utilities */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -374,7 +367,6 @@
 				F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */,
 				F4C5C0C622EB7DB800B3CBA4 /* ChefbookDataModel.xcdatamodeld */,
 				F4C5C0CB22EB80B200B3CBA4 /* CoreData Entities */,
-				F4C5C0BB22EB5B3F00B3CBA4 /* Logger.swift */,
 			);
 			path = ChefbookCentral;
 			sourceTree = "<group>";
@@ -427,7 +419,6 @@
 				F4C5C09522EB536500B3CBA4 /* Sources */,
 				F4C5C09622EB536500B3CBA4 /* Frameworks */,
 				F4C5C09722EB536500B3CBA4 /* Resources */,
-				F4C5C0B422EB577000B3CBA4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -501,6 +492,7 @@
 				F4C5C09F22EB536500B3CBA4 /* RecipeListViewController.swift in Sources */,
 				F4170427231F089800DFFC45 /* FormulaNameTableViewCell.swift in Sources */,
 				F426010223676B5700B0708E /* ProvisioningSelectItemsViewController.swift in Sources */,
+				F42C827B243BAB120044874D /* Logger.swift in Sources */,
 				F481C51E234BA1260003D9E3 /* PreFerment.swift in Sources */,
 				F46418242368B6990048B071 /* ProvisioningTableViewCell.swift in Sources */,
 				F46418152368A0630048B071 /* ProvisionElement.swift in Sources */,
@@ -521,7 +513,7 @@
 				F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */,
 				F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */,
 				F45A19F72383286A005A92C7 /* StandardRecipeStepsTableViewCell.swift in Sources */,
-				F4C5C0BC22EB5B3F00B3CBA4 /* Logger.swift in Sources */,
+				F4C5C0BC22EB5B3F00B3CBA4 /* LoggerOld.swift in Sources */,
 				F46C9CA023203818009D27C7 /* BreadIngredient.swift in Sources */,
 				F481C521234BA1D80003D9E3 /* FormulaPreFermentTableViewCell.swift in Sources */,
 				F442E84323834D0A00BF1C0A /* StandardIngredient+CoreDataProperties.swift in Sources */,

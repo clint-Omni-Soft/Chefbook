@@ -164,7 +164,7 @@ class FormulaEditorViewController: UIViewController
             return
         }
         
-        logVerbose( "recovering selectedRecipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
+        logVerbose( "recovering selectedRecipeIndex[ %@ ] from chefbookCentral", String( chefbookCentral.selectedRecipeIndex ) )
         recipeIndex = chefbookCentral.selectedRecipeIndex
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
@@ -196,7 +196,7 @@ class FormulaEditorViewController: UIViewController
         
         let  cellIsVisible = myTableView.indexPathsForVisibleRows?.contains( indexPathOfCellBeingEdited ) ?? false
         
-//        logVerbose( "[ %d ][ %d ] cellIsVisible[ %@ ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( cellIsVisible ) )
+//        logVerbose( "[ %@ ][ %@ ] cellIsVisible[ %@ ]", String( indexPathOfCellBeingEdited.section ), String( indexPathOfCellBeingEdited.row ), stringFor( cellIsVisible ) )
         
         if !cellIsVisible {
             myTableView.scrollToRow(at: indexPathOfCellBeingEdited, at: .middle, animated: true )
@@ -631,7 +631,7 @@ class FormulaEditorViewController: UIViewController
         let     frame  = myTableView.frame
         var     origin = frame.origin
 
-//        logVerbose( "[ %d ][ %d ] willShow[ %@ ] topOfKeyboard[ %f ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( keyboardWillShow ), topOfKeyboard )
+//        logVerbose( "[ %@ ][ %@ ] willShow[ %@ ] topOfKeyboard[ %@ ]", String( indexPathOfCellBeingEdited.section ), String( indexPathOfCellBeingEdited.row ), stringFor( keyboardWillShow ), String( topOfKeyboard ) )
         if !keyboardDidShow {
             origin.y = ( originalViewOffset == 0.0 ) ? origin.y : originalViewOffset
         }
@@ -642,7 +642,7 @@ class FormulaEditorViewController: UIViewController
                 let     cellBottomY     = ( cellBeingEdited.frame.origin.y + cellBeingEdited.frame.size.height ) + originalViewOffset
                 let     keyboardOverlap = topOfKeyboard - cellBottomY
 
-//                logVerbose( "cellBottomY[ %f ]  keyboardOverlap[ %f ]", cellBottomY, keyboardOverlap )
+//                logVerbose( "cellBottomY[ %@ ]  keyboardOverlap[ %@ ]", String( cellBottomY ), String( keyboardOverlap ) )
                 if keyboardOverlap < 0.0 {
                     origin.y = origin.y + keyboardOverlap
                 }
@@ -651,7 +651,7 @@ class FormulaEditorViewController: UIViewController
             
         }
         
-//        logVerbose( "keyboardDidShow[ %@ ]  originalViewOffset[ %f ]", stringFor( keyboardDidShow ), originalViewOffset )
+//        logVerbose( "keyboardDidShow[ %@ ]  originalViewOffset[ %@ ]", stringFor( keyboardDidShow ), String( originalViewOffset ) )
         myTableView.frame = CGRect( origin: origin, size: frame.size )
     }
 
@@ -666,7 +666,7 @@ class FormulaEditorViewController: UIViewController
             topOfKeyboard = endFrame?.origin.y ?? 1000.0 as CGFloat
         }
         
-//        logVerbose( "topOfKeyboard[ %f ]", topOfKeyboard )
+//        logVerbose( "topOfKeyboard[ %@ ]", String( topOfKeyboard ) )
         return topOfKeyboard
     }
     
@@ -719,12 +719,12 @@ extension FormulaEditorViewController : ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
-        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
+        logVerbose( "loaded [ %@ ] provisions", String( chefbookCentral.provisionArray.count ) )
     }
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral : ChefbookCentral ) {
-//        logVerbose( "loaded [ %d ] recipes ... current recipeIndex[ %d ] ... recovering [ %d ] from chefbookCentral", chefbookCentral.recipeArray.count, recipeIndex, chefbookCentral.selectedRecipeIndex )
+//        logVerbose( "loaded [ %@ ] recipes ... current recipeIndex[ %@ ] ... recovering [ %@ ] from chefbookCentral", String( chefbookCentral.recipeArray.count ), String( recipeIndex ), String( chefbookCentral.selectedRecipeIndex ) )
         recipeIndex = chefbookCentral.selectedRecipeIndex
         
         if loadingImageView {
@@ -891,7 +891,7 @@ extension FormulaEditorViewController : FormulaIngredientTableViewCellDelegate {
                                          ingredientIndexPath            : IndexPath,
                                          didStartEditing                : Bool )
     {
-        logVerbose( "[ %d ][ %d ]", ingredientIndexPath.section, ingredientIndexPath.row )
+        logVerbose( "[ %@ ][ %@ ]", String( ingredientIndexPath.section ), String( ingredientIndexPath.row ) )
         indexPathOfCellBeingEdited = ingredientIndexPath
         ensureCellBeingEditedIsVisible()
     }
@@ -968,7 +968,7 @@ extension FormulaEditorViewController : SectionHeaderViewDelegate {
     
     func sectionHeaderView( sectionHeaderView        : SectionHeaderView,
                             didRequestAddFor section : Int) {
-        logVerbose( "[ %d ]", section )
+        logVerbose( "[ %@ ]", String( section ) )
         
         if section == ForumlaTableSections.preFerment {
             presentPreFermentOptions( sectionHeaderView : sectionHeaderView )
@@ -1031,8 +1031,8 @@ extension FormulaEditorViewController : UIImagePickerControllerDelegate,
                         
                         if imageName.isEmpty {
                             logTrace( "ERROR:  Image save FAILED!" )
-                            self.presentAlert( title: NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                                               message: NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
+                            self.presentAlert( title   : NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
+                                               message : NSLocalizedString( "AlertMessage.ImageSaveFailed", comment: "We were unable to save the image you selected." ) )
                         }
                         else {
                             logVerbose( "Saved image as [ %@ ]", imageName )
@@ -1122,7 +1122,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
             numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : 4
         }
         
-//        logVerbose( "[ %d ]", numberOfSections )
+//        logVerbose( "[ %@ ]", String( numberOfSections ) )
         
         return numberOfSections
     }
@@ -1169,7 +1169,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
             
         }
         
-//        logVerbose( "[ %d ][ %d ]", section, numberOfRows )
+//        logVerbose( "[ %@ ][ %@ ]", String( section), String( numberOfRows ) )
         
         return numberOfRows
     }
@@ -1177,7 +1177,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
     
     func tableView(_ tableView              : UITableView,
                      cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
-//        logVerbose( "row[ %d ]", indexPath.row)
+//        logVerbose( "row[ %@ ]", String( indexPath.row ) )
         var     cell : UITableViewCell!
         
         switch indexPath.section {
@@ -1212,7 +1212,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
         if indexPath.section == newIngredientForSection &&
            indexPath.row + 1 == tableView.numberOfRows( inSection: newIngredientForSection ) {
             
-//            logVerbose( "do NOT allow the user to delete a NEW row at [ %d ][ %d ]", indexPath.section, indexPath.row )
+//            logVerbose( "do NOT allow the user to delete a NEW row at [ %@ ][ %@ ]", String( indexPath.section ), String( indexPath.row ) )
             canEdit = false
         }
         else {
@@ -1228,7 +1228,7 @@ extension FormulaEditorViewController : UITableViewDataSource {
                      forRowAt indexPath  : IndexPath) {
         
         if editingStyle == .delete {
-            logVerbose( "delete ingredient at [ %d ][ %d ]", indexPath.section, indexPath.row )
+            logVerbose( "delete ingredient at [ %@ ][ %@ ]", String( indexPath.section ), String( indexPath.row ) )
             
             DispatchQueue.main.asyncAfter(deadline: ( .now() + 0.2 ), execute: {
                 let  chefbookCentral = ChefbookCentral.sharedInstance
@@ -1267,12 +1267,11 @@ extension FormulaEditorViewController : UITableViewDataSource {
     private func loadFormulaIngredientCellAt(_ indexPath: IndexPath ) -> UITableViewCell {
         
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.ingredients ) else {
-            
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
         
-//        logVerbose( "section[ %d ] row[ %d ]", indexPath.section, indexPath.row )
+//        logVerbose( "section[ %@ ] row[ %@ ]", String( indexPath.section ), String( indexPath.row ) )
         let     formulaIngredientCell = cell as! FormulaIngredientTableViewCell
         
         if indexPath.section == ForumlaTableSections.nameAndYield {
@@ -1298,7 +1297,6 @@ extension FormulaEditorViewController : UITableViewDataSource {
     private func loadFormulaNameCell() -> UITableViewCell {
         
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.name ) else {
-            
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
@@ -1316,7 +1314,6 @@ extension FormulaEditorViewController : UITableViewDataSource {
     private func loadFormulaPreFermentCellAt(_ indexPath : IndexPath) -> UITableViewCell {
         
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.preFerment ) else {
-            
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
@@ -1334,7 +1331,6 @@ extension FormulaEditorViewController : UITableViewDataSource {
     private func loadFormulaYieldCell() -> UITableViewCell {
         
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.yield ) else {
-            
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }
@@ -1363,7 +1359,6 @@ extension FormulaEditorViewController : UITableViewDataSource {
     private func loadImageViewCell() -> UITableViewCell {
         
         guard let cell = myTableView.dequeueReusableCell( withIdentifier: CellIdentifiers.image ) else {
-            
             logVerbose("We FAILED to dequeueReusableCell")
             return UITableViewCell.init()
         }

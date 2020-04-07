@@ -20,8 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     func application(_ application: UIApplication,
                        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? )  -> Bool
     {
-        ZLog.setupLogging()
-        
+//        ZLog.setupLogging()
+        setupLogging()
         return true
     }
     

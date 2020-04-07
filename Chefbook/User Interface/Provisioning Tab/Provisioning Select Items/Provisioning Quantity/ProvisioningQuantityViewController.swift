@@ -162,7 +162,7 @@ class ProvisioningQuantityViewController: UIViewController
         let     frame  = myTableView.frame
         var     origin = frame.origin
         
-//        logVerbose( "[ %d ][ %d ] willShow[ %@ ] topOfKeyboard[ %f ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( keyboardWillShow ), topOfKeyboard )
+//        logVerbose( "[ %@ ][ %@ ] willShow[ %@ ] topOfKeyboard[ %@ ]", String( indexPathOfCellBeingEdited.section ), String( indexPathOfCellBeingEdited.row ), stringFor( keyboardWillShow ), String( topOfKeyboard ) )
         if !keyboardWillShow {
             origin.y = ( originalViewOffset == 0.0 ) ? origin.y : originalViewOffset
         }
@@ -173,7 +173,7 @@ class ProvisioningQuantityViewController: UIViewController
                 let     cellBottomY     = ( cellBeingEdited.frame.origin.y + cellBeingEdited.frame.size.height ) + originalViewOffset
                 let     keyboardOverlap = topOfKeyboard - cellBottomY
                 
-                //                logVerbose( "cellBottomY[ %f ]  keyboardOverlap[ %f ]", cellBottomY, keyboardOverlap )
+                //                logVerbose( "cellBottomY[ %@ ]  keyboardOverlap[ %@ ]", String( cellBottomY ), String( keyboardOverlap ) )
                 if keyboardOverlap < 0.0 {
                     origin.y = origin.y + keyboardOverlap
                 }
@@ -182,7 +182,7 @@ class ProvisioningQuantityViewController: UIViewController
             
         }
         
-//        logVerbose( "originalViewOffset[ %f ]", originalViewOffset )
+//        logVerbose( "originalViewOffset[ %@ ]", String( originalViewOffset ) )
         myTableView.frame = CGRect( origin: origin, size: frame.size )
     }
     
@@ -197,7 +197,7 @@ class ProvisioningQuantityViewController: UIViewController
             topOfKeyboard = endFrame?.origin.y ?? 1000.0 as CGFloat
         }
         
-//        logVerbose( "topOfKeyboard[ %f ]", topOfKeyboard )
+//        logVerbose( "topOfKeyboard[ %@ ]", String( topOfKeyboard ) )
         return topOfKeyboard
     }
     
@@ -249,7 +249,7 @@ extension ProvisioningQuantityViewController : UITableViewDataSource {
             return UITableViewCell.init()
         }
         
-//        logVerbose( "section[ %d ] row[ %d ]", indexPath.section, indexPath.row )
+//        logVerbose( "section[ %@ ] row[ %@ ]", String( indexPath.section ), String( indexPath.row ) )
         let     provisioningQuantityCell = cell as! ProvisioningQuanityTableViewCell
         let     element                  = elementArray[indexPath.row]
         

@@ -45,5 +45,10 @@ extension String {
 }
 
 
+func stringFor(_ boolValue: Bool ) -> String
+{
+    return ( boolValue ? "true" : "false" )
+}
+
 
 

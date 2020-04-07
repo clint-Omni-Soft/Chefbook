@@ -177,7 +177,7 @@ class StandardRecipeEditorViewController: UIViewController {
             return
         }
         
-        logVerbose( "recovering selectedRecipeIndex[ %d ] from chefbookCentral", chefbookCentral.selectedRecipeIndex )
+        logVerbose( "recovering selectedRecipeIndex[ %@ ] from chefbookCentral", String( chefbookCentral.selectedRecipeIndex ) )
         recipeIndex = chefbookCentral.selectedRecipeIndex
         
         // The reason we are using Notifications is because this view can be up in two different places on the iPad at the same time.
@@ -209,7 +209,7 @@ class StandardRecipeEditorViewController: UIViewController {
         
         let  cellIsVisible = myTableView.indexPathsForVisibleRows?.contains( indexPathOfCellBeingEdited ) ?? false
         
-//        logVerbose( "[ %d ][ %d ] cellIsVisible[ %@ ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( cellIsVisible ) )
+//        logVerbose( "[ %@ ][ %@ ] cellIsVisible[ %@ ]", String( indexPathOfCellBeingEdited.section ), String( indexPathOfCellBeingEdited.row ), stringFor( cellIsVisible ) )
         
         if !cellIsVisible {
             myTableView.scrollToRow(at: indexPathOfCellBeingEdited, at: .middle, animated: true )
@@ -556,7 +556,7 @@ class StandardRecipeEditorViewController: UIViewController {
         let     frame  = myTableView.frame
         var     origin = frame.origin
         
-//        logVerbose( "[ %d ][ %d ] willShow[ %@ ] topOfKeyboard[ %f ]", indexPathOfCellBeingEdited.section, indexPathOfCellBeingEdited.row, stringFor( keyboardWillShow ), topOfKeyboard )
+//        logVerbose( "[ %@ ][ %@ ] willShow[ %@ ] topOfKeyboard[ %f ]", String( indexPathOfCellBeingEdited.section ), String( indexPathOfCellBeingEdited.row ), stringFor( keyboardWillShow ), topOfKeyboard )
         if !keyboardDidShow {
             origin.y = ( originalViewOffset == 0.0 ) ? origin.y : originalViewOffset
         }
@@ -576,7 +576,7 @@ class StandardRecipeEditorViewController: UIViewController {
             
         }
         
-//        logVerbose( "keyboardDidShow[ %@ ]  originalViewOffset[ %f ]", stringFor( keyboardDidShow ), originalViewOffset )
+//        logVerbose( "keyboardDidShow[ %@ ]  originalViewOffset[ %@ ]", stringFor( keyboardDidShow ), String( originalViewOffset ) )
         myTableView.frame = CGRect( origin: origin, size: frame.size )
     }
     
@@ -591,7 +591,7 @@ class StandardRecipeEditorViewController: UIViewController {
             topOfKeyboard = endFrame?.origin.y ?? 1000.0 as CGFloat
         }
         
-//        logVerbose( "topOfKeyboard[ %f ]", topOfKeyboard )
+//        logVerbose( "topOfKeyboard[ %@ ]", String( topOfKeyboard ) )
         return topOfKeyboard
     }
 
@@ -611,12 +611,12 @@ extension StandardRecipeEditorViewController : ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
-        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
+        logVerbose( "loaded [ %@ ] provisions", String( chefbookCentral.provisionArray.count ) )
     }
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral : ChefbookCentral ) {
-//        logVerbose( "loaded [ %d ] recipes ... current recipeIndex[ %d ] ... recovering [ %d ] from chefbookCentral", chefbookCentral.recipeArray.count, recipeIndex, chefbookCentral.selectedRecipeIndex )
+//        logVerbose( "loaded [ %@ ] recipes ... current recipeIndex[ %@ ] ... recovering [ %@ ] from chefbookCentral", String( chefbookCentral.recipeArray.count ), String( recipeIndex ), String( chefbookCentral.selectedRecipeIndex ) )
         recipeIndex = chefbookCentral.selectedRecipeIndex
         
         if loadingImageView {
@@ -642,8 +642,8 @@ extension StandardRecipeEditorViewController : ChefbookCentralDelegate {
 
 extension StandardRecipeEditorViewController : StandardRecipeImageTableViewCellDelegate {
     
-    func standardRecipeImageTableViewCell( standardRecipeImageTableViewCell: StandardRecipeImageTableViewCell,
-                                    cameraButtonTouched: Bool) {
+    func standardRecipeImageTableViewCell( standardRecipeImageTableViewCell : StandardRecipeImageTableViewCell,
+                                           cameraButtonTouched              : Bool) {
         logTrace()
         imageCell = standardRecipeImageTableViewCell
         
@@ -782,7 +782,7 @@ extension StandardRecipeEditorViewController : StandardRecipeIngredientTableView
     func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell : StandardRecipeIngredientTableViewCell,
                                                 ingredientIndexPath                   : IndexPath,
                                                 didStartEditing                       : Bool ) {
-        logVerbose( "[ %d ][ %d ]", ingredientIndexPath.section, ingredientIndexPath.row )
+        logVerbose( "[ %@ ][ %@ ]", String( ingredientIndexPath.section ), String( ingredientIndexPath.row ) )
         indexPathOfCellBeingEdited = ingredientIndexPath
         ensureCellBeingEditedIsVisible()
     }
@@ -987,7 +987,7 @@ extension StandardRecipeEditorViewController : UITableViewDataSource {
             numberOfSections = ( currentState == .name || currentState == .yield ) ? 1 : StandardRecipeTableSections.numberOfSections
         }
         
-//        logVerbose( "[ %d ]", numberOfSections )
+//        logVerbose( "[ %@ ]", String( numberOfSections ) )
         return numberOfSections
     }
     
@@ -1023,14 +1023,14 @@ extension StandardRecipeEditorViewController : UITableViewDataSource {
             
         }
         
-//        logVerbose( "section[ %d ]  numberOfRows[ %d ]", section, numberOfRows )
+//        logVerbose( "section[ %@ ]  numberOfRows[ %@ ]", String( section ), String( numberOfRows ) )
         return numberOfRows
     }
     
     
     func tableView(_ tableView              : UITableView,
                      cellForRowAt indexPath : IndexPath ) -> UITableViewCell {
-//        logVerbose( "[ %d ][ %d ]", indexPath.section, indexPath.row)
+//        logVerbose( "[ %@ ][ %@ ]", String( indexPath.section ), String( indexPath.row ) )
         var     cell : UITableViewCell!
         
         switch indexPath.section {
@@ -1076,7 +1076,7 @@ extension StandardRecipeEditorViewController : UITableViewDataSource {
             canEdit = indexPath.section != StandardRecipeTableSections.nameImageAndYield
         }
         
-//        logVerbose( "[ %d ][ %d ] = [ %@ ]", indexPath.section, indexPath.row, stringFor( canEdit ) )
+//        logVerbose( "[ %@ ][ %@ ] = [ %@ ]", String( indexPath.section ), String( indexPath.row ), stringFor( canEdit ) )
         return canEdit
     }
     
@@ -1086,7 +1086,7 @@ extension StandardRecipeEditorViewController : UITableViewDataSource {
                      forRowAt indexPath  : IndexPath) {
         
         if editingStyle == .delete && indexPath.section == StandardRecipeTableSections.ingredients {
-            logVerbose( "delete ingredient at [ %d ][ %d ]", indexPath.section, indexPath.row )
+            logVerbose( "delete ingredient at [ %@ ][ %@ ]", String( indexPath.section), String( indexPath.row ) )
             
             DispatchQueue.main.asyncAfter( deadline: ( .now() + 0.2 ), execute: {
                 let     chefbookCentral = ChefbookCentral.sharedInstance
@@ -1138,7 +1138,7 @@ extension StandardRecipeEditorViewController : UITableViewDataSource {
         let     setupAsHeader                = indexPath.section == StandardRecipeTableSections.nameImageAndYield
         let     standardRecipeIngredientCell = cell as! StandardRecipeIngredientTableViewCell
         
-//        logVerbose( "[ %d ][ %d ] setupAsHeader[ %@ ]", indexPath.section, indexPath.row, stringFor( setupAsHeader ) )
+//        logVerbose( "[ %@ ][ %@ ] setupAsHeader[ %@ ]", String( indexPath.section ), String( indexPath.row ), stringFor( setupAsHeader ) )
         if setupAsHeader {
             
             standardRecipeIngredientCell.setupAsHeaderWithDelegate( self )
@@ -1276,7 +1276,7 @@ extension StandardRecipeEditorViewController : UITableViewDelegate {
             height = ( indexPath.row == 0 ) ? 44.0 : cellHeightForSteps()
         }
 
-//        logVerbose( "[ %d ][ %d ] = [ %f ]", indexPath.section, indexPath.row, height  )
+//        logVerbose( "[ %@ ][ %@ ] = [ %@ ]", String( indexPath.section ), String( indexPath.row ), String( height ) )
         return height
     }
     

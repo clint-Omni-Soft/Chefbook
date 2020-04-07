@@ -65,13 +65,13 @@ extension TabBarViewController : ChefbookCentralDelegate {
     
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
         
-        logVerbose( "loaded [ %d ] provisions", chefbookCentral.provisionArray.count )
+        logVerbose( "loaded [ %@ ] provisions", String( chefbookCentral.provisionArray.count ) )
     }
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
         
-        logVerbose( "loaded [ %d ] recipes", chefbookCentral.recipeArray.count )
+        logVerbose( "loaded [ %@ ] recipes", String( chefbookCentral.recipeArray.count ) )
         chefbookCentral.fetchProvisions()
     }
     

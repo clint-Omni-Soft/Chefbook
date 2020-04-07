@@ -126,7 +126,7 @@ extension ProvisioningSelectItemsViewController : UITableViewDataSource {
         let     chefbookCentral = ChefbookCentral.sharedInstance
         let     numberOfRows    = chefbookCentral.didOpenDatabase ? chefbookCentral.recipeArray.count : 0
         
-        logVerbose( "[ %d ]", numberOfRows )
+        logVerbose( "[ %@ ]", String( numberOfRows ) )
         return numberOfRows
     }
     

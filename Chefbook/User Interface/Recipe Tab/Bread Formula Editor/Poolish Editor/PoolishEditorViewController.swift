@@ -161,7 +161,7 @@ class PoolishEditorViewController: UIViewController
         weightOfPoolishYeast = Int64( round( Float( totalPoolishWeight ) * ( ( Float( percentOfYeastText )! / 100.0 ) ) ) )
         
         totalWeightOfPoolishLabel.text = String( format: "%d", Int( totalPoolishWeight ) )
-        logVerbose( "f[ %d ] w[ %d ] y[ %d ]", weightOfPoolishFlour, weightOfPoolishWater, weightOfPoolishYeast )
+        logVerbose( "f[ %@ ] w[ %@ ] y[ %@ ]", String( weightOfPoolishFlour ), String( weightOfPoolishWater ), String( weightOfPoolishYeast ) )
     }
     
     
@@ -330,7 +330,7 @@ extension PoolishEditorViewController : PoolishTableViewCellDelegate {
     func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
                                indexPath            : IndexPath,
                                didSetNew percentage : String ) {
-        logVerbose( "IndexPath[ %d ][ %d ] ... [ %@ ]", indexPath.section, indexPath.row, percentage )
+        logVerbose( "IndexPath[ %@ ][ %@ ] ... [ %@ ]", String( indexPath.section ), String( indexPath.row ), percentage )
         
         switch indexPath.section {
         case 0:     percentOfFlourText = percentage
