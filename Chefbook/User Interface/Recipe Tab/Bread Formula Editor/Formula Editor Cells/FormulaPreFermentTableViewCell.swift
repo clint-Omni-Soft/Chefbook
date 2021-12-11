@@ -9,17 +9,9 @@
 import UIKit
 
 
-protocol FormulaPreFermentTableViewCellDelegate: class {
-    
-    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
-                                         indexPath                      : IndexPath,
-                                         editedName                     : String,
-                                         editedPercentage               : String,
-                                         editedWeight                   : String )
-    
-    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell : FormulaPreFermentTableViewCell,
-                                         indexPath                      : IndexPath,
-                                         didStartEditing                : Bool )
+protocol FormulaPreFermentTableViewCellDelegate: AnyObject {
+    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell: FormulaPreFermentTableViewCell, indexPath: IndexPath, editedName: String, editedPercentage: String, editedWeight: String )
+    func formulaPreFermentTableViewCell( formulaPreFermentTableViewCell: FormulaPreFermentTableViewCell, indexPath: IndexPath, didStartEditing: Bool )
 }
 
 

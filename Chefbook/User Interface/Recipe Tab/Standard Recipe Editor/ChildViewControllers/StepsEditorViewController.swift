@@ -9,10 +9,8 @@
 import UIKit
 
 
-protocol StepsEditorViewControllerDelegate: class {
-    
-    func stepsEditorViewController( stepsEditorViewController : StepsEditorViewController,
-                                    didEditSteps              : Bool )
+protocol StepsEditorViewControllerDelegate: AnyObject {
+    func stepsEditorViewController( stepsEditorViewController: StepsEditorViewController, didEditSteps: Bool )
 }
 
 

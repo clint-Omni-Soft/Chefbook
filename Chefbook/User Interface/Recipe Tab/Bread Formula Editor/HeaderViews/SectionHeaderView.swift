@@ -10,10 +10,8 @@ import UIKit
 
 
 
-protocol SectionHeaderViewDelegate : class {
-    
-    func sectionHeaderView( sectionHeaderView        : SectionHeaderView,
-                            didRequestAddFor section : Int )
+protocol SectionHeaderViewDelegate : AnyObject {
+    func sectionHeaderView( sectionHeaderView: SectionHeaderView, didRequestAddFor section: Int )
 }
 
 

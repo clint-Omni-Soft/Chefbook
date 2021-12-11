@@ -9,10 +9,8 @@
 import UIKit
 
 
-protocol StandardRecipeNameTableViewCellDelegate: class {
-    
-    func standardRecipeNameTableViewCell( standardRecipeNameTableViewCell : StandardRecipeNameTableViewCell,
-                                          editedName                      : String )
+protocol StandardRecipeNameTableViewCellDelegate: AnyObject {
+    func standardRecipeNameTableViewCell( standardRecipeNameTableViewCell: StandardRecipeNameTableViewCell, editedName: String )
 }
 
 

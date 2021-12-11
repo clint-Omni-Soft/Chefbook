@@ -11,11 +11,8 @@ import UIKit
 
 
 
-protocol ProvisioningTableViewCellDelegate: class {
-    
-    func provisioningTableViewCell( provisioningTableViewCell : ProvisioningTableViewCell,
-                                    editedName                : String,
-                                    forRowAt index            : Int )
+protocol ProvisioningTableViewCellDelegate: AnyObject {
+    func provisioningTableViewCell( provisioningTableViewCell: ProvisioningTableViewCell, editedName: String, forRowAt index: Int )
 }
 
 

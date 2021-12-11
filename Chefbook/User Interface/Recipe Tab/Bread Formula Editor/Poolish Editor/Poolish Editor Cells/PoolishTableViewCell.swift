@@ -10,15 +10,10 @@
 import UIKit
 
 
-protocol PoolishTableViewCellDelegate: class {
+protocol PoolishTableViewCellDelegate: AnyObject {
     
-    func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
-                               indexPath            : IndexPath,
-                               didSetNew percentage : String )
-    
-    func poolishTableViewCell( poolishTableViewCell : PoolishTableViewCell,
-                               indexPath            : IndexPath,
-                               didStartEditing      : Bool )
+    func poolishTableViewCell( poolishTableViewCell: PoolishTableViewCell, indexPath: IndexPath, didSetNew percentage: String )
+    func poolishTableViewCell( poolishTableViewCell: PoolishTableViewCell, indexPath: IndexPath, didStartEditing: Bool )
 }
 
 

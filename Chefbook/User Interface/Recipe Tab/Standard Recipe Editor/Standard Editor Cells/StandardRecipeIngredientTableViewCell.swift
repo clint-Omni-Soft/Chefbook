@@ -9,20 +9,10 @@
 import UIKit
 
 
-protocol StandardRecipeIngredientTableViewCellDelegate: class {
-    
-    func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell : StandardRecipeIngredientTableViewCell,
-                                                ingredientIndexPath                   : IndexPath,
-                                                isNew                                 : Bool,
-                                                editedName                            : String,
-                                                editedAmount                          : String )
-
-    func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell : StandardRecipeIngredientTableViewCell,
-                                                ingredientIndexPath                   : IndexPath,
-                                                didStartEditing                       : Bool )
-
-    func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell : StandardRecipeIngredientTableViewCell,
-                                                requestNewIngredient                  : Bool )
+protocol StandardRecipeIngredientTableViewCellDelegate: AnyObject {
+    func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell: StandardRecipeIngredientTableViewCell, ingredientIndexPath: IndexPath, isNew: Bool, editedName: String, editedAmount: String )
+    func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell: StandardRecipeIngredientTableViewCell, ingredientIndexPath: IndexPath, didStartEditing: Bool )
+    func standardRecipeIngredientTableViewCell( standardRecipeIngredientTableViewCell: StandardRecipeIngredientTableViewCell, requestNewIngredient: Bool )
 }
 
 

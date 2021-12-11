@@ -9,10 +9,8 @@
 import UIKit
 
 
-protocol FormulaNameTableViewCellDelegate: class {
-    
-    func formulaNameTableViewCell( formulaNameTableViewCell : FormulaNameTableViewCell,
-                                   editedName               : String )
+protocol FormulaNameTableViewCellDelegate: AnyObject {
+    func formulaNameTableViewCell( formulaNameTableViewCell: FormulaNameTableViewCell, editedName: String )
 }
 
 

@@ -8,10 +8,8 @@
 
 import UIKit
 
-protocol FormulaImageTableViewCellDelegate: class {
-    
-    func formulaImageTableViewCell( formulaImageTableViewCell: FormulaImageTableViewCell,
-                                    cameraButtonTouched: Bool )
+protocol FormulaImageTableViewCellDelegate: AnyObject {
+    func formulaImageTableViewCell( formulaImageTableViewCell: FormulaImageTableViewCell, cameraButtonTouched: Bool )
 }
 
 

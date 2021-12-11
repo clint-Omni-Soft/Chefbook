@@ -10,11 +10,8 @@
 import UIKit
 
 
-protocol StandardRecipeYieldTableViewCellDelegate: class {
-    
-    func standardRecipeYieldTableViewCell( standardRecipeYieldTableViewCell : StandardRecipeYieldTableViewCell,
-                                           editedQuantity                   : String,
-                                           editedWeight                     : String )
+protocol StandardRecipeYieldTableViewCellDelegate: AnyObject {
+    func standardRecipeYieldTableViewCell( standardRecipeYieldTableViewCell: StandardRecipeYieldTableViewCell, editedQuantity: String, editedWeight: String )
 }
 
 

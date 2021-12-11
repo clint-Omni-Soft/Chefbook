@@ -8,10 +8,8 @@
 
 import UIKit
 
-protocol StandardRecipeImageTableViewCellDelegate: class {
-    
-    func standardRecipeImageTableViewCell( standardRecipeImageTableViewCell : StandardRecipeImageTableViewCell,
-                                           cameraButtonTouched              : Bool )
+protocol StandardRecipeImageTableViewCellDelegate: AnyObject {
+    func standardRecipeImageTableViewCell( standardRecipeImageTableViewCell: StandardRecipeImageTableViewCell, cameraButtonTouched: Bool )
 }
 
 

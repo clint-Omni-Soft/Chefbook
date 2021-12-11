@@ -10,11 +10,8 @@
 import UIKit
 
 
-protocol FormulaYieldTableViewCellDelegate: class {
-    
-    func formulaYieldTableViewCell( formulaYieldTableViewCell: FormulaYieldTableViewCell,
-                                    editedQuantity           : String,
-                                    editedWeight             : String )
+protocol FormulaYieldTableViewCellDelegate: AnyObject {
+    func formulaYieldTableViewCell( formulaYieldTableViewCell: FormulaYieldTableViewCell, editedQuantity: String, editedWeight: String )
 }
 
 

@@ -9,15 +9,9 @@
 
 import UIKit
 
-protocol ProvisioningQuanityTableViewCellDelegate: class {
-    
-    func provisioningQuanityTableViewCell( provisioningQuanityTableViewCell : ProvisioningQuanityTableViewCell,
-                                           elementIndex                     : Int,
-                                           didSetNew quantity               : String )
-    
-    func provisioningQuanityTableViewCell( provisioningQuanityTableViewCell : ProvisioningQuanityTableViewCell,
-                                           elementIndex                     : Int,
-                                           didStartEditing                  : Bool )
+protocol ProvisioningQuanityTableViewCellDelegate: AnyObject {
+    func provisioningQuanityTableViewCell( provisioningQuanityTableViewCell: ProvisioningQuanityTableViewCell, elementIndex: Int, didSetNew quantity: String )
+    func provisioningQuanityTableViewCell( provisioningQuanityTableViewCell: ProvisioningQuanityTableViewCell, elementIndex: Int, didStartEditing: Bool )
 }
 
 

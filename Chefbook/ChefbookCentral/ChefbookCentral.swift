@@ -12,8 +12,7 @@ import CoreData
 
 
 
-protocol ChefbookCentralDelegate: class {
-    
+protocol ChefbookCentralDelegate: AnyObject {
     func chefbookCentral( chefbookCentral: ChefbookCentral, didOpenDatabase: Bool )
     func chefbookCentralDidReloadProvisionArray( chefbookCentral: ChefbookCentral )
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral )

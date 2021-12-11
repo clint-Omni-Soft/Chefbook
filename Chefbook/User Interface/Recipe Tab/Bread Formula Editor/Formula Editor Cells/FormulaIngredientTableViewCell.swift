@@ -9,17 +9,9 @@
 import UIKit
 
 
-protocol FormulaIngredientTableViewCellDelegate: class {
-    
-    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
-                                         ingredientIndexPath            : IndexPath,
-                                         isNew                          : Bool,
-                                         editedIngredientName           : String,
-                                         editedPercentage               : String )
-
-    func formulaIngredientTableViewCell( formulaIngredientTableViewCell : FormulaIngredientTableViewCell,
-                                         ingredientIndexPath            : IndexPath,
-                                         didStartEditing                : Bool )
+protocol FormulaIngredientTableViewCellDelegate: AnyObject {
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell: FormulaIngredientTableViewCell, ingredientIndexPath: IndexPath, isNew: Bool, editedIngredientName: String, editedPercentage: String )
+    func formulaIngredientTableViewCell( formulaIngredientTableViewCell: FormulaIngredientTableViewCell, ingredientIndexPath: IndexPath, didStartEditing: Bool )
 }
 
 
