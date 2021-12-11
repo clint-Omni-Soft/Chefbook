@@ -14,9 +14,7 @@ import CoreData
 
 protocol ChefbookCentralDelegate: class {
     
-    func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool )
-    
+    func chefbookCentral( chefbookCentral: ChefbookCentral, didOpenDatabase: Bool )
     func chefbookCentralDidReloadProvisionArray( chefbookCentral: ChefbookCentral )
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral )
 }
@@ -63,7 +61,6 @@ class ChefbookCentral: NSObject {
     // MARK: Database Access Methods (Public)
     
     func openDatabase() {
-        
         logTrace()
         didOpenDatabase     = false
         recipeArray         = Array.init()
@@ -102,10 +99,7 @@ class ChefbookCentral: NSObject {
     
     // MARK: Recipe Access/Modifier Methods (Public)
     
-    func addBreadIngredientToFormulaRecipeAt( index      : Int,
-                                              isFlour    : Bool,
-                                              name       : String,
-                                              percentage : Int ) {
+    func addBreadIngredientToFormulaRecipeAt( index: Int, isFlour: Bool, name: String, percentage: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -144,8 +138,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addFormulaRecipe(_ name : String ) {
-        
+    func addFormulaRecipe(_ name: String ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -172,12 +165,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addPoolishToFormulaRecipe( recipe         : Recipe,
-                                    percentOfTotal : Int16,
-                                    percentOfFlour : Int16,
-                                    percentOfWater : Int16,
-                                    percentOfYeast : Int16 ) {
-        
+    func addPoolishToFormulaRecipe( recipe: Recipe, percentOfTotal: Int16, percentOfFlour: Int16, percentOfWater: Int16, percentOfYeast: Int16 ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -207,9 +195,7 @@ class ChefbookCentral: NSObject {
     }
 
 
-    func addPreFermentToFormulaRecipeWith( name  : String,
-                                           type  : Int ) {
-        
+    func addPreFermentToFormulaRecipeWith( name: String, type: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -236,7 +222,6 @@ class ChefbookCentral: NSObject {
     
     
     func addProvisionWith(_ name : String ) {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -259,10 +244,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addProvisionElementTo( provision : Provision,
-                                recipe    : Recipe,
-                                quantity  : Int ) {
-        
+    func addProvisionElementTo( provision: Provision, recipe: Recipe, quantity: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -286,11 +268,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addStandardIngredientTo( recipe : Recipe,
-                                  index  : Int,
-                                  name   : String,
-                                  amount : String ) {
-        
+    func addStandardIngredientTo( recipe: Recipe, index: Int, name: String, amount: String ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -316,8 +294,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func addStandardRecipe(_ name : String ) {
-        
+    func addStandardRecipe(_ name: String ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -342,8 +319,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func adjustFlourIngredientsPercentagesIn( recipe                   : Recipe,
-                                              aroundIngredientAt index : Int ) {
+    func adjustFlourIngredientsPercentagesIn( recipe: Recipe, aroundIngredientAt index: Int ) {
         logTrace()
         var     existingPercentageTotal = 0
         let     flourIngredientsArray   = recipe.flourIngredients?.allObjects as! [BreadIngredient]
@@ -392,8 +368,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func deleteFormulaRecipeBreadIngredientAt(_ index : Int ) {
-        
+    func deleteFormulaRecipeBreadIngredientAt(_ index: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -435,8 +410,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func deleteFormulaRecipeFlourIngredientAt(_ index : Int ) {
-        
+    func deleteFormulaRecipeFlourIngredientAt(_ index: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -479,7 +453,6 @@ class ChefbookCentral: NSObject {
     
     
     func deleteFormulaRecipePoolish() {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -500,7 +473,6 @@ class ChefbookCentral: NSObject {
     
     
     func deleteFormulaRecipePreFerment() {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -520,7 +492,6 @@ class ChefbookCentral: NSObject {
     
     
     func deleteProvisionAtIndex(_ index: Int ) {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -539,8 +510,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func deleteProvisionElementFrom( provision : Provision,
-                                     with guid : String ) {
+    func deleteProvisionElementFrom( provision: Provision, with guid: String ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -566,7 +536,6 @@ class ChefbookCentral: NSObject {
     
     
     func deleteRecipeAtIndex(_ index: Int ) {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -585,8 +554,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    func deleteStandardIngredientFrom( recipe     : Recipe,
-                                       with index : Int ) {
+    func deleteStandardIngredientFrom( recipe: Recipe, with index: Int ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -625,20 +593,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-    private func sortedStandardIngredientsFrom(_ recipe : Recipe ) -> [StandardIngredient] {
-        let     standardIngredients = recipe.standardIngredients?.allObjects as! [StandardIngredient]
-        let     sortedIngredientArray = standardIngredients.sorted( by:
-            { (ingredient1, ingredient2) -> Bool in
-                
-                ingredient1.name! < ingredient2.name!     // We can do this because the name is a required field that must be unique
-        } )
-        
-        return sortedIngredientArray
-    }
-    
-    
     func fetchProvisions() {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -654,7 +609,6 @@ class ChefbookCentral: NSObject {
     
     
     func fetchRecipes() {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -670,7 +624,6 @@ class ChefbookCentral: NSObject {
     
     
     func saveUpdatedProvision(_ provision: Provision ) {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -689,7 +642,6 @@ class ChefbookCentral: NSObject {
     
     
     func saveUpdated(_ recipe: Recipe ) {
-        
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -708,7 +660,6 @@ class ChefbookCentral: NSObject {
     
     
     func updateBreadFormulaIngredientsIn(_ recipe: Recipe ) {
-        
         logTrace()
         let     breadIngredientsArray = recipe.breadIngredients?.allObjects as! [BreadIngredient]
         let     flourIngredientsArray = recipe.flourIngredients?.allObjects as! [BreadIngredient]
@@ -742,7 +693,7 @@ class ChefbookCentral: NSObject {
     }
     
     
-
+    
     // MARK: Image Convenience Methods (Public)
     
     func deleteImageWith(_ name: String ) -> Bool {
@@ -841,7 +792,6 @@ class ChefbookCentral: NSObject {
     // MARK: Utility Methods
     
     private func adjustIngredientsForPoolishIn(_ recipe : Recipe ) {
-        
         if recipe.poolish == nil {
             logTrace( "No poolish in this recipe ... do nothing" )
             return
@@ -879,7 +829,6 @@ class ChefbookCentral: NSObject {
     
     
     private func deleteDatabase() {
-        
         guard let docURL = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).last else {
             logTrace( "Error!  Unable to resolve document directory" )
             return
@@ -902,7 +851,6 @@ class ChefbookCentral: NSObject {
     
     
     private func fetchAllProvisionObjects() {   // Must be called from within persistentContainer.viewContext
-        
         selectedProvisionIndex = NO_SELECTION
 
         do {
@@ -935,7 +883,6 @@ class ChefbookCentral: NSObject {
     
     
     private func fetchAllRecipeObjects() {      // Must be called from within persistentContainer.viewContext
-
         selectedRecipeIndex = NO_SELECTION
 
         do {
@@ -968,7 +915,6 @@ class ChefbookCentral: NSObject {
     
     
     private func loadCoreData() {
-        
         guard let modelURL = Bundle.main.url( forResource: DATABASE_MODEL, withExtension: "momd" ) else {
             logTrace( "Error!  Could NOT load model from bundle!" )
             return
@@ -1012,7 +958,6 @@ class ChefbookCentral: NSObject {
     
     
     private func loadExampleRecipesOnFirstTimeIn() {
-        
         let userDefaults = UserDefaults.standard
         let dirtyFlag    = userDefaults.bool( forKey: "Dirty" )
         
@@ -1056,7 +1001,6 @@ class ChefbookCentral: NSObject {
     
     
     private func pictureDirectoryPath() -> String {
-        
         let         fileManager = FileManager.default
         
         if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -1091,7 +1035,6 @@ class ChefbookCentral: NSObject {
     
     
     private func refetchProvisionsAndNotifyDelegate() {     // Must be called from within a persistentContainer.viewContext
-        
         fetchAllProvisionObjects()
         
         DispatchQueue.main.async {
@@ -1102,7 +1045,6 @@ class ChefbookCentral: NSObject {
     
     
     private func refetchRecipesAndNotifyDelegate() {        // Must be called from within a persistentContainer.viewContext
-    
         fetchAllRecipeObjects()
         
         DispatchQueue.main.async {
@@ -1154,6 +1096,18 @@ class ChefbookCentral: NSObject {
     }
     
     
+    private func sortedStandardIngredientsFrom(_ recipe: Recipe ) -> [StandardIngredient] {
+        let     standardIngredients = recipe.standardIngredients?.allObjects as! [StandardIngredient]
+        let     sortedIngredientArray = standardIngredients.sorted( by:
+            { (ingredient1, ingredient2) -> Bool in
+                
+                ingredient1.name! < ingredient2.name!     // We can do this because the name is a required field that must be unique
+        } )
+        
+        return sortedIngredientArray
+    }
+    
+    
     private func typeForIngredientNamed(_ name : String ) -> Int16 {
         var     ingredientType = BreadIngredientTypes.other
         let     myName         = name.uppercased().trimmingCharacters(in: .whitespaces )
@@ -1171,7 +1125,6 @@ class ChefbookCentral: NSObject {
     
     
     private func saveContext() {
-        
         if managedObjectContext.hasChanges {
             
             do {

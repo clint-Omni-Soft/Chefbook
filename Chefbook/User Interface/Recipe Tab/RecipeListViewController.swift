@@ -8,8 +8,7 @@
 
 import UIKit
 
-class RecipeListViewController: UIViewController
-{
+class RecipeListViewController: UIViewController {
     
     @IBOutlet weak var myTableView: UITableView!
     
@@ -30,17 +29,16 @@ class RecipeListViewController: UIViewController
     // MARK: UIViewController Lifecycle Methods
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         logTrace()
+        super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString( "Title.RecipeList", comment: "Recipes" )
     }
     
 
     override func viewWillAppear(_ animated: Bool ) {
-        
-        super.viewWillAppear( animated )
         logTrace()
+        super.viewWillAppear( animated )
 
         let     chefbookCentral = ChefbookCentral.sharedInstance
         
@@ -93,7 +91,7 @@ class RecipeListViewController: UIViewController
     
     @IBAction @objc func addBarButtonItemTouched( barButtonItem: UIBarButtonItem ) {
         logTrace()
-        promptForRecipeType( barButtonItem : barButtonItem )
+        promptForRecipeType( barButtonItem: barButtonItem )
     }
 
     
@@ -101,7 +99,6 @@ class RecipeListViewController: UIViewController
     // MARK: Utility Methods
     
     private func launchFormulaEditorFor(_ index: Int ) {
-        
         logVerbose( "[ %@ ]", String( index ) )
         if let formulaEditorVC: FormulaEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.formulaEditor ) as? FormulaEditorViewController {
             
@@ -132,7 +129,6 @@ class RecipeListViewController: UIViewController
     
     private func launchRecipeEditorFor(_ index: Int ) {
         logVerbose( "[ %@ ]", String( index ) )
-
         if let recipeEditorVC: StandardRecipeEditorViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.standardRecipeEditor ) as? StandardRecipeEditorViewController {
             
             recipeEditorVC.recipeIndex = index
@@ -172,19 +168,17 @@ class RecipeListViewController: UIViewController
     
     private func promptForRecipeType( barButtonItem: UIBarButtonItem ) {
         logTrace()
-        let     alert = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ),
-                                                message: nil,
-                                                preferredStyle: .actionSheet )
+        let     alert          = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RecipeType", comment: "Recipe Type?" ), message: nil, preferredStyle: .actionSheet )
         
-        let     standardAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Standard", comment: "Standard" ), style: .default )
-        { ( alertAction ) in
+        let     standardAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Standard", comment: "Standard" ), style: .default ) {
+            ( alertAction ) in
             logTrace( "Standard Action" )
             
             self.launchRecipeEditorFor( NEW_RECIPE )
         }
         
-        let     formulaAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.BreadFormula", comment: "Bread Formula" ), style: .default )
-        { ( alertAction ) in
+        let     formulaAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.BreadFormula", comment: "Bread Formula" ), style: .default ) {
+            ( alertAction ) in
             logTrace( "Formula Action" )
             
             self.launchFormulaEditorFor( NEW_RECIPE )
@@ -197,7 +191,6 @@ class RecipeListViewController: UIViewController
         alert.addAction( cancelAction   )
         
         if UIDevice.current.userInterfaceIdiom == .pad {
-            
             if let popoverController = alert.popoverPresentationController {
                 popoverController.barButtonItem = barButtonItem
             }
@@ -216,8 +209,7 @@ class RecipeListViewController: UIViewController
 
 extension RecipeListViewController: ChefbookCentralDelegate {
     
-    func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool ) {
+    func chefbookCentral( chefbookCentral: ChefbookCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         
         if didOpenDatabase {
@@ -239,14 +231,11 @@ extension RecipeListViewController: ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
-        
         logVerbose( "loaded [ %@ ] recipes", String( chefbookCentral.recipeArray.count ) )
         chefbookCentral.fetchProvisions()
     }
     
     
-    
-
 }
 
 
@@ -255,9 +244,7 @@ extension RecipeListViewController: ChefbookCentralDelegate {
 
 extension RecipeListViewController: UITableViewDataSource {
     
-    func tableView(_ tableView                     : UITableView,
-                     numberOfRowsInSection section : Int) -> Int {
-        
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         let     numberOfRows = ChefbookCentral.sharedInstance.recipeArray.count
         
 //        logVerbose( "[ %@ ]", String( numberOfRows ) )
@@ -265,9 +252,7 @@ extension RecipeListViewController: UITableViewDataSource {
     }
     
     
-    func tableView(_ tableView              : UITableView,
-                     cellForRowAt indexPath : IndexPath) -> UITableViewCell {
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let         cell                     = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath )
         let         imageView:   UIImageView = cell.viewWithTag( CellTags.imageView ) as! UIImageView
         let         nameLabel:   UILabel     = cell.viewWithTag( CellTags.name      ) as! UILabel
@@ -289,21 +274,16 @@ extension RecipeListViewController: UITableViewDataSource {
     }
     
     
-    func tableView(_ tableView              : UITableView,
-                     canEditRowAt indexPath : IndexPath ) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath ) -> Bool {
         return true
     }
     
     
-    func tableView(_ tableView           : UITableView,
-                     commit editingStyle : UITableViewCell.EditingStyle,
-                     forRowAt indexPath  : IndexPath ) {
-        
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath ) {
         if editingStyle == .delete {
-            
             logVerbose( "delete recipe at row [ %@ ]", String( indexPath.row ) )
+            
             if UIDevice.current.userInterfaceIdiom == .pad {
-                
                 let detailNavigationViewController = ( ( (self.splitViewController?.viewControllers.count)! > 1 ) ? self.splitViewController?.viewControllers[1] : nil ) as? UINavigationController
                 
                 detailNavigationViewController?.viewControllers = []
@@ -324,11 +304,9 @@ extension RecipeListViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate Methods
 
-extension RecipeListViewController: UITableViewDelegate
-{
-    func tableView(_ tableView                : UITableView,
-                     didSelectRowAt indexPath : IndexPath ) {
-        
+extension RecipeListViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath ) {
         logVerbose( "[ %@ ]", String( indexPath.row ) )
         tableView.deselectRow( at: indexPath, animated: false )
         

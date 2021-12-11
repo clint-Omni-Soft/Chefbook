@@ -47,9 +47,7 @@ class TabBarViewController: UITabBarController {
 
 extension TabBarViewController : ChefbookCentralDelegate {
     
-    func chefbookCentral( chefbookCentral: ChefbookCentral,
-                          didOpenDatabase: Bool ) {
-        
+    func chefbookCentral( chefbookCentral: ChefbookCentral, didOpenDatabase: Bool ) {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         
         if didOpenDatabase {
@@ -64,13 +62,11 @@ extension TabBarViewController : ChefbookCentralDelegate {
     
     
     func chefbookCentralDidReloadProvisionArray(chefbookCentral: ChefbookCentral) {
-        
         logVerbose( "loaded [ %@ ] provisions", String( chefbookCentral.provisionArray.count ) )
     }
     
     
     func chefbookCentralDidReloadRecipeArray( chefbookCentral: ChefbookCentral ) {
-        
         logVerbose( "loaded [ %@ ] recipes", String( chefbookCentral.recipeArray.count ) )
         chefbookCentral.fetchProvisions()
     }

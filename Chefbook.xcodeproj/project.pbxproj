@@ -49,7 +49,6 @@
 		F4C5C0A222EB536500B3CBA4 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A022EB536500B3CBA4 /* Main_iPhone.storyboard */; };
 		F4C5C0A722EB536600B3CBA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A622EB536600B3CBA4 /* Assets.xcassets */; };
 		F4C5C0AA22EB536600B3CBA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0A822EB536600B3CBA4 /* LaunchScreen.storyboard */; };
-		F4C5C0BC22EB5B3F00B3CBA4 /* LoggerOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0BB22EB5B3F00B3CBA4 /* LoggerOld.swift */; };
 		F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */; };
 		F4C5C0DC22EB978100B3CBA4 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0DE22EB978100B3CBA4 /* Main_iPad.storyboard */; };
 		F4C5C0E822EB992600B3CBA4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4C5C0E622EB992600B3CBA4 /* Localizable.strings */; };
@@ -109,7 +108,6 @@
 		F4C5C0A922EB536600B3CBA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4C5C0AB22EB536600B3CBA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4C5C0B622EB59C800B3CBA4 /* Chefbook-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4C5C0BB22EB5B3F00B3CBA4 /* LoggerOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerOld.swift; sourceTree = "<group>"; };
 		F4C5C0BD22EB5F4300B3CBA4 /* Chefbook-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Chefbook-Prefix.pch"; sourceTree = "<group>"; };
 		F4C5C0C222EB7D7200B3CBA4 /* ChefbookCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChefbookCentral.swift; sourceTree = "<group>"; };
 		F4C5C0C722EB7DB800B3CBA4 /* Chefbook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chefbook.xcdatamodel; sourceTree = "<group>"; };
@@ -227,7 +225,6 @@
 			isa = PBXGroup;
 			children = (
 				F42C827A243BAB120044874D /* Logger.swift */,
-				F4C5C0BB22EB5B3F00B3CBA4 /* LoggerOld.swift */,
 				F4C5C0ED22EBB7DB00B3CBA4 /* UIKitExtensions.swift */,
 			);
 			path = Utilities;
@@ -436,11 +433,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = "Omni-Soft, Inc.";
 				TargetAttributes = {
 					F4C5C09822EB536500B3CBA4 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1310;
 					};
 				};
 			};
@@ -513,7 +511,6 @@
 				F4C5C09D22EB536500B3CBA4 /* AppDelegate.swift in Sources */,
 				F4C5C0C322EB7D7200B3CBA4 /* ChefbookCentral.swift in Sources */,
 				F45A19F72383286A005A92C7 /* StandardRecipeStepsTableViewCell.swift in Sources */,
-				F4C5C0BC22EB5B3F00B3CBA4 /* LoggerOld.swift in Sources */,
 				F46C9CA023203818009D27C7 /* BreadIngredient.swift in Sources */,
 				F481C521234BA1D80003D9E3 /* FormulaPreFermentTableViewCell.swift in Sources */,
 				F442E84323834D0A00BF1C0A /* StandardIngredient+CoreDataProperties.swift in Sources */,
@@ -611,6 +608,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -636,7 +634,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -673,6 +671,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -692,7 +691,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -713,7 +712,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chefbook/Chefbook-Prefix.pch";
 				INFOPLIST_FILE = Chefbook/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -722,7 +721,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.Chefbook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Chefbook/Chefbook-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s i386 x86_64";
 			};
@@ -739,7 +738,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chefbook/Chefbook-Prefix.pch";
 				INFOPLIST_FILE = Chefbook/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -747,7 +746,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.Chefbook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Chefbook/Chefbook-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s i386 x86_64";
 			};
